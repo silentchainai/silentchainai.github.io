@@ -8,3 +8,5 @@ Thumbs.db
 
 # Local settings
 .local/
+.claude/
+.idea/
