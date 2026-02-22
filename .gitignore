@@ -1,12 +1,30 @@
 # OS files
 .DS_Store
 Thumbs.db
+desktop.ini
 
-# IDE
+# IDE / Editors
 .idea/
 .vscode/
+*.swp
+*.swo
+*~
 
 # Local settings
 .local/
 .claude/
-.idea/
+
+# Secrets / credentials
+.env
+.env.*
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Logs
+*.log
+
+# Dependencies (defensive)
+node_modules/

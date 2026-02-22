@@ -364,6 +364,82 @@
             line-height: 1.8;
         }
 
+        /* Demo Video Button */
+        .demo-button {
+            padding: 12px 30px;
+            background: transparent;
+            color: var(--text-light);
+            border: 1px solid rgba(0, 255, 136, 0.4);
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .demo-button:hover {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: var(--accent-green);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .demo-button .play-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            color: #0a0e1a;
+            font-size: 10px;
+        }
+
+        /* Video Showcase Section */
+        .video-showcase {
+            padding: 100px 0;
+        }
+
+        .video-wrapper {
+            position: relative;
+            max-width: 960px;
+            margin: 0 auto;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(77, 232, 255, 0.2);
+            box-shadow: 0 20px 80px rgba(77, 232, 255, 0.15), 0 0 0 1px rgba(77, 232, 255, 0.05);
+            aspect-ratio: 16 / 9;
+        }
+
+        .video-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .video-caption {
+            text-align: center;
+            margin-top: 24px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .video-caption a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .video-caption a:hover {
+            color: var(--accent-green);
+        }
+
         /* Code Example Section */
         .code-example {
             padding: 100px 0;
@@ -581,6 +657,11 @@
 
             .hero-buttons {
                 flex-direction: column;
+                align-items: center;
+            }
+
+            .video-wrapper {
+                border-radius: 8px;
             }
         }
     </style>
@@ -619,6 +700,9 @@
         <div class="hero-buttons">
             <a href="https://github.com/silentchainai/SILENTCHAIN" class="cta-button">
                 Download Community Edition
+            </a>
+            <a href="https://youtu.be/yWJK4CvS5pE" class="demo-button" target="_blank" rel="noopener">
+                <span class="play-icon">&#9654;</span> Watch Pro Demo
             </a>
             <a href="https://sn1persecurity.com/wordpress/silentchain-ai-waitlist/" class="secondary-button" target="_blank">
                 Join Pro Waitlist
@@ -713,6 +797,30 @@
                 </p>
             </div>
         </div>
+    </section>
+</div>
+
+<!-- Video Demo Section -->
+<div class="container">
+    <section class="video-showcase">
+        <div class="section-header">
+            <div class="section-tag">SEE IT IN ACTION</div>
+            <h2>SILENTCHAIN Professional<br>Demo</h2>
+            <p class="section-description">
+                Watch how SILENTCHAIN AI detects and actively verifies vulnerabilities in real time.
+            </p>
+        </div>
+        <div class="video-wrapper">
+            <iframe
+                src="https://www.youtube-nocookie.com/embed/yWJK4CvS5pE?rel=0&modestbranding=1&color=white"
+                title="SILENTCHAIN AI Professional Demo"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+            </iframe>
+        </div>
+        <p class="video-caption">
+            Ready to upgrade? <a href="https://sn1persecurity.com/wordpress/silentchain-ai-waitlist/" target="_blank">Join the Professional waitlist</a>
+        </p>
     </section>
 </div>
 
@@ -857,7 +965,7 @@
             <div class="table-row">
                 <div style="font-weight: 700;">Price</div>
                 <div style="font-weight: 700; color: var(--accent-green);">FREE</div>
-                <div style="font-weight: 700;"><a href="https://sn1persecurity.com/wordpress/silentchain-ai-waitlist/" style="color: var(--accent-cyan); text-decoration: none;" target="_blank">Join Waitlist →</a></div>
+                <div style="font-weight: 700;"><a href="https://youtu.be/yWJK4CvS5pE" style="color: var(--accent-green); text-decoration: none; font-size: 13px;" target="_blank" rel="noopener">Watch Demo</a> &middot; <a href="https://sn1persecurity.com/wordpress/silentchain-ai-waitlist/" style="color: var(--accent-cyan); text-decoration: none;" target="_blank">Join Waitlist →</a></div>
             </div>
         </div>
     </section>
@@ -869,9 +977,12 @@
         <div class="cta-box">
             <h2>Ready to Transform<br>Your Security Testing?</h2>
             <p>Join thousands of security professionals using SILENTCHAIN AI</p>
-            <div style="display: flex; gap: 20px; justify-content: center;">
+            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
                 <a href="https://github.com/silentchainai/SILENTCHAIN" class="cta-button">
                     Get Started Free
+                </a>
+                <a href="https://youtu.be/yWJK4CvS5pE" class="demo-button" target="_blank" rel="noopener">
+                    <span class="play-icon">&#9654;</span> Watch Demo
                 </a>
                 <a href="https://sn1persecurity.com/wordpress/silentchain-ai-waitlist/" class="secondary-button" target="_blank">
                     Join Waitlist
