@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SILENTCHAIN Enterprise — Standalone AI Web Application Scanner</title>
+    <meta name="description" content="Standalone AI-powered web application scanner. No Burp Suite required. REST API, CI/CD integration, Phase 2 active verification, WAF evasion, cross-product correlation engine, and finding persistence.">
+    <meta name="keywords" content="web application scanner, DAST, AI vulnerability scanner, REST API security, CI/CD security, WAF evasion, penetration testing, OWASP, enterprise security">
+    <link rel="canonical" href="https://silentchain.ai/enterprise">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://silentchain.ai/enterprise">
+    <meta property="og:title" content="SILENTCHAIN Enterprise — Standalone AI Web Application Scanner">
+    <meta property="og:description" content="AI-powered web app scanner. No Burp Suite required. REST API, CI/CD, Phase 2 active verification, WAF evasion, cross-product correlation.">
+    <meta property="og:image" content="https://silentchain.ai/og-image.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="SILENTCHAIN Enterprise — Standalone AI Web Application Scanner">
+    <meta name="twitter:description" content="AI-powered web app scanner. No Burp Suite required. REST API, CI/CD, Phase 2 active verification, WAF evasion.">
+    <meta name="twitter:image" content="https://silentchain.ai/og-image.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="silentchainai-logo-transparent.png">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@700;800&display=swap');
+
+        :root {
+            --bg-dark: #0a0e1a;
+            --bg-darker: #050810;
+            --accent-cyan: #4de8ff;
+            --accent-blue: #0080f0;
+            --accent-green: #00ff88;
+            --accent-orange: #ff6b35;
+            --accent-purple: #a855f7;
+            --text-light: #e0e6ed;
+            --text-muted: #8892a6;
+            --card-bg: rgba(10, 25, 50, 0.6);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .background-grid {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image:
+                linear-gradient(rgba(77, 232, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(77, 232, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none; z-index: 0;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .glow-orb {
+            position: fixed; width: 600px; height: 600px;
+            border-radius: 50%; filter: blur(120px);
+            opacity: 0.15; pointer-events: none; z-index: 1;
+        }
+        .orb-1 { background: var(--accent-cyan); top: -300px; left: -300px; animation: float 20s ease-in-out infinite; }
+        .orb-2 { background: var(--accent-blue); bottom: -300px; right: -300px; animation: float 25s ease-in-out infinite reverse; }
+        .orb-3 { background: var(--accent-cyan); top: 50%; left: 50%; transform: translate(-50%, -50%); animation: pulse 15s ease-in-out infinite; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(100px, 100px); }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.1; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.2; transform: translate(-50%, -50%) scale(1.2); }
+        }
+
+        .container {
+            position: relative; z-index: 10;
+            max-width: 1400px; margin: 0 auto; padding: 0 40px;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex; justify-content: space-between;
+            align-items: center; padding: 30px 0;
+            border-bottom: 1px solid rgba(77, 232, 255, 0.1);
+            position: relative; z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 28px;
+            letter-spacing: -1px;
+            display: flex; align-items: center; gap: 14px;
+            text-decoration: none; color: inherit;
+        }
+
+        .logo-text {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-icon { width: 36px; height: 36px; flex-shrink: 0; }
+
+        .nav-links { display: flex; gap: 40px; list-style: none; }
+
+        .nav-links a {
+            color: var(--text-light); text-decoration: none;
+            font-size: 14px; transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--accent-cyan); }
+
+        .nav-dropdown { position: relative; padding-bottom: 20px; margin-bottom: -20px; }
+        .nav-dropdown > a::after { content: ' \25BE'; font-size: 10px; }
+        .dropdown-menu {
+            display: none; position: absolute; top: 100%; left: 50%;
+            transform: translateX(-50%); min-width: 260px;
+            background: #0c1225; border: 1px solid rgba(77, 232, 255, 0.25);
+            border-radius: 8px; padding: 8px 0; list-style: none;
+            z-index: 1000; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+        }
+        .dropdown-menu::before {
+            content: ''; position: absolute; top: -20px;
+            left: 0; right: 0; height: 20px;
+        }
+        .nav-dropdown:hover .dropdown-menu { display: block; }
+        .dropdown-menu li a {
+            display: block; padding: 10px 24px; color: var(--accent-cyan);
+            text-decoration: none; font-size: 13px; transition: all 0.2s; white-space: nowrap;
+        }
+        .dropdown-menu li a:hover { color: #fff; background: rgba(77, 232, 255, 0.12); }
+
+        .cta-button {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: white; border: none; border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700; font-size: 14px; cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none; display: inline-block;
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(77, 232, 255, 0.3);
+        }
+        .cta-button-large { padding: 16px 40px; font-size: 16px; }
+
+        .secondary-button {
+            padding: 12px 30px;
+            border: 1px solid rgba(77, 232, 255, 0.3);
+            color: var(--text-light); border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px; text-decoration: none;
+            transition: all 0.3s; display: inline-block;
+        }
+        .secondary-button:hover {
+            border-color: var(--accent-cyan);
+            background: rgba(77, 232, 255, 0.05);
+        }
+
+        /* Hero */
+        .hero {
+            padding: 100px 0 60px; text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-block; padding: 8px 20px;
+            background: rgba(77, 232, 255, 0.1);
+            border: 1px solid rgba(77, 232, 255, 0.3);
+            border-radius: 50px; color: var(--accent-cyan);
+            font-size: 12px; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            margin-bottom: 30px;
+        }
+
+        .hero h1 {
+            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 64px;
+            line-height: 1.1; margin-bottom: 24px;
+            background: linear-gradient(135deg, #ffffff 0%, var(--accent-cyan) 50%, var(--accent-blue) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+
+        .hero-description {
+            font-size: 18px; color: var(--text-muted); max-width: 700px;
+            margin: 0 auto 40px; line-height: 1.7;
+        }
+
+        .hero-buttons {
+            display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+        }
+
+        /* Stats */
+        .stats {
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 30px; padding: 60px 0;
+            border-top: 1px solid rgba(77, 232, 255, 0.1);
+            border-bottom: 1px solid rgba(77, 232, 255, 0.1);
+        }
+
+        .stat-item { text-align: center; }
+
+        .stat-number {
+            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 42px;
+            color: var(--accent-cyan); margin-bottom: 8px;
+        }
+
+        .stat-label { font-size: 13px; color: var(--text-muted); }
+
+        /* Section Shared */
+        .section-header { text-align: center; margin-bottom: 60px; }
+
+        .section-tag {
+            display: inline-block; padding: 6px 16px;
+            background: rgba(77, 232, 255, 0.1);
+            border: 1px solid rgba(77, 232, 255, 0.2);
+            border-radius: 50px; color: var(--accent-cyan);
+            font-size: 11px; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .section-header h2 {
+            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 42px;
+            margin-bottom: 16px; line-height: 1.2;
+        }
+
+        .section-description {
+            color: var(--text-muted); font-size: 16px;
+            max-width: 600px; margin: 0 auto; line-height: 1.7;
+        }
+
+        /* Pipeline */
+        .pipeline { padding: 100px 0; }
+
+        .pipeline-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
+        }
+
+        .pipeline-step {
+            background: var(--card-bg);
+            border: 1px solid rgba(77, 232, 255, 0.1);
+            border-radius: 16px; padding: 32px 24px;
+            transition: border-color 0.3s, transform 0.3s;
+        }
+        .pipeline-step:hover {
+            border-color: rgba(77, 232, 255, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .step-number {
+            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 48px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; margin-bottom: 16px;
+        }
+
+        .pipeline-step h3 {
+            font-family: 'Syne', sans-serif; font-weight: 700; font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .pipeline-step p {
+            color: var(--text-muted); font-size: 14px; line-height: 1.6; margin-bottom: 16px;
+        }
+
+        .step-detail {
+            font-size: 11px; color: var(--accent-cyan); opacity: 0.7;
+            border-top: 1px solid rgba(77, 232, 255, 0.1);
+            padding-top: 12px;
+        }
+
+        /* Features */
+        .features { padding: 100px 0; }
+
+        .features-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(77, 232, 255, 0.1);
+            border-radius: 16px; padding: 32px;
+            transition: border-color 0.3s, transform 0.3s;
+        }
+        .feature-card:hover {
+            border-color: rgba(77, 232, 255, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .feature-icon { font-size: 32px; margin-bottom: 16px; }
+
+        .feature-card h3 {
+            font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: var(--text-muted); font-size: 14px; line-height: 1.6;
+        }
+
+        /* Architecture Diagram */
+        .architecture { padding: 100px 0; }
+
+        .arch-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+        }
+
+        .arch-content h2 {
+            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .arch-content .section-description {
+            text-align: left; margin: 0 0 30px;
+        }
+
+        .arch-diagram {
+            background: var(--bg-darker);
+            border: 1px solid rgba(77, 232, 255, 0.1);
+            border-radius: 16px; padding: 40px;
+        }
+
+        .arch-layer {
+            background: var(--card-bg);
+            border: 1px solid rgba(77, 232, 255, 0.15);
+            border-radius: 8px; padding: 16px 20px;
+            margin-bottom: 12px; text-align: center;
+            font-size: 13px; color: var(--accent-cyan);
+            transition: border-color 0.3s;
+        }
+        .arch-layer:hover { border-color: var(--accent-cyan); }
+        .arch-layer:last-child { margin-bottom: 0; }
+
+        .arch-arrow {
+            text-align: center; color: var(--text-muted);
+            font-size: 18px; padding: 4px 0;
+        }
+
+        /* Final CTA */
+        .final-cta { padding: 80px 0; }
+
+        .cta-box {
+            background: var(--card-bg);
+            border: 1px solid rgba(77, 232, 255, 0.15);
+            border-radius: 24px; padding: 80px 60px;
+            text-align: center;
+        }
+
+        .cta-box h2 {
+            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 36px;
+            margin-bottom: 16px;
+        }
+
+        .cta-box p {
+            color: var(--text-muted); font-size: 16px;
+            margin-bottom: 30px; max-width: 500px; margin-left: auto; margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(77, 232, 255, 0.1);
+            padding: 60px 0 40px; margin-top: 100px;
+        }
+
+        .footer-content {
+            display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            gap: 60px; margin-bottom: 40px;
+        }
+
+        .footer-section h4 { font-family: 'Syne', sans-serif; margin-bottom: 20px; }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links a {
+            color: var(--text-muted); text-decoration: none;
+            font-size: 14px; transition: color 0.3s;
+        }
+        .footer-links a:hover { color: var(--accent-cyan); }
+
+        .footer-bottom {
+            padding-top: 30px;
+            border-top: 1px solid rgba(77, 232, 255, 0.05);
+            text-align: center; color: var(--text-muted); font-size: 12px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav { flex-wrap: wrap; gap: 16px; }
+            .logo { font-size: 20px; gap: 10px; white-space: nowrap; }
+            .logo-icon { width: 28px; height: 28px; }
+            .nav-links {
+                order: 3; width: 100%; justify-content: center;
+                flex-wrap: wrap; gap: 16px 24px;
+                padding-top: 16px; border-top: 1px solid rgba(77, 232, 255, 0.1);
+            }
+            nav .cta-button { padding: 8px 20px; font-size: 12px; }
+            .hero h1 { font-size: 36px; }
+            .pipeline-grid, .features-grid, .stats { grid-template-columns: 1fr; }
+            .arch-grid { grid-template-columns: 1fr; }
+            .footer-content { grid-template-columns: 1fr; }
+            .hero-buttons { flex-direction: column; align-items: center; }
+            .container { padding: 0 20px; }
+        }
+    </style>
+</head>
+<body>
+<!-- Background Effects -->
+<div class="background-grid"></div>
+<div class="glow-orb orb-1"></div>
+<div class="glow-orb orb-2"></div>
+<div class="glow-orb orb-3"></div>
+
+<!-- Navigation -->
+<div class="container" style="z-index: 50;">
+    <nav>
+        <a href="/" class="logo"><img src="silentchainai-logo-transparent.png" alt="SILENTCHAIN AI" class="logo-icon"><span class="logo-text">SILENTCHAIN</span></a>
+        <ul class="nav-links">
+            <li class="nav-dropdown">
+                <a href="#">Products</a>
+                <ul class="dropdown-menu">
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN">SILENTCHAIN Community</a></li>
+                    <li><a href="/professional.html">SILENTCHAIN Professional</a></li>
+                    <li><a href="/enterprise.html">SILENTCHAIN Enterprise</a></li>
+                    <li><a href="/source.html">SILENTCHAIN SOURCE</a></li>
+                    <li><a href="https://sn1persecurity.com/" target="_blank">Sn1per AI Core</a></li>
+                </ul>
+            </li>
+            <li><a href="#scanning">How It Works</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#architecture">Architecture</a></li>
+        </ul>
+        <a href="https://sn1persecurity.com/wordpress/silentchain-ai-waitlist/" class="cta-button" target="_blank">Join Waitlist</a>
+    </nav>
+</div>
+
+<!-- Hero Section -->
+<div class="container">
+    <section class="hero">
+        <div class="hero-badge">Standalone Platform</div>
+        <h1>AI Web App Scanner<br>No Burp Required</h1>
+        <p class="hero-description">
+            SILENTCHAIN Enterprise is a standalone AI-powered web application scanner with
+            REST API, CI/CD integration, Phase 2 active verification, WAF evasion,
+            and cross-product correlation &mdash; no Burp Suite dependency.
+        </p>
+        <div class="hero-buttons">
+            <a href="https://sn1persecurity.com/wordpress/silentchain-ai-waitlist/" class="cta-button cta-button-large" target="_blank">
+                Join the Waitlist
+            </a>
+            <a href="#scanning" class="secondary-button">
+                See How It Works
+            </a>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <div class="stats">
+        <div class="stat-item">
+            <div class="stat-number">5</div>
+            <div class="stat-label">AI Providers Supported</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">25+</div>
+            <div class="stat-label">WAF Fingerprints</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">250+</div>
+            <div class="stat-label">Curated Payloads</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">80K+</div>
+            <div class="stat-label">RAG Knowledge Documents</div>
+        </div>
+    </div>
+</div>
+
+<!-- Scanning Pipeline -->
+<div class="container">
+    <section id="scanning" class="pipeline">
+        <div class="section-header">
+            <div class="section-tag">HOW IT WORKS</div>
+            <h2>Intelligent Scanning<br>Pipeline</h2>
+            <p class="section-description">
+                From target discovery to verified exploitation.
+                Each phase uses AI enriched by 80,000+ security knowledge documents.
+            </p>
+        </div>
+
+        <div class="pipeline-grid">
+            <div class="pipeline-step">
+                <div class="step-number">1</div>
+                <h3>Crawl &amp; Discover</h3>
+                <p>
+                    Automated target crawling via Katana, HAR import,
+                    OpenAPI spec parsing, or mitmproxy traffic capture.
+                    Map the full attack surface.
+                </p>
+                <div class="step-detail">Katana &bull; HAR &bull; OpenAPI &bull; mitmproxy</div>
+            </div>
+
+            <div class="pipeline-step">
+                <div class="step-number">2</div>
+                <h3>AI Analysis</h3>
+                <p>
+                    Every request/response pair analyzed by AI with
+                    RAG-retrieved context from real exploits, CVEs,
+                    and CWE definitions. OWASP Top 10 coverage.
+                </p>
+                <div class="step-detail">RAG context &bull; OWASP Top 10 &bull; CWE mapping</div>
+            </div>
+
+            <div class="pipeline-step">
+                <div class="step-number">3</div>
+                <h3>Phase 2 Verification</h3>
+                <p>
+                    AI-generated payloads actively test findings.
+                    250+ curated OWASP payloads. OOB testing for
+                    blind injection, XSS, SSRF, RFI, and XXE.
+                </p>
+                <div class="step-detail">Active testing &bull; OOB &bull; Payload generation</div>
+            </div>
+
+            <div class="pipeline-step">
+                <div class="step-number">4</div>
+                <h3>WAF Evasion</h3>
+                <p>
+                    Detect 25+ WAF types automatically. When blocked,
+                    AI generates evasion payloads tailored to the
+                    specific WAF vendor and configuration.
+                </p>
+                <div class="step-detail">25+ WAFs &bull; Auto-detect &bull; Bypass generation</div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Features Section -->
+<div class="container">
+    <section id="features" class="features">
+        <div class="section-header">
+            <div class="section-tag">FEATURES</div>
+            <h2>Enterprise-Grade<br>Security Testing</h2>
+            <p class="section-description">
+                Everything you need to integrate AI-powered vulnerability
+                scanning into your security workflow.
+            </p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">&#x1F310;</div>
+                <h3>Standalone Platform</h3>
+                <p>
+                    No Burp Suite required. Full web UI, REST API,
+                    and CLI. Deploy on-premises with Docker or run
+                    directly on your security workstation.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">&#x26A1;</div>
+                <h3>Phase 2 Active Verification</h3>
+                <p>
+                    AI-driven payload generation confirms findings with
+                    real exploitation attempts. Reduces false positives
+                    with proof-of-exploitation evidence.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">&#x1F6E1;&#xFE0F;</div>
+                <h3>WAF Detection &amp; Evasion</h3>
+                <p>
+                    Fingerprint 25+ WAF vendors automatically.
+                    AI generates bypass payloads specific to
+                    Cloudflare, Akamai, ModSecurity, and more.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">&#x1F504;</div>
+                <h3>REST API &amp; CI/CD</h3>
+                <p>
+                    Full REST API for scan automation. WebSocket
+                    live streaming. Integrate into Jenkins, GitHub Actions,
+                    or any CI/CD pipeline.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">&#x1F517;</div>
+                <h3>Cross-Product Correlation</h3>
+                <p>
+                    10 severity escalation rules. When Enterprise, SOURCE,
+                    and Sn1per findings corroborate each other, severity
+                    automatically escalates with evidence.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">&#x1F4BE;</div>
+                <h3>Finding Persistence &amp; Triage</h3>
+                <p>
+                    SQLite-backed finding storage. Triage status tracking.
+                    Import findings from JSON. WebSocket-connected
+                    real-time dashboard.
+                </p>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Architecture Section -->
+<div class="container">
+    <section id="architecture" class="architecture">
+        <div class="arch-grid">
+            <div class="arch-content">
+                <div class="section-tag">ARCHITECTURE</div>
+                <h2>Built for<br>Integration</h2>
+                <p class="section-description">
+                    SILENTCHAIN Enterprise is a Python 3 application built on FastAPI.
+                    Async scanning engine, SQLite persistence, WebSocket streaming,
+                    and a React web dashboard. Deploy standalone or in Docker alongside
+                    the RAG Knowledge Engine for maximum accuracy.
+                </p>
+                <div style="margin-top: 30px;">
+                    <a href="https://sn1persecurity.com/wordpress/silentchain-ai-waitlist/" class="cta-button" target="_blank">Request Access</a>
+                </div>
+            </div>
+            <div class="arch-diagram">
+                <div class="arch-layer">Targets (URLs, HAR, OpenAPI, mitmproxy)</div>
+                <div class="arch-arrow">&darr;</div>
+                <div class="arch-layer">Crawl Engine (Katana + Chromium)</div>
+                <div class="arch-arrow">&darr;</div>
+                <div class="arch-layer">AI Analysis (5 providers + RAG context)</div>
+                <div class="arch-arrow">&darr;</div>
+                <div class="arch-layer">Phase 2 Verification + WAF Evasion</div>
+                <div class="arch-arrow">&darr;</div>
+                <div class="arch-layer">Cross-Product Correlation Engine</div>
+                <div class="arch-arrow">&darr;</div>
+                <div class="arch-layer">Findings DB + REST API + Web Dashboard</div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Final CTA -->
+<div class="container">
+    <section class="final-cta">
+        <div class="cta-box">
+            <h2>Get Access to<br>SILENTCHAIN Enterprise</h2>
+            <p>Join the waitlist for standalone AI-powered web application scanning with Phase 2 verification and WAF evasion.</p>
+            <div class="cta-buttons">
+                <a href="https://sn1persecurity.com/wordpress/silentchain-ai-waitlist/" class="cta-button cta-button-large" target="_blank">
+                    Join the Waitlist
+                </a>
+                <a href="/" class="secondary-button">
+                    Explore All Products
+                </a>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <a href="/" class="logo" style="margin-bottom: 20px;"><img src="silentchainai-logo-transparent.png" alt="SILENTCHAIN AI" class="logo-icon"><span class="logo-text">SILENTCHAIN</span></a>
+                <p style="color: var(--text-muted); font-size: 14px; margin-top: 20px;">
+                    AI-powered security testing for the modern web.
+                    Open source, privacy-focused, and built for professionals.
+                </p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Product</h4>
+                <ul class="footer-links">
+                    <li><a href="/#products">Products</a></li>
+                    <li><a href="/#features">Features</a></li>
+                    <li><a href="/#pricing">Pricing</a></li>
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN/blob/main/README.md">Documentation</a></li>
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN/blob/main/CHANGELOG.md">Changelog</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul class="footer-links">
+                    <li><a href="/blog/">Blog</a></li>
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN">GitHub</a></li>
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN/blob/main/INSTALLATION.md">Installation Guide</a></li>
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN/blob/main/QUICKSTART.md">Quick Start</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Company</h4>
+                <ul class="footer-links">
+                    <li><a href="/about.html">About</a></li>
+                    <li><a href="mailto:support@silentchain.ai">Contact</a></li>
+                    <li><a href="/privacy.html">Privacy Policy</a></li>
+                    <li><a href="/terms.html">Terms of Service</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Connect</h4>
+                <ul class="footer-links">
+                    <li><a href="https://x.com/silentchainai" target="_blank">X (Twitter)</a></li>
+                    <li><a href="https://github.com/silentchainai" target="_blank">GitHub</a></li>
+                    <li><a href="https://youtube.com/@silentchainai" target="_blank">YouTube</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 SILENTCHAIN AI. Built for the security community.</p>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

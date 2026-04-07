@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SILENTCHAIN Professional — Advanced AI Burp Suite Extension</title>
+    <meta name="description" content="Advanced AI-powered Burp Suite extension with Phase 2 active verification, WAF detection and evasion for 25+ WAF types, 250+ curated payloads, out-of-band testing, and 7 AI providers including offensive security models.">
+    <meta name="keywords" content="burp suite extension, AI security testing, WAF evasion, active verification, penetration testing, OWASP, web security, bug bounty, offensive security, burp plugin">
+    <link rel="canonical" href="https://silentchain.ai/professional">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://silentchain.ai/professional">
+    <meta property="og:title" content="SILENTCHAIN Professional — Advanced AI Burp Suite Extension">
+    <meta property="og:description" content="Advanced AI Burp Suite extension. Phase 2 active verification, 25+ WAF evasion, 250+ payloads, OOB testing, 7 AI providers.">
+    <meta property="og:image" content="https://silentchain.ai/og-image.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="SILENTCHAIN Professional — Advanced AI Burp Suite Extension">
+    <meta name="twitter:description" content="Advanced AI Burp Suite extension. Phase 2 active verification, 25+ WAF evasion, 250+ payloads, OOB testing.">
+    <meta name="twitter:image" content="https://silentchain.ai/og-image.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="silentchainai-logo-transparent.png">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@700;800&display=swap');
+
+        :root {
+            --bg-dark: #0a0e1a;
+            --bg-darker: #050810;
+            --accent-cyan: #4de8ff;
+            --accent-blue: #0080f0;
+            --accent-green: #00ff88;
+            --accent-orange: #ff6b35;
+            --accent-purple: #a855f7;
+            --text-light: #e0e6ed;
+            --text-muted: #8892a6;
+            --card-bg: rgba(10, 25, 50, 0.6);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .background-grid {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image:
+                linear-gradient(rgba(77, 232, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(77, 232, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none; z-index: 0;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .glow-orb {
+            position: fixed; width: 600px; height: 600px;
+            border-radius: 50%; filter: blur(120px);
+            opacity: 0.15; pointer-events: none; z-index: 1;
+        }
+        .orb-1 { background: var(--accent-cyan); top: -300px; left: -300px; animation: float 20s ease-in-out infinite; }
+        .orb-2 { background: var(--accent-blue); bottom: -300px; right: -300px; animation: float 25s ease-in-out infinite reverse; }
+        .orb-3 { background: var(--accent-cyan); top: 50%; left: 50%; transform: translate(-50%, -50%); animation: pulse 15s ease-in-out infinite; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(100px, 100px); }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.1; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.2; transform: translate(-50%, -50%) scale(1.2); }
+        }
+
+        .container {
+            position: relative; z-index: 10;
+            max-width: 1400px; margin: 0 auto; padding: 0 40px;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex; justify-content: space-between;
+            align-items: center; padding: 30px 0;
+            border-bottom: 1px solid rgba(77, 232, 255, 0.1);
+            position: relative; z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 28px;
+            letter-spacing: -1px;
+            display: flex; align-items: center; gap: 14px;
+            text-decoration: none; color: inherit;
+        }
+
+        .logo-text {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-icon { width: 36px; height: 36px; flex-shrink: 0; }
+
+        .nav-links { display: flex; gap: 40px; list-style: none; }
+
+        .nav-links a {
+            color: var(--text-light); text-decoration: none;
+            font-size: 14px; transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--accent-cyan); }
+
+        .nav-dropdown { position: relative; padding-bottom: 20px; margin-bottom: -20px; }
+        .nav-dropdown > a::after { content: ' \25BE'; font-size: 10px; }
+        .dropdown-menu {
+            display: none; position: absolute; top: 100%; left: 50%;
+            transform: translateX(-50%); min-width: 260px;
+            background: #0c1225; border: 1px solid rgba(77, 232, 255, 0.25);
+            border-radius: 8px; padding: 8px 0; list-style: none;
+            z-index: 1000; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+        }
+        .dropdown-menu::before {
+            content: ''; position: absolute; top: -20px;
+            left: 0; right: 0; height: 20px;
+        }
+        .nav-dropdown:hover .dropdown-menu { display: block; }
+        .dropdown-menu li a {
+            display: block; padding: 10px 24px; color: var(--accent-cyan);
+            text-decoration: none; font-size: 13px; transition: all 0.2s; white-space: nowrap;
+        }
+        .dropdown-menu li a:hover { color: #fff; background: rgba(77, 232, 255, 0.12); }
+
+        .cta-button {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: white; border: none; border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700; font-size: 14px; cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none; display: inline-block;
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(77, 232, 255, 0.3);
+        }
+        .cta-button-large { padding: 16px 40px; font-size: 16px; }
+
+        .secondary-button {
+            padding: 12px 30px;
+            border: 1px solid rgba(77, 232, 255, 0.3);
+            color: var(--text-light); border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px; text-decoration: none;
+            transition: all 0.3s; display: inline-block;
+        }
+        .secondary-button:hover {
+            border-color: var(--accent-cyan);
+            background: rgba(77, 232, 255, 0.05);
+        }
+
+        /* Hero */
+        .hero { padding: 100px 0 60px; text-align: center; }
+
+        .hero-badge {
+            display: inline-block; padding: 8px 20px;
+            background: rgba(77, 232, 255, 0.1);
+            border: 1px solid rgba(77, 232, 255, 0.3);
+            border-radius: 50px; color: var(--accent-cyan);
+            font-size: 12px; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            margin-bottom: 30px;
+        }
+
+        .hero h1 {
+            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 64px;
+            line-height: 1.1; margin-bottom: 24px;
+            background: linear-gradient(135deg, #ffffff 0%, var(--accent-cyan) 50%, var(--accent-blue) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+
+        .hero-description {
+            font-size: 18px; color: var(--text-muted); max-width: 700px;
+            margin: 0 auto 40px; line-height: 1.7;
+        }
+
+        .hero-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+        /* Stats */
+        .stats {
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 30px; padding: 60px 0;
+            border-top: 1px solid rgba(77, 232, 255, 0.1);
+            border-bottom: 1px solid rgba(77, 232, 255, 0.1);
+        }
+
+        .stat-item { text-align: center; }
+        .stat-number {
+            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 42px;
+            color: var(--accent-cyan); margin-bottom: 8px;
+        }
+        .stat-label { font-size: 13px; color: var(--text-muted); }
+
+        /* Section Shared */
+        .section-header { text-align: center; margin-bottom: 60px; }
+
+        .section-tag {
+            display: inline-block; padding: 6px 16px;
+            background: rgba(77, 232, 255, 0.1);
+            border: 1px solid rgba(77, 232, 255, 0.2);
+            border-radius: 50px; color: var(--accent-cyan);
+            font-size: 11px; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .section-header h2 {
+            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 42px;
+            margin-bottom: 16px; line-height: 1.2;
+        }
+
+        .section-description {
+            color: var(--text-muted); font-size: 16px;
+            max-width: 600px; margin: 0 auto; line-height: 1.7;
+        }
+
+        /* Upgrade Comparison */
+        .upgrade { padding: 100px 0; }
+
+        .upgrade-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 30px;
+            max-width: 900px; margin: 0 auto;
+        }
+
+        .upgrade-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(77, 232, 255, 0.1);
+            border-radius: 16px; padding: 36px;
+        }
+
+        .upgrade-card.pro {
+            border-color: rgba(77, 232, 255, 0.3);
+            background: rgba(10, 25, 50, 0.8);
+        }
+
+        .upgrade-card h3 {
+            font-family: 'Syne', sans-serif; font-weight: 700; font-size: 22px;
+            margin-bottom: 8px;
+        }
+
+        .upgrade-card .edition-tag {
+            display: inline-block; padding: 3px 10px; margin-bottom: 20px;
+            background: rgba(77, 232, 255, 0.1);
+            border: 1px solid rgba(77, 232, 255, 0.2);
+            border-radius: 20px; color: var(--accent-cyan);
+            font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        .upgrade-card .edition-tag.pro-tag {
+            background: rgba(77, 232, 255, 0.15);
+            border-color: var(--accent-cyan);
+        }
+
+        .upgrade-list {
+            list-style: none; padding: 0;
+        }
+
+        .upgrade-list li {
+            padding: 8px 0; font-size: 13px; color: var(--text-muted);
+            border-bottom: 1px solid rgba(77, 232, 255, 0.05);
+        }
+
+        .upgrade-list li:last-child { border-bottom: none; }
+
+        .upgrade-list .check { color: var(--accent-green); margin-right: 8px; }
+        .upgrade-list .cross { color: var(--text-muted); opacity: 0.4; margin-right: 8px; }
+        .upgrade-list .new { color: var(--accent-cyan); margin-right: 8px; font-weight: 700; font-size: 10px; }
+
+        /* Features */
+        .features { padding: 100px 0; }
+
+        .features-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(77, 232, 255, 0.1);
+            border-radius: 16px; padding: 32px;
+            transition: border-color 0.3s, transform 0.3s;
+        }
+        .feature-card:hover {
+            border-color: rgba(77, 232, 255, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .feature-icon { font-size: 32px; margin-bottom: 16px; }
+
+        .feature-card h3 {
+            font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: var(--text-muted); font-size: 14px; line-height: 1.6;
+        }
+
+        /* Video Demo */
+        .video-showcase { padding: 80px 0; }
+
+        .video-wrapper {
+            position: relative; padding-bottom: 56.25%; height: 0;
+            border-radius: 16px; overflow: hidden;
+            border: 1px solid rgba(77, 232, 255, 0.15);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            margin-top: 40px;
+        }
+
+        .video-wrapper iframe {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%; border: none;
+        }
+
+        /* Providers */
+        .providers { padding: 80px 0; }
+
+        .providers-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+            margin-top: 40px;
+        }
+
+        .provider-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(77, 232, 255, 0.1);
+            border-radius: 12px; padding: 24px; text-align: center;
+            transition: border-color 0.3s;
+        }
+        .provider-card:hover { border-color: rgba(77, 232, 255, 0.3); }
+
+        .provider-icon { font-size: 28px; margin-bottom: 10px; }
+
+        .provider-card h4 {
+            font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .provider-note { color: var(--text-muted); font-size: 11px; margin-bottom: 8px; }
+
+        .provider-highlight {
+            display: inline-block; padding: 2px 8px;
+            background: rgba(77, 232, 255, 0.1); border-radius: 4px;
+            color: var(--accent-cyan); font-size: 10px;
+        }
+
+        /* Final CTA */
+        .final-cta { padding: 80px 0; }
+
+        .cta-box {
+            background: var(--card-bg);
+            border: 1px solid rgba(77, 232, 255, 0.15);
+            border-radius: 24px; padding: 80px 60px; text-align: center;
+        }
+
+        .cta-box h2 {
+            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 36px;
+            margin-bottom: 16px;
+        }
+
+        .cta-box p {
+            color: var(--text-muted); font-size: 16px;
+            margin-bottom: 30px; max-width: 500px; margin-left: auto; margin-right: auto;
+        }
+
+        .cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(77, 232, 255, 0.1);
+            padding: 60px 0 40px; margin-top: 100px;
+        }
+
+        .footer-content {
+            display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            gap: 60px; margin-bottom: 40px;
+        }
+
+        .footer-section h4 { font-family: 'Syne', sans-serif; margin-bottom: 20px; }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links a {
+            color: var(--text-muted); text-decoration: none;
+            font-size: 14px; transition: color 0.3s;
+        }
+        .footer-links a:hover { color: var(--accent-cyan); }
+
+        .footer-bottom {
+            padding-top: 30px;
+            border-top: 1px solid rgba(77, 232, 255, 0.05);
+            text-align: center; color: var(--text-muted); font-size: 12px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav { flex-wrap: wrap; gap: 16px; }
+            .logo { font-size: 20px; gap: 10px; white-space: nowrap; }
+            .logo-icon { width: 28px; height: 28px; }
+            .nav-links {
+                order: 3; width: 100%; justify-content: center;
+                flex-wrap: wrap; gap: 16px 24px;
+                padding-top: 16px; border-top: 1px solid rgba(77, 232, 255, 0.1);
+            }
+            nav .cta-button { padding: 8px 20px; font-size: 12px; }
+            .hero h1 { font-size: 36px; }
+            .features-grid, .stats, .providers-grid { grid-template-columns: 1fr; }
+            .upgrade-grid { grid-template-columns: 1fr; }
+            .footer-content { grid-template-columns: 1fr; }
+            .hero-buttons { flex-direction: column; align-items: center; }
+            .container { padding: 0 20px; }
+        }
+    </style>
+</head>
+<body>
+<!-- Background Effects -->
+<div class="background-grid"></div>
+<div class="glow-orb orb-1"></div>
+<div class="glow-orb orb-2"></div>
+<div class="glow-orb orb-3"></div>
+
+<!-- Navigation -->
+<div class="container" style="z-index: 50;">
+    <nav>
+        <a href="/" class="logo"><img src="silentchainai-logo-transparent.png" alt="SILENTCHAIN AI" class="logo-icon"><span class="logo-text">SILENTCHAIN</span></a>
+        <ul class="nav-links">
+            <li class="nav-dropdown">
+                <a href="#">Products</a>
+                <ul class="dropdown-menu">
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN">SILENTCHAIN Community</a></li>
+                    <li><a href="/professional.html">SILENTCHAIN Professional</a></li>
+                    <li><a href="/enterprise.html">SILENTCHAIN Enterprise</a></li>
+                    <li><a href="/source.html">SILENTCHAIN SOURCE</a></li>
+                    <li><a href="https://sn1persecurity.com/" target="_blank">Sn1per AI Core</a></li>
+                </ul>
+            </li>
+            <li><a href="#upgrade">Community vs Pro</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#demo">Demo</a></li>
+        </ul>
+        <a href="https://sn1persecurity.com/wordpress/silentchain-ai-waitlist/" class="cta-button" target="_blank">Join Waitlist</a>
+    </nav>
+</div>
+
+<!-- Hero Section -->
+<div class="container">
+    <section class="hero">
+        <div class="hero-badge">Burp Suite Extension</div>
+        <h1>AI-Powered<br>Burp Suite<br>On Steroids</h1>
+        <p class="hero-description">
+            SILENTCHAIN Professional supercharges Burp Suite with Phase 2 active verification,
+            WAF detection and evasion for 25+ WAF types, 250+ curated OWASP payloads,
+            out-of-band testing, and 7 AI providers &mdash; including offensive security models.
+        </p>
+        <div class="hero-buttons">
+            <a href="https://sn1persecurity.com/wordpress/silentchain-ai-waitlist/" class="cta-button cta-button-large" target="_blank">
+                Join the Waitlist
+            </a>
+            <a href="https://youtu.be/yWJK4CvS5pE" class="secondary-button" target="_blank">
+                &#9654; Watch Demo
+            </a>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <div class="stats">
+        <div class="stat-item">
+            <div class="stat-number">7</div>
+            <div class="stat-label">AI Providers</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">25+</div>
+            <div class="stat-label">WAF Fingerprints</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">250+</div>
+            <div class="stat-label">Curated Payloads</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">80K+</div>
+            <div class="stat-label">RAG Knowledge Documents</div>
+        </div>
+    </div>
+</div>
+
+<!-- Community vs Pro Comparison -->
+<div class="container">
+    <section id="upgrade" class="upgrade">
+        <div class="section-header">
+            <div class="section-tag">UPGRADE PATH</div>
+            <h2>Community vs<br>Professional</h2>
+            <p class="section-description">
+                Everything in Community, plus active verification,
+                WAF evasion, OOB testing, and offensive AI models.
+            </p>
+        </div>
+
+        <div class="upgrade-grid">
+            <div class="upgrade-card">
+                <span class="edition-tag">Free</span>
+                <h3>Community</h3>
+                <ul class="upgrade-list">
+                    <li><span class="check">&#10003;</span> AI-Powered OWASP Top 10 Detection</li>
+                    <li><span class="check">&#10003;</span> 5 AI Providers (Ollama, OpenAI, Claude, Gemini, Azure)</li>
+                    <li><span class="check">&#10003;</span> RAG Knowledge Engine Integration</li>
+                    <li><span class="check">&#10003;</span> Burp Suite HTTP Traffic Interception</li>
+                    <li><span class="check">&#10003;</span> Real-Time Findings Panel</li>
+                    <li><span class="cross">&#10007;</span> Phase 2 Active Verification</li>
+                    <li><span class="cross">&#10007;</span> WAF Detection &amp; Evasion</li>
+                    <li><span class="cross">&#10007;</span> Curated Payloads &amp; OOB Testing</li>
+                    <li><span class="cross">&#10007;</span> Offensive AI Models</li>
+                </ul>
+            </div>
+            <div class="upgrade-card pro">
+                <span class="edition-tag pro-tag">Professional</span>
+                <h3>Professional</h3>
+                <ul class="upgrade-list">
+                    <li><span class="check">&#10003;</span> Everything in Community</li>
+                    <li><span class="new">NEW</span> Phase 2 Active Verification</li>
+                    <li><span class="new">NEW</span> WAF Detection (25+ types) &amp; Evasion</li>
+                    <li><span class="new">NEW</span> 250+ Curated OWASP Payloads</li>
+                    <li><span class="new">NEW</span> Out-of-Band Testing (XSS, SSRF, XXE, RFI)</li>
+                    <li><span class="new">NEW</span> 7 AI Providers + Offensive Models</li>
+                    <li><span class="new">NEW</span> OpenRouter &amp; Zai Providers</li>
+                    <li><span class="new">NEW</span> RAG-Augmented Payload Generation</li>
+                    <li><span class="new">NEW</span> Cross-Product Finding Correlation</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Features Section -->
+<div class="container">
+    <section id="features" class="features">
+        <div class="section-header">
+            <div class="section-tag">PRO FEATURES</div>
+            <h2>Built for<br>Offensive Security</h2>
+            <p class="section-description">
+                Advanced capabilities designed for penetration testers,
+                red teamers, and bug bounty hunters.
+            </p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">&#x26A1;</div>
+                <h3>Phase 2 Active Verification</h3>
+                <p>
+                    AI generates targeted payloads to confirm findings with
+                    real exploitation attempts. Moves beyond passive analysis
+                    to proof-of-exploitation evidence.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">&#x1F6E1;&#xFE0F;</div>
+                <h3>WAF Detection &amp; Evasion</h3>
+                <p>
+                    Automatically fingerprint 25+ WAF vendors including
+                    Cloudflare, Akamai, ModSecurity, AWS WAF, and Imperva.
+                    AI generates bypass payloads tailored to each WAF.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">&#x1F4E1;</div>
+                <h3>Out-of-Band Testing</h3>
+                <p>
+                    Detect blind vulnerabilities with OOB callbacks.
+                    Test for blind XSS, SSRF, XXE, RFI, and blind
+                    SQL injection that traditional scanners miss.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">&#x1F9E0;</div>
+                <h3>7 AI Providers</h3>
+                <p>
+                    Ollama, OpenAI, Claude, Gemini, Claude Code,
+                    OpenRouter, and Zai. Use local offensive models
+                    like Dolphin3-Cyber for zero-data-exposure testing.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">&#x1F3AF;</div>
+                <h3>250+ Curated Payloads</h3>
+                <p>
+                    Hand-crafted OWASP payloads organized by vulnerability
+                    class and WAF type. Double-encoding, unicode normalization,
+                    comment injection, and vendor-specific bypasses.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">&#x1F517;</div>
+                <h3>Cross-Product Correlation</h3>
+                <p>
+                    Findings correlated with SILENTCHAIN Enterprise and
+                    Sn1per results via the RAG engine. Automatic severity
+                    escalation when multiple tools agree.
+                </p>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Video Demo -->
+<div class="container">
+    <section id="demo" class="video-showcase">
+        <div class="section-header">
+            <div class="section-tag">SEE IT IN ACTION</div>
+            <h2>SILENTCHAIN Professional<br>Demo</h2>
+            <p class="section-description">
+                Watch how SILENTCHAIN AI detects and actively verifies
+                vulnerabilities in real time inside Burp Suite.
+            </p>
+        </div>
+        <div class="video-wrapper">
+            <iframe
+                src="https://www.youtube-nocookie.com/embed/yWJK4CvS5pE?rel=0&modestbranding=1&color=white"
+                title="SILENTCHAIN AI Professional Demo"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+            </iframe>
+        </div>
+    </section>
+</div>
+
+<!-- AI Providers -->
+<div class="container">
+    <section class="providers">
+        <div class="section-header">
+            <div class="section-tag">AI PROVIDERS</div>
+            <h2>7 AI Backends</h2>
+            <p class="section-description">
+                Choose cloud providers for accuracy or local models
+                for air-gapped, zero-data-exposure testing.
+            </p>
+        </div>
+
+        <div class="providers-grid">
+            <div class="provider-card">
+                <div class="provider-icon">&#x1F999;</div>
+                <h4>Ollama</h4>
+                <p class="provider-note">Local models, 100% private</p>
+                <span class="provider-highlight">Zero data exposure</span>
+            </div>
+            <div class="provider-card">
+                <div class="provider-icon">&#x2728;</div>
+                <h4>OpenAI</h4>
+                <p class="provider-note">GPT-4o, GPT-4</p>
+                <span class="provider-highlight">Highest accuracy</span>
+            </div>
+            <div class="provider-card">
+                <div class="provider-icon">&#x1F916;</div>
+                <h4>Claude</h4>
+                <p class="provider-note">Claude 4, Sonnet, Haiku</p>
+                <span class="provider-highlight">Deep reasoning</span>
+            </div>
+            <div class="provider-card">
+                <div class="provider-icon">&#x1F48E;</div>
+                <h4>Gemini</h4>
+                <p class="provider-note">Gemini Pro, Flash</p>
+                <span class="provider-highlight">Fast analysis</span>
+            </div>
+            <div class="provider-card">
+                <div class="provider-icon">&#x1F4BB;</div>
+                <h4>Claude Code</h4>
+                <p class="provider-note">Autonomous tool use</p>
+                <span class="provider-highlight">CLI integration</span>
+            </div>
+            <div class="provider-card">
+                <div class="provider-icon">&#x1F310;</div>
+                <h4>OpenRouter</h4>
+                <p class="provider-note">100+ models</p>
+                <span class="provider-highlight">Model marketplace</span>
+            </div>
+            <div class="provider-card">
+                <div class="provider-icon">&#x1F525;</div>
+                <h4>Zai</h4>
+                <p class="provider-note">Offensive models</p>
+                <span class="provider-highlight">Security-focused</span>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Final CTA -->
+<div class="container">
+    <section class="final-cta">
+        <div class="cta-box">
+            <h2>Upgrade Your<br>Burp Suite</h2>
+            <p>Join the waitlist for SILENTCHAIN Professional. Active verification, WAF evasion, and offensive AI models for Burp Suite.</p>
+            <div class="cta-buttons">
+                <a href="https://sn1persecurity.com/wordpress/silentchain-ai-waitlist/" class="cta-button cta-button-large" target="_blank">
+                    Join the Waitlist
+                </a>
+                <a href="https://github.com/silentchainai/SILENTCHAIN" class="secondary-button">
+                    Download Community (Free)
+                </a>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <a href="/" class="logo" style="margin-bottom: 20px;"><img src="silentchainai-logo-transparent.png" alt="SILENTCHAIN AI" class="logo-icon"><span class="logo-text">SILENTCHAIN</span></a>
+                <p style="color: var(--text-muted); font-size: 14px; margin-top: 20px;">
+                    AI-powered security testing for the modern web.
+                    Open source, privacy-focused, and built for professionals.
+                </p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Product</h4>
+                <ul class="footer-links">
+                    <li><a href="/#products">Products</a></li>
+                    <li><a href="/#features">Features</a></li>
+                    <li><a href="/#pricing">Pricing</a></li>
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN/blob/main/README.md">Documentation</a></li>
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN/blob/main/CHANGELOG.md">Changelog</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul class="footer-links">
+                    <li><a href="/blog/">Blog</a></li>
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN">GitHub</a></li>
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN/blob/main/INSTALLATION.md">Installation Guide</a></li>
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN/blob/main/QUICKSTART.md">Quick Start</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Company</h4>
+                <ul class="footer-links">
+                    <li><a href="/about.html">About</a></li>
+                    <li><a href="mailto:support@silentchain.ai">Contact</a></li>
+                    <li><a href="/privacy.html">Privacy Policy</a></li>
+                    <li><a href="/terms.html">Terms of Service</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Connect</h4>
+                <ul class="footer-links">
+                    <li><a href="https://x.com/silentchainai" target="_blank">X (Twitter)</a></li>
+                    <li><a href="https://github.com/silentchainai" target="_blank">GitHub</a></li>
+                    <li><a href="https://youtube.com/@silentchainai" target="_blank">YouTube</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 SILENTCHAIN AI. Built for the security community.</p>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

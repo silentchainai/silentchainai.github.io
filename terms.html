@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - SILENTCHAIN AI</title>
+    <meta name="description" content="SILENTCHAIN AI Terms of Service. Terms and conditions governing the use of our products and services.">
+    <link rel="icon" type="image/png" href="silentchainai-logo-transparent.png">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@700;800&display=swap');
+
+        :root {
+            --bg-dark: #0a0e1a;
+            --bg-darker: #050810;
+            --accent-cyan: #4de8ff;
+            --accent-blue: #0080f0;
+            --accent-green: #00ff88;
+            --text-light: #e0e6ed;
+            --text-muted: #8892a6;
+            --card-bg: rgba(10, 25, 50, 0.6);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            line-height: 1.8;
+        }
+
+        .background-grid {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image:
+                linear-gradient(rgba(77, 232, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(77, 232, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none; z-index: 0;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 0;
+        }
+
+        .logo {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-light);
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            flex-shrink: 0;
+        }
+
+        .back-link {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover { color: var(--accent-green); }
+
+        .legal-content {
+            padding: 60px 0 120px;
+        }
+
+        .legal-content h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 42px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .effective-date {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 50px;
+        }
+
+        .legal-content h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 22px;
+            margin-top: 40px;
+            margin-bottom: 16px;
+            color: var(--accent-cyan);
+        }
+
+        .legal-content h3 {
+            font-size: 16px;
+            margin-top: 24px;
+            margin-bottom: 10px;
+            color: var(--text-light);
+        }
+
+        .legal-content p, .legal-content li {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.9;
+            margin-bottom: 14px;
+        }
+
+        .legal-content ul, .legal-content ol {
+            padding-left: 24px;
+            margin-bottom: 16px;
+        }
+
+        .legal-content li { margin-bottom: 8px; }
+
+        .legal-content a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .legal-content a:hover { color: var(--accent-green); }
+
+        .legal-content strong { color: var(--text-light); }
+
+        footer {
+            border-top: 1px solid rgba(77, 232, 255, 0.1);
+            padding: 40px 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        footer a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin: 0 12px;
+            transition: color 0.3s;
+        }
+
+        footer a:hover { color: var(--accent-cyan); }
+
+        @media (max-width: 768px) {
+            .legal-content h1 { font-size: 30px; }
+            .legal-content h2 { font-size: 18px; }
+        }
+    </style>
+</head>
+<body>
+<div class="background-grid"></div>
+
+<div class="container">
+    <nav>
+        <a href="/" class="logo"><img src="silentchainai-logo-transparent.png" alt="SILENTCHAIN AI" class="logo-icon"><span class="logo-text">SILENTCHAIN</span></a>
+        <a href="/" class="back-link">&larr; Back to Home</a>
+    </nav>
+</div>
+
+<div class="container">
+    <div class="legal-content">
+        <h1>Terms of Service</h1>
+        <p class="effective-date">Effective Date: March 31, 2026 &nbsp;|&nbsp; Last Updated: March 31, 2026</p>
+
+        <p>These Terms of Service ("<strong>Terms</strong>") govern your access to and use of the websites, software, and services (collectively, the "<strong>Services</strong>") provided by Sn1perSecurity LLC ("<strong>Sn1perSecurity</strong>," "<strong>we</strong>," "<strong>us</strong>," or "<strong>our</strong>"). By accessing or using our Services, you agree to be bound by these Terms. If you do not agree, do not use our Services.</p>
+
+        <h2>1. Definitions</h2>
+        <ul>
+            <li><strong>"Software"</strong> refers to SILENTCHAIN AI products including Community Edition, Professional Edition, Enterprise Edition, and SOURCE Edition.</li>
+            <li><strong>"User," "you," "your"</strong> refers to the individual or entity accessing or using the Services.</li>
+            <li><strong>"License"</strong> refers to the rights granted to you to use our paid Software editions under the applicable license agreement.</li>
+        </ul>
+
+        <h2>2. Eligibility</h2>
+        <p>You must be at least 18 years of age (or the age of majority in your jurisdiction) to use our Services. By using our Services, you represent that you meet this requirement and have the legal capacity to enter into these Terms.</p>
+
+        <h2>3. Accounts</h2>
+        <p>Some features of our Services may require you to create an account. You are responsible for:</p>
+        <ul>
+            <li>Maintaining the confidentiality of your account credentials</li>
+            <li>All activities that occur under your account</li>
+            <li>Notifying us immediately of any unauthorized access or use of your account</li>
+        </ul>
+        <p>We reserve the right to suspend or terminate accounts that violate these Terms.</p>
+
+        <h2>4. Permitted Use</h2>
+        <p>Our Software is designed for <strong>authorized security testing</strong>. You agree to use our Services only:</p>
+        <ul>
+            <li>On systems and applications you own or have explicit written authorization to test</li>
+            <li>In compliance with all applicable local, state, national, and international laws and regulations</li>
+            <li>In accordance with responsible disclosure practices</li>
+        </ul>
+
+        <h2>5. Prohibited Use</h2>
+        <p>You may <strong>not</strong> use our Services to:</p>
+        <ul>
+            <li>Conduct unauthorized security testing, hacking, or attacks on systems you do not own or have permission to test</li>
+            <li>Engage in any activity that violates applicable computer fraud, abuse, or cybercrime laws (including but not limited to the CFAA, CMA, or equivalent laws in your jurisdiction)</li>
+            <li>Distribute malware, ransomware, or any malicious software</li>
+            <li>Conduct denial-of-service attacks or disrupt the availability of any system</li>
+            <li>Collect, harvest, or process personal data of third parties without a lawful basis</li>
+            <li>Reverse-engineer, decompile, or disassemble any proprietary components of our Software (except as permitted by applicable law)</li>
+            <li>Circumvent or disable any license enforcement, authentication, or access control mechanisms</li>
+            <li>Redistribute, resell, sublicense, or share license keys for paid editions without our written consent</li>
+            <li>Use the Software to develop a competing product or service</li>
+        </ul>
+
+        <h2>6. Software Licenses</h2>
+
+        <h3>6.1 Community Edition</h3>
+        <p>SILENTCHAIN Community Edition is released under an open-source license as specified in the repository's LICENSE file. Your use is governed by the terms of that license.</p>
+
+        <h3>6.2 Paid Editions (Professional, Enterprise, SOURCE)</h3>
+        <p>Paid editions are licensed under a separate commercial license agreement provided at the time of purchase. License keys are personal and non-transferable unless otherwise agreed in writing. Each license specifies the number of authorized users and installations.</p>
+
+        <h3>6.3 Trial and Beta Access</h3>
+        <p>Trial or beta software is provided "as is" for evaluation purposes only. We may modify, suspend, or discontinue trial/beta features at any time without notice.</p>
+
+        <h2>7. Payments and Refunds</h2>
+        <ul>
+            <li>All fees are stated in US Dollars and are exclusive of applicable taxes.</li>
+            <li>Subscription licenses renew automatically unless cancelled before the renewal date.</li>
+            <li>We offer a 14-day refund policy from the date of purchase for annual licenses. Refund requests should be sent to <a href="mailto:support@silentchain.ai">support@silentchain.ai</a>.</li>
+            <li>No refunds are available for monthly subscriptions after the billing period has begun.</li>
+        </ul>
+
+        <h2>8. Intellectual Property</h2>
+        <p>All rights, title, and interest in and to the Services (excluding open-source components) are and remain the exclusive property of Sn1perSecurity LLC. Our trademarks, logos, and brand names may not be used without prior written permission. Nothing in these Terms transfers any intellectual property rights to you.</p>
+
+        <h2>9. User Content and Feedback</h2>
+        <p>If you submit feedback, suggestions, or ideas about our Services, you grant us a non-exclusive, royalty-free, worldwide license to use, modify, and incorporate such feedback into our products without obligation to you.</p>
+
+        <h2>10. Disclaimer of Warranties</h2>
+        <p><strong>THE SERVICES ARE PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, AND ACCURACY.</strong></p>
+        <p>We do not warrant that:</p>
+        <ul>
+            <li>The Services will be uninterrupted, error-free, or secure</li>
+            <li>The Software will detect all vulnerabilities or security issues</li>
+            <li>Results or findings generated by the Software are complete or accurate</li>
+            <li>The Software is suitable for any specific regulatory compliance requirement</li>
+        </ul>
+        <p>Security testing inherently involves risk. You are solely responsible for evaluating the suitability of the Software for your use case and for the consequences of any actions taken based on its output.</p>
+
+        <h2>11. Limitation of Liability</h2>
+        <p><strong>TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL SN1PERSECURITY LLC, ITS OFFICERS, DIRECTORS, EMPLOYEES, OR AGENTS BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING BUT NOT LIMITED TO LOSS OF PROFITS, DATA, OR BUSINESS OPPORTUNITY, ARISING OUT OF OR IN CONNECTION WITH YOUR USE OF THE SERVICES.</strong></p>
+        <p>Our total aggregate liability for any claim arising from or related to these Terms or the Services shall not exceed the amount you paid to us in the twelve (12) months preceding the claim, or $100 USD, whichever is greater.</p>
+
+        <h2>12. Indemnification</h2>
+        <p>You agree to indemnify, defend, and hold harmless Sn1perSecurity LLC and its officers, directors, employees, and agents from and against any claims, liabilities, damages, losses, and expenses (including reasonable legal fees) arising out of or related to:</p>
+        <ul>
+            <li>Your use of the Services</li>
+            <li>Your violation of these Terms</li>
+            <li>Your violation of any applicable law or third-party rights</li>
+            <li>Unauthorized or unlawful security testing conducted using our Software</li>
+        </ul>
+
+        <h2>13. Third-Party Services</h2>
+        <p>Our Software may integrate with third-party AI providers (e.g., Ollama, OpenAI, Google Gemini, Anthropic Claude). Your use of these services is subject to their respective terms and privacy policies. We are not responsible for third-party service availability, accuracy, or data handling practices.</p>
+
+        <h2>14. Termination</h2>
+        <p>We may suspend or terminate your access to the Services at any time, with or without cause, and with or without notice. Upon termination:</p>
+        <ul>
+            <li>Your license to use paid Software editions is immediately revoked</li>
+            <li>You must cease all use and destroy any copies of proprietary Software</li>
+            <li>Sections that by their nature should survive (including Disclaimers, Limitation of Liability, Indemnification, and Governing Law) will remain in effect</li>
+        </ul>
+
+        <h2>15. Export Compliance</h2>
+        <p>You agree to comply with all applicable export control laws and regulations. You may not export, re-export, or transfer the Software to any country, entity, or person prohibited by applicable laws.</p>
+
+        <h2>16. Governing Law and Dispute Resolution</h2>
+        <p>These Terms are governed by and construed in accordance with the laws of the State of Delaware, United States, without regard to its conflict of laws principles. Any disputes arising out of or relating to these Terms shall be resolved through binding arbitration administered by the American Arbitration Association (AAA), except that either party may seek injunctive relief in any court of competent jurisdiction.</p>
+
+        <h2>17. Modifications to These Terms</h2>
+        <p>We reserve the right to modify these Terms at any time. Material changes will be communicated by posting the updated Terms on this page with a revised "Last Updated" date. Continued use of the Services after such changes constitutes acceptance. If you do not agree with the updated Terms, you must stop using the Services.</p>
+
+        <h2>18. Severability</h2>
+        <p>If any provision of these Terms is found to be unenforceable or invalid, that provision will be limited or eliminated to the minimum extent necessary, and the remaining provisions will remain in full force and effect.</p>
+
+        <h2>19. Entire Agreement</h2>
+        <p>These Terms, together with our <a href="/privacy.html">Privacy Policy</a> and any applicable license agreement, constitute the entire agreement between you and Sn1perSecurity LLC regarding the Services and supersede all prior agreements and understandings.</p>
+
+        <h2>20. Contact Us</h2>
+        <p>If you have questions about these Terms, contact us at:</p>
+        <p>
+            <strong>Sn1perSecurity LLC</strong><br>
+            Email: <a href="mailto:legal@silentchain.ai">legal@silentchain.ai</a><br>
+            Website: <a href="https://silentchain.ai">silentchain.ai</a>
+        </p>
+    </div>
+</div>
+
+<footer>
+    <div class="container">
+        <p>
+            <a href="/">Home</a>
+            <a href="/privacy.html">Privacy Policy</a>
+            <a href="/terms.html">Terms of Service</a>
+            <a href="mailto:support@silentchain.ai">Contact</a>
+        </p>
+        <p style="margin-top: 16px;">&copy; 2026 SILENTCHAIN AI by Sn1perSecurity LLC. All rights reserved.</p>
+    </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SILENTCHAIN SOURCE — AI Static Code Vulnerability Scanner</title>
+    <meta name="description" content="AI-powered static code vulnerability scanner with 4-phase pipeline: Discovery, AI Analysis, PoC Generation, and Attack Chain Construction. Supports Ollama, OpenAI, Claude, Gemini. SARIF output for CI/CD integration.">
+    <meta name="keywords" content="static code analysis, SAST, AI vulnerability scanner, source code security, code review, SARIF, CI/CD security, OWASP, exploit generation, attack chains, ai code audit">
+    <link rel="canonical" href="https://silentchain.ai/source">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://silentchain.ai/source">
+    <meta property="og:title" content="SILENTCHAIN SOURCE — AI Static Code Vulnerability Scanner">
+    <meta property="og:description" content="Find vulnerabilities in source code with AI. 4-phase pipeline from discovery to exploit proof-of-concept. 5 AI providers. SARIF output for CI/CD.">
+    <meta property="og:image" content="https://silentchain.ai/og-image-source.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="SILENTCHAIN SOURCE — AI Static Code Vulnerability Scanner">
+    <meta name="twitter:description" content="Find vulnerabilities in source code with AI. 4-phase pipeline from discovery to exploit proof-of-concept.">
+    <meta name="twitter:image" content="https://silentchain.ai/og-image-source.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="silentchainai-logo-transparent.png">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@700;800&display=swap');
+
+        :root {
+            --bg-dark: #0a0e1a;
+            --bg-darker: #050810;
+            --accent-cyan: #4de8ff;
+            --accent-blue: #0080f0;
+            --accent-green: #00ff88;
+            --accent-orange: #ff6b35;
+            --accent-purple: #a855f7;
+            --text-light: #e0e6ed;
+            --text-muted: #8892a6;
+            --card-bg: rgba(10, 25, 50, 0.6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated Background */
+        .background-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(77, 232, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(77, 232, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .glow-orb {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .orb-1 {
+            background: var(--accent-purple);
+            top: -300px;
+            left: -300px;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .orb-2 {
+            background: var(--accent-blue);
+            bottom: -300px;
+            right: -300px;
+            animation: float 25s ease-in-out infinite reverse;
+        }
+
+        .orb-3 {
+            background: var(--accent-cyan);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse 15s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(100px, 100px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.1; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.2; transform: translate(-50%, -50%) scale(1.2); }
+        }
+
+        /* Content Container */
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 0;
+            border-bottom: 1px solid rgba(77, 232, 255, 0.1);
+            position: relative;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 28px;
+            letter-spacing: -1px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-text {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-cyan);
+        }
+
+        .nav-dropdown {
+            position: relative;
+            padding-bottom: 20px;
+            margin-bottom: -20px;
+        }
+
+        .nav-dropdown > a::after {
+            content: ' \25BE';
+            font-size: 10px;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            min-width: 260px;
+            background: #0c1225;
+            border: 1px solid rgba(77, 232, 255, 0.25);
+            border-radius: 8px;
+            padding: 8px 0;
+            list-style: none;
+            z-index: 1000;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+        }
+
+        .dropdown-menu::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 0;
+            right: 0;
+            height: 20px;
+        }
+
+        .nav-dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu li a {
+            display: block;
+            padding: 10px 24px;
+            color: var(--accent-cyan);
+            text-decoration: none;
+            font-size: 13px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .dropdown-menu li a:hover {
+            color: #fff;
+            background: rgba(77, 232, 255, 0.12);
+        }
+
+        .cta-button {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(77, 232, 255, 0.3);
+        }
+
+        .cta-button-large {
+            padding: 16px 40px;
+            font-size: 16px;
+        }
+
+        .secondary-button {
+            padding: 12px 30px;
+            background: transparent;
+            color: var(--text-light);
+            border: 1px solid rgba(77, 232, 255, 0.3);
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .secondary-button:hover {
+            background: rgba(77, 232, 255, 0.1);
+            border-color: var(--accent-cyan);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 120px 0 80px;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(168, 85, 247, 0.1);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 50px;
+            color: var(--accent-purple);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 30px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        h1 {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 72px;
+            line-height: 1.1;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #ffffff, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .hero-description {
+            font-size: 20px;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto 50px;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+
+        /* Stats Section */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin: 80px 0;
+            padding: 60px 0;
+            border-top: 1px solid rgba(77, 232, 255, 0.1);
+            border-bottom: 1px solid rgba(77, 232, 255, 0.1);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'Syne', sans-serif;
+            font-size: 48px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        /* Section Headers */
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-tag {
+            color: var(--accent-cyan);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 48px;
+            font-weight: 800;
+            margin: 20px 0;
+        }
+
+        .section-description {
+            color: var(--text-muted);
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Pipeline Section */
+        .pipeline {
+            padding: 100px 0;
+        }
+
+        .pipeline-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            position: relative;
+        }
+
+        .pipeline-grid::before {
+            content: '';
+            position: absolute;
+            top: 60px;
+            left: 12.5%;
+            right: 12.5%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue), var(--accent-purple), var(--accent-orange));
+            z-index: 0;
+        }
+
+        .pipeline-step {
+            background: var(--card-bg);
+            border: 1px solid rgba(77, 232, 255, 0.1);
+            border-radius: 16px;
+            padding: 40px 30px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .pipeline-step:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 10px 40px rgba(77, 232, 255, 0.2);
+        }
+
+        .step-number {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 20px;
+            margin: 0 auto 20px;
+            color: white;
+        }
+
+        .step-1 .step-number { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); }
+        .step-2 .step-number { background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); }
+        .step-3 .step-number { background: linear-gradient(135deg, var(--accent-purple), var(--accent-orange)); }
+        .step-4 .step-number { background: linear-gradient(135deg, var(--accent-orange), #ff3366); }
+
+        .pipeline-step h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .pipeline-step p {
+            color: var(--text-muted);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .step-detail {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(77, 232, 255, 0.1);
+            font-size: 12px;
+            color: var(--accent-cyan);
+        }
+
+        /* Features Grid */
+        .features {
+            padding: 100px 0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(77, 232, 255, 0.1);
+            border-radius: 16px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 10px 40px rgba(77, 232, 255, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        /* AI Providers Section */
+        .providers {
+            padding: 100px 0;
+            background: rgba(5, 8, 15, 0.5);
+        }
+
+        .providers-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 24px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .provider-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(77, 232, 255, 0.1);
+            border-radius: 12px;
+            padding: 30px 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+
+        .provider-card:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-3px);
+        }
+
+        .provider-icon {
+            font-size: 36px;
+            margin-bottom: 12px;
+        }
+
+        .provider-card h4 {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .provider-card .provider-note {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .provider-highlight {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 3px 10px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 20px;
+            font-size: 10px;
+            color: var(--accent-green);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* RAG Section */
+        .rag-section {
+            padding: 100px 0;
+        }
+
+        .rag-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .rag-content h2 {
+            text-align: left;
+            font-size: 42px;
+        }
+
+        .rag-content .section-description {
+            text-align: left;
+            margin: 20px 0 30px;
+        }
+
+        .rag-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .rag-stat {
+            background: var(--card-bg);
+            border: 1px solid rgba(77, 232, 255, 0.1);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .rag-stat-number {
+            font-family: 'Syne', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--accent-cyan);
+        }
+
+        .rag-stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        .rag-visual {
+            background: #0d1117;
+            border: 1px solid rgba(77, 232, 255, 0.2);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .rag-visual-header {
+            background: #161b22;
+            padding: 15px 20px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+
+        .rag-visual-body {
+            padding: 30px;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .rag-flow-line {
+            margin-bottom: 8px;
+        }
+
+        .rag-label {
+            color: var(--accent-purple);
+        }
+
+        .rag-arrow {
+            color: var(--text-muted);
+        }
+
+        .rag-source {
+            color: var(--accent-cyan);
+        }
+
+        .rag-result {
+            color: var(--accent-green);
+        }
+
+        .rag-dim {
+            color: var(--text-muted);
+        }
+
+        /* Code Terminal */
+        .code-example {
+            padding: 100px 0;
+            background: rgba(5, 8, 15, 0.5);
+        }
+
+        .code-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .code-terminal {
+            background: #0d1117;
+            border: 1px solid rgba(77, 232, 255, 0.2);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .terminal-header {
+            background: #161b22;
+            padding: 15px 20px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .terminal-body {
+            padding: 30px;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .terminal-line {
+            margin-bottom: 10px;
+        }
+
+        .terminal-prompt { color: var(--accent-green); }
+        .terminal-command { color: var(--accent-cyan); }
+        .terminal-output { color: var(--text-muted); }
+        .terminal-highlight { color: var(--accent-orange); }
+        .terminal-success { color: var(--accent-green); }
+
+        /* CI/CD Integration Section */
+        .cicd-section {
+            padding: 100px 0;
+        }
+
+        .cicd-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .cicd-content h2 {
+            text-align: left;
+            font-size: 42px;
+        }
+
+        .cicd-content .section-description {
+            text-align: left;
+            margin: 20px 0 30px;
+        }
+
+        .cicd-features {
+            list-style: none;
+            padding: 0;
+        }
+
+        .cicd-features li {
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(77, 232, 255, 0.1);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        .cicd-features li:last-child {
+            border-bottom: none;
+        }
+
+        .cicd-check {
+            color: var(--accent-green);
+            font-size: 16px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .cicd-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-sarif {
+            background: rgba(168, 85, 247, 0.15);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            color: var(--accent-purple);
+        }
+
+        .badge-json {
+            background: rgba(77, 232, 255, 0.1);
+            border: 1px solid rgba(77, 232, 255, 0.3);
+            color: var(--accent-cyan);
+        }
+
+        .badge-html {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            color: var(--accent-green);
+        }
+
+        .output-formats {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+
+        /* CTA Section */
+        .final-cta {
+            padding: 120px 0;
+            text-align: center;
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(0, 128, 240, 0.1));
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 24px;
+            padding: 80px 60px;
+            backdrop-filter: blur(20px);
+        }
+
+        .cta-box h2 {
+            margin-bottom: 20px;
+        }
+
+        .cta-box p {
+            color: var(--text-muted);
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-subtext {
+            margin-top: 20px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(77, 232, 255, 0.1);
+            padding: 60px 0 40px;
+            margin-top: 100px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h4 {
+            font-family: 'Syne', sans-serif;
+            margin-bottom: 20px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-cyan);
+        }
+
+        .footer-bottom {
+            padding-top: 30px;
+            border-top: 1px solid rgba(77, 232, 255, 0.05);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .pipeline-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .pipeline-grid::before {
+                display: none;
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .providers-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                flex-wrap: wrap;
+                gap: 16px;
+            }
+
+            .logo {
+                font-size: 20px;
+                gap: 10px;
+                white-space: nowrap;
+            }
+
+            .logo-icon {
+                width: 28px;
+                height: 28px;
+            }
+
+            .nav-links {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 16px 24px;
+                padding-top: 16px;
+                border-top: 1px solid rgba(77, 232, 255, 0.1);
+            }
+
+            nav .cta-button {
+                padding: 8px 20px;
+                font-size: 12px;
+            }
+
+            h1 {
+                font-size: 42px;
+            }
+
+            h2 {
+                font-size: 36px;
+            }
+
+            .pipeline-grid,
+            .features-grid,
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .providers-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .code-grid,
+            .rag-grid,
+            .cicd-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .rag-content h2,
+            .cicd-content h2 {
+                text-align: center;
+            }
+
+            .rag-content .section-description,
+            .cicd-content .section-description {
+                text-align: center;
+            }
+
+            .container {
+                padding: 0 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Background Effects -->
+<div class="background-grid"></div>
+<div class="glow-orb orb-1"></div>
+<div class="glow-orb orb-2"></div>
+<div class="glow-orb orb-3"></div>
+
+<!-- Navigation -->
+<div class="container" style="z-index: 50;">
+    <nav>
+        <a href="/" class="logo"><img src="silentchainai-logo-transparent.png" alt="SILENTCHAIN AI" class="logo-icon"><span class="logo-text">SILENTCHAIN</span></a>
+        <ul class="nav-links">
+            <li class="nav-dropdown">
+                <a href="#">Products</a>
+                <ul class="dropdown-menu">
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN">SILENTCHAIN Community</a></li>
+                    <li><a href="/professional.html">SILENTCHAIN Professional</a></li>
+                    <li><a href="/enterprise.html">SILENTCHAIN Enterprise</a></li>
+                    <li><a href="/source.html">SILENTCHAIN SOURCE</a></li>
+                    <li><a href="https://sn1persecurity.com/" target="_blank">Sn1per AI Core</a></li>
+                </ul>
+            </li>
+            <li><a href="#pipeline">How It Works</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#rag">RAG Engine</a></li>
+        </ul>
+        <a href="https://sn1persecurity.com/wordpress/silentchain-ai-waitlist/" class="cta-button">Get Early Access</a>
+    </nav>
+</div>
+
+<!-- Hero Section -->
+<div class="container">
+    <section class="hero">
+        <div class="hero-badge">New Product &mdash; SILENTCHAIN SOURCE</div>
+        <h1>Find Vulnerabilities<br>In Your Source Code<br>With AI</h1>
+        <p class="hero-description">
+            AI-powered static code analysis that goes beyond pattern matching.
+            SILENTCHAIN SOURCE discovers vulnerabilities, generates proof-of-concept exploits,
+            and maps complete attack chains &mdash; automatically.
+        </p>
+        <div class="hero-buttons">
+            <a href="https://sn1persecurity.com/wordpress/silentchain-ai-waitlist/" class="cta-button cta-button-large">
+                Request Early Access
+            </a>
+            <a href="#pipeline" class="secondary-button">
+                See How It Works
+            </a>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <div class="stats">
+        <div class="stat-item">
+            <div class="stat-number">4</div>
+            <div class="stat-label">Phase Analysis Pipeline</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">5</div>
+            <div class="stat-label">AI Providers Supported</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">80K+</div>
+            <div class="stat-label">RAG Knowledge Documents</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">SARIF</div>
+            <div class="stat-label">CI/CD Native Output</div>
+        </div>
+    </div>
+</div>
+
+<!-- 4-Phase Pipeline Section -->
+<div class="container">
+    <section id="pipeline" class="pipeline">
+        <div class="section-header">
+            <div class="section-tag">HOW IT WORKS</div>
+            <h2>4-Phase Scanning<br>Pipeline</h2>
+            <p class="section-description">
+                From file discovery to exploit proof-of-concept.
+                Each phase feeds the next with AI-enriched context.
+            </p>
+        </div>
+
+        <div class="pipeline-grid">
+            <div class="pipeline-step step-1">
+                <div class="step-number">1</div>
+                <h3>Discovery</h3>
+                <p>
+                    Automatically crawl local codebases or clone Git repos.
+                    Identify security-relevant files, entry points,
+                    and data flows across the project.
+                </p>
+                <div class="step-detail">Local FS &bull; Git repos &bull; File fingerprinting</div>
+            </div>
+
+            <div class="pipeline-step step-2">
+                <div class="step-number">2</div>
+                <h3>AI Analysis</h3>
+                <p>
+                    AI models analyze each target for OWASP Top 10
+                    vulnerabilities with full code context.
+                    RAG provides real-world exploit knowledge.
+                </p>
+                <div class="step-detail">OWASP Top 10 &bull; CWE mapping &bull; RAG context</div>
+            </div>
+
+            <div class="pipeline-step step-3">
+                <div class="step-number">3</div>
+                <h3>PoC Generation</h3>
+                <p>
+                    For each confirmed vulnerability, AI generates
+                    working proof-of-concept exploit code.
+                    Execute safely in a Docker sandbox.
+                </p>
+                <div class="step-detail">Exploit code &bull; Docker sandbox &bull; Safe execution</div>
+            </div>
+
+            <div class="pipeline-step step-4">
+                <div class="step-number">4</div>
+                <h3>Attack Chains</h3>
+                <p>
+                    Connect related findings into multi-step attack
+                    chains that demonstrate real-world impact.
+                    Visualize data flow from source to sink.
+                </p>
+                <div class="step-detail">Chain mapping &bull; Impact analysis &bull; Data flow</div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Features Section -->
+<div class="container">
+    <section id="features" class="features">
+        <div class="section-header">
+            <div class="section-tag">FEATURES</div>
+            <h2>Built for Security<br>Engineers</h2>
+            <p class="section-description">
+                Everything you need to find, verify, and report
+                source code vulnerabilities at scale.
+            </p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">&#x1F9E0;</div>
+                <h3>Multi-AI Analysis</h3>
+                <p>
+                    Choose your AI backend: Ollama for local/private analysis,
+                    OpenAI GPT-4, Claude, Gemini, or Claude Code CLI
+                    for autonomous code auditing with tool use.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">&#x1F6E1;&#xFE0F;</div>
+                <h3>Docker Sandbox</h3>
+                <p>
+                    AI-generated exploit PoCs run in isolated Docker containers.
+                    Verify vulnerabilities safely without risking your
+                    development environment.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">&#x1F517;</div>
+                <h3>Attack Chain Mapping</h3>
+                <p>
+                    Automatically connect related findings into multi-step
+                    attack chains. Visualize data flow from user input
+                    to exploitable sink.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">&#x1F4CA;</div>
+                <h3>Advisory Reports</h3>
+                <p>
+                    Generate professional HTML vulnerability reports
+                    with severity ratings, CWE classifications, code
+                    snippets, and remediation guidance.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">&#x26A1;</div>
+                <h3>Real-Time Web UI</h3>
+                <p>
+                    React 19 dashboard with WebSocket live streaming.
+                    Watch findings appear in real time as scans progress.
+                    Filter, triage, and export from the browser.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">&#x1F50D;</div>
+                <h3>Cross-Product Correlation</h3>
+                <p>
+                    Connect SOURCE findings with SILENTCHAIN Enterprise
+                    and Sn1per results. Automatic severity escalation
+                    when multiple products corroborate a finding.
+                </p>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- AI Providers Section -->
+<section class="providers">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag">AI PROVIDERS</div>
+            <h2>Your AI, Your Choice</h2>
+            <p class="section-description">
+                Run fully local with Ollama for zero data exposure,
+                or use cloud models for maximum accuracy.
+            </p>
+        </div>
+
+        <div class="providers-grid">
+            <div class="provider-card">
+                <div class="provider-icon">&#x1F999;</div>
+                <h4>Ollama</h4>
+                <p class="provider-note">100% local, private</p>
+                <span class="provider-highlight">Zero data exposure</span>
+            </div>
+            <div class="provider-card">
+                <div class="provider-icon">&#x2728;</div>
+                <h4>OpenAI</h4>
+                <p class="provider-note">GPT-4o, GPT-4</p>
+            </div>
+            <div class="provider-card">
+                <div class="provider-icon">&#x1F4AC;</div>
+                <h4>Claude API</h4>
+                <p class="provider-note">Opus, Sonnet, Haiku</p>
+            </div>
+            <div class="provider-card">
+                <div class="provider-icon">&#x1F48E;</div>
+                <h4>Gemini</h4>
+                <p class="provider-note">Pro, Ultra</p>
+            </div>
+            <div class="provider-card">
+                <div class="provider-icon">&#x1F4BB;</div>
+                <h4>Claude Code</h4>
+                <p class="provider-note">Autonomous audit</p>
+                <span class="provider-highlight">Tool use</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- RAG Knowledge Engine Section -->
+<div class="container">
+    <section id="rag" class="rag-section">
+        <div class="rag-grid">
+            <div class="rag-content">
+                <div class="section-tag">RAG KNOWLEDGE ENGINE</div>
+                <h2>Every Finding<br>Backed by Real<br>Exploit Intelligence</h2>
+                <p class="section-description">
+                    SILENTCHAIN SOURCE queries a vector knowledge base of 80,000+
+                    security documents before every analysis. Your AI doesn't guess &mdash;
+                    it references real vulnerabilities, real exploits, and real attack patterns.
+                </p>
+                <div class="rag-stats">
+                    <div class="rag-stat">
+                        <div class="rag-stat-number">80K+</div>
+                        <div class="rag-stat-label">Knowledge Base Documents</div>
+                    </div>
+                    <div class="rag-stat">
+                        <div class="rag-stat-number">46K+</div>
+                        <div class="rag-stat-label">Exploit-DB Entries</div>
+                    </div>
+                    <div class="rag-stat">
+                        <div class="rag-stat-number">6.5K+</div>
+                        <div class="rag-stat-label">HackerOne Reports</div>
+                    </div>
+                    <div class="rag-stat">
+                        <div class="rag-stat-number">25+</div>
+                        <div class="rag-stat-label">Knowledge Sources</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rag-visual">
+                <div class="rag-visual-header">
+                    <span class="terminal-dot dot-red"></span>
+                    <span class="terminal-dot dot-yellow"></span>
+                    <span class="terminal-dot dot-green"></span>
+                </div>
+                <div class="rag-visual-body">
+                    <div class="rag-flow-line">
+                        <span class="rag-dim">[SOURCE]</span> <span class="terminal-output">Analyzing: auth/login.py</span>
+                    </div>
+                    <div class="rag-flow-line">
+                        <span class="rag-dim">[AI]</span> <span class="terminal-output">Potential SQL injection in query()</span>
+                    </div>
+                    <div class="rag-flow-line" style="margin-top: 16px;">
+                        <span class="rag-label">[RAG]</span> <span class="rag-arrow">Retrieving context...</span>
+                    </div>
+                    <div class="rag-flow-line">
+                        <span class="rag-source">&nbsp;&nbsp;&#8627; CWE-89:</span> <span class="rag-dim">SQL Injection (OWASP A03)</span>
+                    </div>
+                    <div class="rag-flow-line">
+                        <span class="rag-source">&nbsp;&nbsp;&#8627; CVE-2024-1234:</span> <span class="rag-dim">Similar pattern in Django ORM</span>
+                    </div>
+                    <div class="rag-flow-line">
+                        <span class="rag-source">&nbsp;&nbsp;&#8627; Exploit-DB #51823:</span> <span class="rag-dim">Auth bypass via SQLi</span>
+                    </div>
+                    <div class="rag-flow-line">
+                        <span class="rag-source">&nbsp;&nbsp;&#8627; HackerOne #1847291:</span> <span class="rag-dim">$15K bounty, same sink</span>
+                    </div>
+                    <div class="rag-flow-line" style="margin-top: 16px;">
+                        <span class="rag-result">&#10003; Finding enriched</span> <span class="rag-dim">&mdash; 4 references, confidence: HIGH</span>
+                    </div>
+                    <div class="rag-flow-line">
+                        <span class="rag-result">&#10003; PoC generated</span> <span class="rag-dim">&mdash; based on Exploit-DB pattern</span>
+                    </div>
+                    <div class="rag-flow-line">
+                        <span class="rag-result">&#10003; Feedback sent</span> <span class="rag-dim">&mdash; KB updated for next scan</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- CLI / Quick Start Section -->
+<section class="code-example">
+    <div class="container">
+        <div class="code-grid">
+            <div>
+                <div class="section-tag">QUICK START</div>
+                <h2>Scan in<br>60 Seconds</h2>
+                <p class="section-description" style="margin: 30px 0; text-align: left;">
+                    CLI-first design. Point at a codebase, pick your AI, get findings.
+                    Or launch the web UI for a full dashboard experience.
+                </p>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 15px 0; border-bottom: 1px solid rgba(77, 232, 255, 0.1);">
+                        <strong style="color: var(--accent-cyan);">01.</strong>
+                        Install with pip
+                    </li>
+                    <li style="padding: 15px 0; border-bottom: 1px solid rgba(77, 232, 255, 0.1);">
+                        <strong style="color: var(--accent-cyan);">02.</strong>
+                        Scan a local project or Git repo
+                    </li>
+                    <li style="padding: 15px 0; border-bottom: 1px solid rgba(77, 232, 255, 0.1);">
+                        <strong style="color: var(--accent-cyan);">03.</strong>
+                        Review findings in the web UI
+                    </li>
+                    <li style="padding: 15px 0;">
+                        <strong style="color: var(--accent-cyan);">04.</strong>
+                        Export SARIF for your CI/CD pipeline
+                    </li>
+                </ul>
+            </div>
+
+            <div class="code-terminal">
+                <div class="terminal-header">
+                    <span class="terminal-dot dot-red"></span>
+                    <span class="terminal-dot dot-yellow"></span>
+                    <span class="terminal-dot dot-green"></span>
+                </div>
+                <div class="terminal-body">
+                    <div class="terminal-line">
+                        <span class="terminal-prompt">$</span>
+                        <span class="terminal-command"> pip install silentchain-source</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="terminal-output">&#10003; Installed silentchain-source</span>
+                    </div>
+                    <div class="terminal-line" style="margin-top: 20px;">
+                        <span class="terminal-prompt">$</span>
+                        <span class="terminal-command"> silentchain-source scan --path ./myapp</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="terminal-output">[Discovery] Scanning 342 files...</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="terminal-output">[AI] Analyzing with Ollama (llama3)...</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="terminal-highlight">[Finding] SQL Injection in auth/login.py:47</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="terminal-highlight">[Finding] XSS in templates/profile.html:12</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="terminal-highlight">[Finding] SSRF in api/proxy.py:89</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="terminal-output">[PoC] Generated 3 exploit PoCs</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="terminal-output">[Chain] Mapped 1 attack chain</span>
+                    </div>
+                    <div class="terminal-line" style="margin-top: 10px;">
+                        <span class="terminal-success">&#10003; Scan complete: 3 High, 2 Medium, 1 Low</span>
+                    </div>
+                    <div class="terminal-line" style="margin-top: 20px;">
+                        <span class="terminal-prompt">$</span>
+                        <span class="terminal-command"> silentchain-source serve --port 9099</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="terminal-success">&#10003; Web UI at http://localhost:9099</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SARIF / CI/CD Integration Section -->
+<div class="container">
+    <section class="cicd-section">
+        <div class="cicd-grid">
+            <div class="code-terminal">
+                <div class="terminal-header">
+                    <span class="terminal-dot dot-red"></span>
+                    <span class="terminal-dot dot-yellow"></span>
+                    <span class="terminal-dot dot-green"></span>
+                </div>
+                <div class="terminal-body">
+                    <div class="terminal-line">
+                        <span class="rag-dim"># GitHub Actions example</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="terminal-command">- name:</span> <span class="terminal-output">SILENTCHAIN SOURCE Scan</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="terminal-command">&nbsp;&nbsp;run:</span> <span class="terminal-output">|</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="terminal-output">&nbsp;&nbsp;&nbsp;&nbsp;silentchain-source scan \</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="terminal-output">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--path . \</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="terminal-output">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--output results.sarif \</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="terminal-output">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--format sarif</span>
+                    </div>
+                    <div class="terminal-line" style="margin-top: 16px;">
+                        <span class="terminal-command">- name:</span> <span class="terminal-output">Upload SARIF</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="terminal-command">&nbsp;&nbsp;uses:</span> <span class="rag-source">github/codeql-action/upload-sarif@v3</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="terminal-command">&nbsp;&nbsp;with:</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="terminal-output">&nbsp;&nbsp;&nbsp;&nbsp;sarif_file: results.sarif</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cicd-content">
+                <div class="section-tag">CI/CD INTEGRATION</div>
+                <h2>Ship Secure<br>Code, Every<br>Commit</h2>
+                <p class="section-description">
+                    SARIF output integrates with GitHub Code Scanning,
+                    GitLab SAST, and any CI/CD pipeline that speaks SARIF.
+                    Block vulnerable code before it reaches production.
+                </p>
+                <ul class="cicd-features">
+                    <li>
+                        <span class="cicd-check">&#10003;</span>
+                        <span>SARIF v2.1 output &mdash; native GitHub Code Scanning integration</span>
+                    </li>
+                    <li>
+                        <span class="cicd-check">&#10003;</span>
+                        <span>JSON and HTML report formats for custom workflows</span>
+                    </li>
+                    <li>
+                        <span class="cicd-check">&#10003;</span>
+                        <span>Exit codes for pass/fail gating in CI pipelines</span>
+                    </li>
+                    <li>
+                        <span class="cicd-check">&#10003;</span>
+                        <span>Docker image available for containerized scanning</span>
+                    </li>
+                    <li>
+                        <span class="cicd-check">&#10003;</span>
+                        <span>Git repo URL input &mdash; scan any branch or commit</span>
+                    </li>
+                </ul>
+                <div class="output-formats">
+                    <span class="cicd-badge badge-sarif">SARIF v2.1</span>
+                    <span class="cicd-badge badge-json">JSON</span>
+                    <span class="cicd-badge badge-html">HTML Advisory</span>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Final CTA -->
+<div class="container">
+    <section class="final-cta">
+        <div class="cta-box">
+            <h2>Get Early Access to<br>SILENTCHAIN SOURCE</h2>
+            <p>Be first to scan your codebase with AI-powered static analysis, PoC generation, and attack chain mapping.</p>
+            <div class="cta-buttons">
+                <a href="https://sn1persecurity.com/wordpress/silentchain-ai-waitlist/" class="cta-button cta-button-large">
+                    Request Early Access
+                </a>
+                <a href="/" class="secondary-button">
+                    Explore All Products
+                </a>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <a href="/" class="logo" style="margin-bottom: 20px;"><img src="silentchainai-logo-transparent.png" alt="SILENTCHAIN AI" class="logo-icon"><span class="logo-text">SILENTCHAIN</span></a>
+                <p style="color: var(--text-muted); font-size: 14px;">
+                    AI-powered security testing for the modern web.
+                    Open source, privacy-focused, and built for professionals.
+                </p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Products</h4>
+                <ul class="footer-links">
+                    <li><a href="/#products">Products</a></li>
+                    <li><a href="/">Community Edition</a></li>
+                    <li><a href="/professional.html">Professional</a></li>
+                    <li><a href="/source.html">SOURCE</a></li>
+                    <li><a href="https://sn1persecurity.com/" target="_blank">Sn1per AI Core</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul class="footer-links">
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN">GitHub</a></li>
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN/blob/main/README.md">Documentation</a></li>
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN/blob/main/CHANGELOG.md">Changelog</a></li>
+                    <li><a href="/blog/">Blog</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Company</h4>
+                <ul class="footer-links">
+                    <li><a href="/about.html">About</a></li>
+                    <li><a href="mailto:support@silentchain.ai">Contact</a></li>
+                    <li><a href="/privacy.html">Privacy Policy</a></li>
+                    <li><a href="/terms.html">Terms of Service</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Connect</h4>
+                <ul class="footer-links">
+                    <li><a href="https://x.com/silentchainai" target="_blank">X (Twitter)</a></li>
+                    <li><a href="https://github.com/silentchainai" target="_blank">GitHub</a></li>
+                    <li><a href="https://youtube.com/@silentchainai" target="_blank">YouTube</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 SILENTCHAIN AI. Built for the security community.</p>
+        </div>
+    </div>
+</footer>
+</body>
+</html>
