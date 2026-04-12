@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Privacy Policy - SILENTCHAIN AI</title>
     <meta name="description" content="SILENTCHAIN AI Privacy Policy. Learn how we collect, use, and protect your personal information.">
-    <link rel="icon" type="image/png" href="silentchainai-logo-transparent.png">
+    <link rel="icon" type="image/png" href="images/silentchainai-logo-transparent.png">
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@700;800&display=swap');
@@ -175,7 +175,7 @@
 
 <div class="container">
     <nav>
-        <a href="/" class="logo"><img src="silentchainai-logo-transparent.png" alt="SILENTCHAIN AI" class="logo-icon"><span class="logo-text">SILENTCHAIN</span></a>
+        <a href="/" class="logo"><img src="images/silentchainai-logo-transparent.png" alt="SILENTCHAIN AI" class="logo-icon"><span class="logo-text">SILENTCHAIN</span></a>
         <a href="/" class="back-link">&larr; Back to Home</a>
     </nav>
 </div>
@@ -183,7 +183,7 @@
 <div class="container">
     <div class="legal-content">
         <h1>Privacy Policy</h1>
-        <p class="effective-date">Effective Date: March 31, 2026 &nbsp;|&nbsp; Last Updated: March 31, 2026</p>
+        <p class="effective-date">Effective Date: March 31, 2026 &nbsp;|&nbsp; Last Updated: April 12, 2026</p>
 
         <p>Sn1perSecurity LLC ("<strong>Sn1perSecurity</strong>," "<strong>we</strong>," "<strong>us</strong>," or "<strong>our</strong>") operates the SILENTCHAIN AI website at <strong>silentchain.ai</strong> and related products and services (collectively, the "<strong>Services</strong>"). This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or use our Services.</p>
 
@@ -203,11 +203,43 @@
             <li><strong>Cookies &amp; Similar Technologies:</strong> We use essential cookies for site functionality and optional analytics cookies (see Section 5).</li>
         </ul>
 
-        <h3>1.3 Information We Do NOT Collect</h3>
+        <h3>1.3 Information We Do NOT Collect from Sn1perSecurity Servers</h3>
         <ul>
-            <li><strong>Scan Data:</strong> SILENTCHAIN software runs locally on your machine. We do not receive, transmit, or store any target URLs, HTTP traffic, vulnerability findings, or scan results. When you use Ollama as your AI provider, all processing is entirely local.</li>
-            <li><strong>Source Code:</strong> SILENTCHAIN SOURCE analyzes code locally. We never access, collect, or store your source code.</li>
+            <li><strong>Scan Data:</strong> SILENTCHAIN software runs locally on your machine. <strong>Sn1perSecurity</strong> does not receive, transmit, or store any target URLs, HTTP traffic, vulnerability findings, or scan results on our servers.</li>
+            <li><strong>Source Code:</strong> SILENTCHAIN SOURCE analyzes code locally. Sn1perSecurity never accesses, collects, or stores your source code on our servers.</li>
         </ul>
+
+        <h3>1.4 AI Provider Data Transmission (Important)</h3>
+        <p><strong>This section describes how your data may be transmitted to third-party AI providers when you use SILENTCHAIN products.</strong></p>
+        <p>SILENTCHAIN products use AI providers to analyze HTTP traffic, source code, and generate vulnerability findings. <strong>When you configure a cloud-based AI provider, portions of your scan data are transmitted to that provider's API for analysis.</strong> The specific data transmitted depends on the scan type and provider:</p>
+        <ul>
+            <li><strong>SILENTCHAIN Enterprise / Pro / Community (HTTP scanning):</strong> HTTP request and response content (URLs, headers, parameters, body content), vulnerability finding metadata (severity, CWE, parameter names), and Phase 2 active verification payloads may be sent to your configured AI provider.</li>
+            <li><strong>SILENTCHAIN SOURCE (static code analysis):</strong> Source code snippets, file paths, function signatures, data-flow analysis, and vulnerability context may be sent to your configured AI provider.</li>
+        </ul>
+        <p><strong>Supported AI providers and their data handling:</strong></p>
+        <ul>
+            <li><strong>Ollama (local):</strong> All AI processing occurs entirely on your machine. No data leaves your infrastructure. <strong>This is the only provider that keeps all data fully local.</strong></li>
+            <li><strong>OpenAI:</strong> Data is transmitted to OpenAI's API servers. Subject to <a href="https://openai.com/policies/privacy-policy" target="_blank">OpenAI's Privacy Policy</a> and <a href="https://openai.com/policies/api-data-usage-policies" target="_blank">API Data Usage Policy</a>.</li>
+            <li><strong>Anthropic (Claude API):</strong> Data is transmitted to Anthropic's API servers. Subject to <a href="https://www.anthropic.com/privacy" target="_blank">Anthropic's Privacy Policy</a>.</li>
+            <li><strong>Google (Gemini):</strong> Data is transmitted to Google's API servers. Subject to <a href="https://ai.google.dev/gemini-api/terms" target="_blank">Google's Gemini API Terms</a>.</li>
+            <li><strong>OpenRouter / Other providers:</strong> Data is transmitted to the respective provider's API. Refer to that provider's privacy policy.</li>
+        </ul>
+        <p><strong>Sn1perSecurity does not control how third-party AI providers process, store, or retain data sent to their APIs.</strong> If your scan targets contain sensitive information (personally identifiable information, protected health information, customer data, credentials, or proprietary business data), you are responsible for:</p>
+        <ul>
+            <li>Evaluating whether transmitting that data to a third-party AI provider complies with your organization's data protection policies and applicable regulations (including GDPR, CCPA, HIPAA, and contractual obligations).</li>
+            <li>Reviewing and accepting the third-party AI provider's terms of service and data processing agreements.</li>
+            <li>Configuring Ollama as your AI provider if data must not leave your infrastructure.</li>
+        </ul>
+
+        <h3>1.5 License Validation and Telemetry</h3>
+        <p>SILENTCHAIN Pro, Enterprise, and Sn1per Pro/Enterprise editions require license activation and periodic validation. The following data is transmitted to Sn1perSecurity servers during license operations:</p>
+        <ul>
+            <li><strong>License Activation:</strong> License key, machine fingerprint (a SHA-256 hash derived from hardware identifiers), software version, build ID, operating system, and hostname.</li>
+            <li><strong>Periodic Heartbeat:</strong> License token, machine fingerprint, software version, and aggregated usage metrics including: workspace count, host count, scan count, disk usage, and scan mode. Heartbeats occur approximately every 4 hours while the software is running.</li>
+            <li><strong>IP Address:</strong> Your IP address is recorded with each license validation request as a standard part of server-side logging.</li>
+        </ul>
+        <p><strong>What we do NOT collect via telemetry:</strong> Target URLs, scan results, vulnerability findings, HTTP traffic, source code, file contents, or any data about what you scan. Telemetry is limited to aggregate usage counts and license validity checks.</p>
+        <p>License data is stored encrypted locally on your machine. A 72-hour grace period allows offline operation if our license server is unreachable.</p>
 
         <h2>2. How We Use Your Information</h2>
         <p>We use the information we collect to:</p>

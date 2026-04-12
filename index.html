@@ -13,8 +13,47 @@
     <meta property="og:description" content="AI-powered offensive security platform for web app testing, static code analysis, and automated pentesting. OWASP Top 10 detection with RAG-augmented threat intelligence.">
     <meta property="og:image" content="https://silentchain.ai/og-image.png">
 
+    <!-- Canonical -->
+    <link rel="canonical" href="https://silentchain.ai/">
+
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="silentchainai-logo-transparent.png">
+    <link rel="icon" type="image/png" href="images/silentchainai-logo-transparent.png">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "SILENTCHAIN AI",
+        "url": "https://silentchain.ai",
+        "logo": "https://silentchain.ai/images/silentchainai-logo-transparent.png",
+        "description": "AI-powered offensive security platform for web app testing, static code analysis, and automated penetration testing.",
+        "foundingDate": "2026",
+        "sameAs": [
+            "https://x.com/silentchainai",
+            "https://github.com/silentchainai",
+            "https://youtube.com/@silentchainai"
+        ],
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "email": "support@silentchain.ai",
+            "contactType": "customer support"
+        }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "SILENTCHAIN AI",
+        "url": "https://silentchain.ai",
+        "description": "AI-powered offensive security platform for web app testing, static code analysis, and automated penetration testing.",
+        "publisher": {
+            "@type": "Organization",
+            "name": "SILENTCHAIN AI"
+        }
+    }
+    </script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@700;800&display=swap');
@@ -872,7 +911,7 @@
 <!-- Navigation -->
 <div class="container" style="z-index: 50;">
     <nav>
-        <div class="logo"><img src="silentchainai-logo-transparent.png" alt="SILENTCHAIN AI" class="logo-icon"><span class="logo-text">SILENTCHAIN</span></div>
+        <div class="logo"><img src="images/silentchainai-logo-transparent.png" alt="SILENTCHAIN AI" class="logo-icon"><span class="logo-text">SILENTCHAIN</span></div>
         <ul class="nav-links">
             <li class="nav-dropdown">
                 <a href="#">Products</a>
@@ -882,6 +921,7 @@
                     <li><a href="/enterprise.html">SILENTCHAIN Enterprise</a></li>
                     <li><a href="/source.html">SILENTCHAIN SOURCE</a></li>
                     <li><a href="https://sn1persecurity.com/" target="_blank">Sn1per AI Core</a></li>
+                    <li><a href="/rag-engine.html">RAG Knowledge Engine</a></li>
                 </ul>
             </li>
             <li><a href="#features">Features</a></li>
@@ -983,11 +1023,12 @@
                 <p>Automated penetration testing for network and infrastructure security. Reconnaissance, vulnerability scanning, and exploitation in a unified workflow. Feeds network context into the RAG correlation engine.</p>
                 <span class="product-link">Learn More &rarr;</span>
             </a>
-            <div class="product-card" style="border-color: rgba(0, 255, 136, 0.2); background: rgba(0, 255, 136, 0.03);">
+            <a href="/rag-engine.html" class="product-card" style="border-color: rgba(0, 255, 136, 0.2); background: rgba(0, 255, 136, 0.03); text-decoration: none; color: inherit;">
                 <span class="product-tag" style="color: var(--accent-green); border-color: rgba(0, 255, 136, 0.3); background: rgba(0, 255, 136, 0.1);">Knowledge Layer</span>
                 <h3 style="color: var(--accent-green);">RAG Knowledge Engine</h3>
                 <p>80,000+ security documents powering every product. OWASP Top 10, CWE Top 25, Exploit-DB, NVD CVEs, SecLists, HackerOne reports, and Nuclei templates. Verified findings automatically improve future results through feedback loops.</p>
-            </div>
+                <span class="product-link" style="color: var(--accent-green);">Learn More &rarr;</span>
+            </a>
         </div>
     </section>
 </div>
@@ -1324,7 +1365,7 @@
     <div class="container">
         <div class="footer-content">
             <div class="footer-section">
-                <div class="logo" style="margin-bottom: 20px;"><img src="silentchainai-logo-transparent.png" alt="SILENTCHAIN AI" class="logo-icon"><span class="logo-text">SILENTCHAIN</span></div>
+                <div class="logo" style="margin-bottom: 20px;"><img src="images/silentchainai-logo-transparent.png" alt="SILENTCHAIN AI" class="logo-icon"><span class="logo-text">SILENTCHAIN</span></div>
                 <p style="color: var(--text-muted); font-size: 14px;">
                     AI-powered security testing for the modern web.
                     Open source, privacy-focused, and built for professionals.

@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building an Attack Chain Engine: Cross-Product Vulnerability Correlation - SILENTCHAIN AI</title>
+    <meta name="description" content="A technical deep-dive into building an attack chain engine that correlates vulnerabilities across network scans, web traffic, static analysis, and DAST findings to escalate severity and construct multi-stage exploitation paths.">
+    <meta name="keywords" content="attack chain, vulnerability correlation, severity escalation, kill chain, security correlation engine, cross-product, dast, sast, network scanning, silentchain, owasp, cwe">
+    <meta name="author" content="SILENTCHAIN AI Team">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Building an Attack Chain Engine: Cross-Product Vulnerability Correlation">
+    <meta property="og:description" content="A technical deep-dive into building an attack chain engine that correlates vulnerabilities across DAST, SAST, and network scan data to construct multi-stage exploitation paths.">
+    <meta property="og:image" content="https://silentchain.ai/og-image.png">
+    <meta property="og:url" content="https://silentchain.ai/blog/building-an-attack-chain-engine">
+    <meta property="article:published_time" content="2026-04-09">
+    <meta property="article:section" content="Engineering">
+    <meta property="article:tag" content="Correlation">
+    <meta property="article:tag" content="Engineering">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Building an Attack Chain Engine: Cross-Product Vulnerability Correlation">
+    <meta name="twitter:description" content="A technical deep-dive into building an attack chain engine that correlates vulnerabilities across DAST, SAST, and network scan data to construct multi-stage exploitation paths.">
+    <meta name="twitter:image" content="https://silentchain.ai/og-image.png">
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://silentchain.ai/blog/building-an-attack-chain-engine">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/images/silentchainai-logo-transparent.png">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Building an Attack Chain Engine: Cross-Product Vulnerability Correlation",
+        "description": "A technical deep-dive into building an attack chain engine that correlates vulnerabilities across network scans, web traffic, static analysis, and DAST findings to escalate severity and construct multi-stage exploitation paths.",
+        "datePublished": "2026-04-09",
+        "author": {
+            "@type": "Organization",
+            "name": "SILENTCHAIN AI",
+            "url": "https://silentchain.ai"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "SILENTCHAIN AI",
+            "url": "https://silentchain.ai",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://silentchain.ai/images/silentchainai-logo-transparent.png"
+            }
+        },
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://silentchain.ai/blog/building-an-attack-chain-engine"
+        },
+        "image": "https://silentchain.ai/og-image.png"
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "SILENTCHAIN AI",
+        "url": "https://silentchain.ai",
+        "logo": "https://silentchain.ai/images/silentchainai-logo-transparent.png",
+        "sameAs": [
+            "https://x.com/silentchainai",
+            "https://github.com/silentchainai",
+            "https://youtube.com/@silentchainai"
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://silentchain.ai/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Blog",
+                "item": "https://silentchain.ai/blog/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Building an Attack Chain Engine: Cross-Product Vulnerability Correlation",
+                "item": "https://silentchain.ai/blog/building-an-attack-chain-engine"
+            }
+        ]
+    }
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@700;800&display=swap');
+
+        :root {
+            --bg-dark: #0a0e1a;
+            --bg-darker: #050810;
+            --accent-cyan: #4de8ff;
+            --accent-blue: #0080f0;
+            --accent-green: #00ff88;
+            --text-light: #e0e6ed;
+            --text-muted: #8892a6;
+            --card-bg: rgba(10, 25, 50, 0.6);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .background-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image:
+                linear-gradient(rgba(77, 232, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(77, 232, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none; z-index: 0;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .glow-orb {
+            position: fixed; width: 600px; height: 600px;
+            border-radius: 50%; filter: blur(120px);
+            opacity: 0.15; pointer-events: none; z-index: 1;
+        }
+        .orb-1 { background: var(--accent-cyan); top: -300px; left: -300px; animation: float 20s ease-in-out infinite; }
+        .orb-2 { background: var(--accent-blue); bottom: -300px; right: -300px; animation: float 25s ease-in-out infinite reverse; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(100px, 100px); }
+        }
+
+        .container {
+            position: relative; z-index: 10;
+            max-width: 1400px; margin: 0 auto; padding: 0 40px;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex; justify-content: space-between;
+            align-items: center; padding: 30px 0;
+            border-bottom: 1px solid rgba(77, 232, 255, 0.1);
+            position: relative; z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 28px;
+            letter-spacing: -1px;
+            display: flex; align-items: center; gap: 14px;
+            text-decoration: none; color: inherit;
+        }
+
+        .logo-text {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-icon { width: 36px; height: 36px; flex-shrink: 0; }
+
+        .nav-links { display: flex; gap: 40px; list-style: none; }
+
+        .nav-links a {
+            color: var(--text-light); text-decoration: none;
+            font-size: 14px; transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--accent-cyan); }
+        .nav-links a.active { color: var(--accent-cyan); }
+
+        .nav-dropdown { position: relative; padding-bottom: 20px; margin-bottom: -20px; }
+        .nav-dropdown > a::after { content: ' \25BE'; font-size: 10px; }
+        .dropdown-menu {
+            display: none; position: absolute; top: 100%; left: 50%;
+            transform: translateX(-50%); min-width: 260px;
+            background: #0c1225; border: 1px solid rgba(77, 232, 255, 0.25);
+            border-radius: 8px; padding: 8px 0; list-style: none;
+            z-index: 1000; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+        }
+        .dropdown-menu::before {
+            content: ''; position: absolute; top: -20px;
+            left: 0; right: 0; height: 20px;
+        }
+        .nav-dropdown:hover .dropdown-menu { display: block; }
+        .dropdown-menu li a {
+            display: block; padding: 10px 24px; color: var(--accent-cyan);
+            text-decoration: none; font-size: 13px; transition: all 0.2s; white-space: nowrap;
+        }
+        .dropdown-menu li a:hover { color: #fff; background: rgba(77, 232, 255, 0.12); }
+
+        .cta-button {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: white; border: none; border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700; font-size: 14px; cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none; display: inline-block;
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(77, 232, 255, 0.3);
+        }
+
+        /* Article */
+        .article-header {
+            max-width: 780px; margin: 80px auto 0; text-align: center;
+        }
+
+        .article-header .post-meta {
+            display: flex; gap: 16px; align-items: center;
+            justify-content: center;
+            margin-bottom: 24px; font-size: 13px; color: var(--text-muted);
+        }
+
+        .post-tag {
+            padding: 4px 12px;
+            background: rgba(77, 232, 255, 0.1);
+            border: 1px solid rgba(77, 232, 255, 0.2);
+            border-radius: 20px; color: var(--accent-cyan);
+            font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        .article-header h1 {
+            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 48px;
+            background: linear-gradient(135deg, #ffffff, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; line-height: 1.2; margin-bottom: 20px;
+        }
+
+        .article-header .subtitle {
+            color: var(--text-muted); font-size: 18px; line-height: 1.7;
+        }
+
+        /* Article Body */
+        .article-body {
+            max-width: 780px; margin: 60px auto 0;
+            font-size: 15px; line-height: 1.85;
+        }
+
+        .article-body h2 {
+            font-family: 'Syne', sans-serif; font-weight: 700; font-size: 28px;
+            color: var(--text-light);
+            margin: 50px 0 20px;
+        }
+
+        .article-body h3 {
+            font-family: 'Syne', sans-serif; font-weight: 700; font-size: 20px;
+            color: var(--text-light);
+            margin: 36px 0 14px;
+        }
+
+        .article-body p {
+            color: var(--text-muted); margin-bottom: 20px;
+        }
+
+        .article-body strong {
+            color: var(--text-light);
+        }
+
+        .article-body a {
+            color: var(--accent-cyan); text-decoration: none;
+            border-bottom: 1px solid rgba(77, 232, 255, 0.3);
+            transition: border-color 0.3s;
+        }
+        .article-body a:hover { border-color: var(--accent-cyan); }
+
+        .article-body ul, .article-body ol {
+            color: var(--text-muted);
+            margin: 0 0 20px 24px;
+        }
+
+        .article-body li {
+            margin-bottom: 8px;
+        }
+
+        .article-body code {
+            background: rgba(77, 232, 255, 0.08);
+            border: 1px solid rgba(77, 232, 255, 0.15);
+            border-radius: 4px; padding: 2px 6px;
+            font-size: 13px; color: var(--accent-cyan);
+        }
+
+        .article-body pre {
+            background: var(--bg-darker);
+            border: 1px solid rgba(77, 232, 255, 0.1);
+            border-radius: 12px; padding: 24px;
+            margin: 24px 0; overflow-x: auto;
+            font-size: 13px; line-height: 1.6;
+        }
+        .article-body pre code {
+            background: none; border: none; padding: 0;
+            color: var(--text-light);
+        }
+
+        .callout {
+            background: rgba(77, 232, 255, 0.05);
+            border-left: 3px solid var(--accent-cyan);
+            border-radius: 0 12px 12px 0;
+            padding: 20px 24px; margin: 30px 0;
+        }
+        .callout p { margin-bottom: 0; }
+
+        .diagram-box {
+            background: var(--bg-darker);
+            border: 1px solid rgba(77, 232, 255, 0.15);
+            border-radius: 12px; padding: 32px;
+            margin: 30px 0; text-align: center;
+            font-size: 14px; color: var(--text-muted);
+        }
+
+        .diagram-box .flow {
+            display: flex; align-items: center; justify-content: center;
+            gap: 16px; flex-wrap: wrap;
+        }
+
+        .diagram-box .flow-step {
+            background: var(--card-bg);
+            border: 1px solid rgba(77, 232, 255, 0.2);
+            border-radius: 8px; padding: 12px 18px;
+            font-size: 13px; color: var(--accent-cyan);
+        }
+
+        .diagram-box .flow-arrow { color: var(--text-muted); font-size: 18px; }
+
+        /* Rule table */
+        .rule-table {
+            width: 100%; border-collapse: collapse;
+            margin: 24px 0; font-size: 13px;
+        }
+        .rule-table th {
+            text-align: left; padding: 12px 16px;
+            background: var(--bg-darker);
+            border: 1px solid rgba(77, 232, 255, 0.15);
+            color: var(--accent-cyan); font-weight: 700;
+            white-space: nowrap;
+        }
+        .rule-table td {
+            padding: 10px 16px;
+            border: 1px solid rgba(77, 232, 255, 0.08);
+            color: var(--text-muted); vertical-align: top;
+        }
+        .rule-table tr:hover td { background: rgba(77, 232, 255, 0.03); }
+        .severity-critical { color: #ff4444; font-weight: 700; }
+        .severity-high { color: #ff8800; font-weight: 700; }
+
+        /* Back link */
+        .back-link {
+            display: inline-block; margin-top: 60px;
+            color: var(--accent-cyan); font-size: 14px;
+            text-decoration: none; font-weight: 700;
+        }
+        .back-link:hover { color: #fff; }
+
+        /* CTA Box */
+        .post-cta {
+            background: var(--card-bg);
+            border: 1px solid rgba(77, 232, 255, 0.15);
+            border-radius: 16px; padding: 40px;
+            margin: 60px 0 0; text-align: center;
+        }
+        .post-cta h3 {
+            font-family: 'Syne', sans-serif; font-weight: 700; font-size: 24px;
+            color: var(--text-light); margin-bottom: 12px;
+        }
+        .post-cta p { color: var(--text-muted); font-size: 15px; margin-bottom: 24px; }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(77, 232, 255, 0.1);
+            padding: 60px 0 40px; margin-top: 100px;
+        }
+
+        .footer-content {
+            display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            gap: 60px; margin-bottom: 40px;
+        }
+
+        .footer-section h4 { font-family: 'Syne', sans-serif; margin-bottom: 20px; }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links a {
+            color: var(--text-muted); text-decoration: none;
+            font-size: 14px; transition: color 0.3s;
+        }
+        .footer-links a:hover { color: var(--accent-cyan); }
+
+        .footer-bottom {
+            padding-top: 30px;
+            border-top: 1px solid rgba(77, 232, 255, 0.05);
+            text-align: center; color: var(--text-muted); font-size: 12px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav { flex-wrap: wrap; gap: 16px; }
+            .logo { font-size: 20px; gap: 10px; white-space: nowrap; }
+            .logo-icon { width: 28px; height: 28px; }
+            .nav-links {
+                order: 3; width: 100%; justify-content: center;
+                flex-wrap: wrap; gap: 16px 24px;
+                padding-top: 16px; border-top: 1px solid rgba(77, 232, 255, 0.1);
+            }
+            nav .cta-button { padding: 8px 20px; font-size: 12px; }
+            .article-header h1 { font-size: 32px; }
+            .article-body h2 { font-size: 22px; }
+            .footer-content { grid-template-columns: 1fr; }
+            .diagram-box .flow { flex-direction: column; }
+            .diagram-box .flow-arrow { transform: rotate(90deg); }
+            .rule-table { font-size: 11px; }
+            .rule-table th, .rule-table td { padding: 8px 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="background-grid"></div>
+<div class="glow-orb orb-1"></div>
+<div class="glow-orb orb-2"></div>
+
+<!-- Navigation -->
+<div class="container" style="z-index: 50;">
+    <nav>
+        <a href="/" class="logo"><img src="/images/silentchainai-logo-transparent.png" alt="SILENTCHAIN AI" class="logo-icon"><span class="logo-text">SILENTCHAIN</span></a>
+        <ul class="nav-links">
+            <li class="nav-dropdown">
+                <a href="#">Products</a>
+                <ul class="dropdown-menu">
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN">SILENTCHAIN Community</a></li>
+                    <li><a href="/professional.html">SILENTCHAIN Professional</a></li>
+                    <li><a href="/enterprise.html">SILENTCHAIN Enterprise</a></li>
+                    <li><a href="/source.html">SILENTCHAIN SOURCE</a></li>
+                    <li><a href="https://sn1persecurity.com/" target="_blank">Sn1per AI Core</a></li>
+                </ul>
+            </li>
+            <li><a href="/#features">Features</a></li>
+            <li><a href="/#pricing">Pricing</a></li>
+            <li><a href="/blog/" class="active">Blog</a></li>
+            <li><a href="https://github.com/silentchainai/SILENTCHAIN">GitHub</a></li>
+        </ul>
+        <a href="https://github.com/silentchainai/SILENTCHAIN" class="cta-button">Download Free</a>
+    </nav>
+</div>
+
+<!-- Article Header -->
+<div class="container">
+    <div class="article-header">
+        <div class="post-meta">
+            <span class="post-tag">Correlation</span>
+            <span class="post-tag">Engineering</span>
+            <span>April 9, 2026</span>
+            <span>14 min read</span>
+        </div>
+        <h1>Building an Attack Chain Engine</h1>
+        <p class="subtitle">
+            How we built a cross-product correlation engine that joins network reconnaissance,
+            web traffic analysis, static code review, and DAST findings into unified attack chains
+            &mdash; automatically escalating severity when evidence from multiple tools converges
+            on the same target.
+        </p>
+    </div>
+</div>
+
+<!-- Article Body -->
+<div class="container">
+    <article class="article-body">
+
+        <h2>The Problem: Siloed Findings, Missed Chains</h2>
+
+        <p>
+            Every security team runs multiple tools. A network scanner finds open ports and internal services.
+            A DAST scanner finds injection points in web parameters. A SAST tool flags dangerous sinks in
+            source code. A proxy captures live HTTP traffic with session tokens and cookie flags.
+        </p>
+
+        <p>
+            Each tool produces a list of findings. Each finding exists in isolation. And isolation is
+            where severity miscalculation lives.
+        </p>
+
+        <p>
+            Consider a concrete scenario: your DAST scanner reports a Medium-severity SSRF in a
+            <code>url</code> query parameter. It can make outbound HTTP requests. Medium seems right &mdash;
+            it is a server-side request forgery with limited observed impact. The finding goes into the
+            backlog behind twenty other items.
+        </p>
+
+        <p>
+            Meanwhile, your network scanner found Redis on port 6379, two internal services on 10.x addresses,
+            and an AWS EC2 metadata endpoint responding on 169.254.169.254. These are separate findings in a
+            separate report. Nobody connects them to the SSRF.
+        </p>
+
+        <p>
+            That SSRF is not Medium. It is a <strong>Critical</strong> path to the cloud metadata service,
+            internal Redis (likely unauthenticated), and lateral movement across the internal network. The
+            attack chain is obvious to a senior penetration tester who reads both reports. It is invisible
+            to every tool that produced them.
+        </p>
+
+        <p>
+            This is the problem an attack chain engine solves: <strong>correlating findings across tool
+            boundaries to construct the exploitation narrative that individual tools cannot see.</strong>
+        </p>
+
+        <h2>Architecture: A Shared Context Store</h2>
+
+        <p>
+            The key architectural insight is that correlation is not a feature you bolt onto individual
+            scanners. It requires a shared data layer where every tool deposits structured context about
+            a target, and a correlation engine that joins that context against incoming findings.
+        </p>
+
+        <div class="diagram-box">
+            <p style="margin-bottom: 16px; font-weight: 700; color: var(--accent-cyan);">Data Flow: Four Products &rarr; One Context Store &rarr; Correlated Findings</p>
+            <div class="flow">
+                <span class="flow-step">Network Scanner<br><small>ports, services, IPs</small></span>
+                <span class="flow-arrow">&rarr;</span>
+                <span class="flow-step" style="border-color: var(--accent-green);">Context Store<br><small>ChromaDB + metadata</small></span>
+                <span class="flow-arrow">&larr;</span>
+                <span class="flow-step">SAST Scanner<br><small>sinks, data flows, files</small></span>
+            </div>
+            <div class="flow" style="margin-top: 16px;">
+                <span class="flow-step">DAST Scanner<br><small>URLs, params, WAF</small></span>
+                <span class="flow-arrow">&rarr;</span>
+                <span class="flow-step" style="border-color: var(--accent-green);">Correlation Engine<br><small>rules + chain builder</small></span>
+                <span class="flow-arrow">&larr;</span>
+                <span class="flow-step">Traffic Proxy<br><small>cookies, auth, headers</small></span>
+            </div>
+        </div>
+
+        <p>
+            Each tool contributes a different <strong>context type</strong>:
+        </p>
+
+        <ul>
+            <li><strong>Network context:</strong> Open ports, running services (with versions), internal IP addresses (RFC 1918, link-local, localhost), detected OS and technology stack.</li>
+            <li><strong>Surface context:</strong> Discovered URLs, mapped parameters (name, type, location), WAF detection status, web technologies, and response headers.</li>
+            <li><strong>Code context:</strong> Vulnerable file paths, dangerous sinks (<code>exec</code>, <code>eval</code>, <code>cursor.execute</code>, <code>requests.get</code>), taint data flows from source to sink, and absence of sanitizers.</li>
+            <li><strong>Traffic context:</strong> Observed parameters in live requests, cookie attributes (HttpOnly, Secure flags), authentication patterns (Bearer tokens, session cookies), and request patterns.</li>
+        </ul>
+
+        <p>
+            The context store is a vector database (ChromaDB) with heavy metadata usage. Each ingested
+            document carries a <code>target_id</code>, <code>context_type</code>, <code>evidence_type</code>,
+            and <code>source</code> tag. The <code>target_id</code> is the join key &mdash; a normalized
+            version of the target hostname or IP that strips protocol, default ports, paths, and www prefixes.
+        </p>
+
+        <h3>Target Normalization: Getting the Join Key Right</h3>
+
+        <p>
+            The correlation engine is only as good as its ability to recognize that
+            <code>https://www.Example.COM:443/api/proxy</code> and <code>example.com</code> are the same
+            target. Normalization strips protocol prefixes, removes default ports (80 for HTTP, 443 for HTTPS),
+            lowercases the hostname, strips <code>www.</code>, and discards paths. Non-default ports are
+            preserved: <code>http://10.0.0.5:8080/</code> normalizes to <code>10.0.0.5:8080</code>.
+        </p>
+
+        <p>
+            This is deceptively important. A single normalization bug means an entire product's context
+            fails to join with findings from other products. Every ingestion call and every correlation
+            query passes through the same <code>normalize_target()</code> function to guarantee consistency.
+        </p>
+
+        <h3>Idempotent Ingestion</h3>
+
+        <p>
+            Security tools run repeatedly against the same targets. The context store must handle
+            re-ingestion without creating duplicates. Each context document gets a deterministic ID
+            computed from its content:
+        </p>
+
+        <pre><code>doc_id = f"ctx-{target_id}-{context_type}-{evidence_type}-{sha256(data)[:12]}"</code></pre>
+
+        <p>
+            Ingestion uses upsert semantics. If the same tool reports the same data for the same target,
+            the existing document is updated rather than duplicated. If the data changes (a new port opens,
+            a new parameter is discovered), the SHA256 suffix produces a different ID and a new document
+            is created alongside the existing one. The context store grows monotonically with new
+            intelligence, never with redundant repetition.
+        </p>
+
+        <h2>The Correlation Algorithm</h2>
+
+        <p>
+            When a finding arrives for correlation, the engine executes a seven-step pipeline.
+        </p>
+
+        <h3>Step 1: Fetch All Context for the Target</h3>
+
+        <p>
+            A metadata-filtered query retrieves every context document for the normalized target ID.
+            This is not a vector similarity search &mdash; it is a direct metadata lookup. We want
+            <em>everything</em> known about this target, regardless of semantic similarity to the
+            finding's description.
+        </p>
+
+        <pre><code># Metadata filter, not vector search
+docs = store.list_by_metadata(
+    where={"target_id": target_id},
+    limit=500
+)</code></pre>
+
+        <p>
+            In parallel, a semantic similarity search retrieves relevant general knowledge base documents
+            (CVE records, exploit code, CWE references) for optional PoC generation:
+        </p>
+
+        <pre><code># Vector similarity for KB enrichment
+kb_docs = store.query(
+    f"{title} {vuln_type} {cwe} {parameter}",
+    n_results=10
+)</code></pre>
+
+        <h3>Step 2: Group by Context Type</h3>
+
+        <p>
+            The retrieved documents are grouped into buckets by their <code>context_type</code> metadata:
+            <code>network</code>, <code>surface</code>, <code>code</code>, <code>traffic</code>. Each
+            bucket represents a different tool's perspective on the target.
+        </p>
+
+        <h3>Step 3: Extract Structured Evidence</h3>
+
+        <p>
+            Each context type has a dedicated extractor that pulls structured data from the raw document
+            text using regex patterns and metadata fields:
+        </p>
+
+        <ul>
+            <li><strong>Network extractor:</strong> Port numbers, service names, internal IPs (RFC 1918 ranges, 169.254.x.x, 127.0.0.1), technologies.</li>
+            <li><strong>Surface extractor:</strong> URLs, parameter names, WAF status (special-case detection for "no waf" / "waf: none"), web frameworks.</li>
+            <li><strong>Code extractor:</strong> A hardcoded list of dangerous sinks (<code>exec</code>, <code>eval</code>, <code>system</code>, <code>subprocess</code>, <code>requests.get</code>, <code>urllib</code>, <code>os.popen</code>, <code>cursor.execute</code>), taint flow indicators, file paths.</li>
+            <li><strong>Traffic extractor:</strong> Parameters from metadata, cookie names and flag absence (HttpOnly, Secure), authentication patterns (Bearer, session cookie), request method/path pairs.</li>
+        </ul>
+
+        <p>
+            The extractors do not need to understand every document perfectly. They look for the specific
+            evidence patterns that the escalation rules need. A network extractor that misses a service
+            name is fine; one that misses a 169.254.169.254 address is a severity escalation failure.
+        </p>
+
+        <h3>Step 4: Evaluate Escalation Rules</h3>
+
+        <p>
+            This is where the correlation becomes actionable. The engine evaluates a set of declarative
+            rules, each of which encodes a specific escalation pattern:
+        </p>
+
+        <pre><code>@dataclass
+class CorrelationRule:
+    name: str
+    description: str
+    vuln_types: list[str]       # Finding must match one of these
+    required_context: list[str] # These context types must exist
+    evidence_patterns: list[str] # Regex patterns to find in context docs
+    escalated_severity: str
+    confidence_boost: float
+    reason_template: str</code></pre>
+
+        <p>
+            A rule fires when three conditions are met simultaneously:
+        </p>
+
+        <ol>
+            <li><strong>Vulnerability match:</strong> The finding's vulnerability type or CWE matches one of the rule's trigger types (case-insensitive substring match).</li>
+            <li><strong>Context presence:</strong> All required context types have at least one document in the grouped results.</li>
+            <li><strong>Evidence match:</strong> At least one of the rule's regex patterns matches in the raw text of the required context documents.</li>
+        </ol>
+
+        <p>
+            When a rule fires, it contributes an escalated severity level and a confidence boost. Severity
+            escalation is <strong>monotonic</strong> &mdash; once a finding is escalated to Critical, no
+            subsequent rule can downgrade it. Confidence boosts accumulate additively, capped at 1.0.
+        </p>
+
+        <h2>The Ten Escalation Rules</h2>
+
+        <p>
+            Each rule represents a real-world exploitation pattern where cross-tool context changes the
+            severity calculus. These are not theoretical &mdash; they come from patterns observed in
+            penetration testing engagements.
+        </p>
+
+        <table class="rule-table">
+            <thead>
+                <tr>
+                    <th>Rule</th>
+                    <th>Trigger</th>
+                    <th>Required Context</th>
+                    <th>Evidence Patterns</th>
+                    <th>Escalation</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>SSRF + Internal Services</strong></td>
+                    <td>SSRF, CWE-918</td>
+                    <td>network</td>
+                    <td>redis, memcache, elasticsearch, internal IPs</td>
+                    <td class="severity-critical">Critical (+0.30)</td>
+                </tr>
+                <tr>
+                    <td><strong>SSRF/RCE + Cloud Metadata</strong></td>
+                    <td>SSRF, RCE, CWE-918, CWE-78</td>
+                    <td>network</td>
+                    <td>169.254.169.254, metadata.google, iam.*credential</td>
+                    <td class="severity-critical">Critical (+0.35)</td>
+                </tr>
+                <tr>
+                    <td><strong>SQLi + Traffic Confirmed</strong></td>
+                    <td>SQLi, CWE-89</td>
+                    <td>traffic</td>
+                    <td>parameter, user input, query string, form data</td>
+                    <td class="severity-high">High (+0.25)</td>
+                </tr>
+                <tr>
+                    <td><strong>SQLi + DB Credentials in Code</strong></td>
+                    <td>SQLi, CWE-89</td>
+                    <td>code</td>
+                    <td>password, db_pass, connection string, credential</td>
+                    <td class="severity-critical">Critical (+0.30)</td>
+                </tr>
+                <tr>
+                    <td><strong>RCE + No WAF</strong></td>
+                    <td>RCE, command/code injection, CWE-78, CWE-94</td>
+                    <td>surface</td>
+                    <td>no waf, waf none, waf not detected, unprotected</td>
+                    <td class="severity-critical">Critical (+0.30)</td>
+                </tr>
+                <tr>
+                    <td><strong>Auth Bypass + Admin Panels</strong></td>
+                    <td>Auth bypass, IDOR, CWE-287, CWE-306, CWE-639</td>
+                    <td>surface</td>
+                    <td>/admin, /dashboard, /manage, /console, privileged</td>
+                    <td class="severity-critical">Critical (+0.30)</td>
+                </tr>
+                <tr>
+                    <td><strong>XSS + Session Theft</strong></td>
+                    <td>XSS, CWE-79</td>
+                    <td>traffic</td>
+                    <td>httponly false, no httponly, session token, set-cookie without httponly</td>
+                    <td class="severity-high">High (+0.20)</td>
+                </tr>
+                <tr>
+                    <td><strong>File Upload + Server-Side Execution</strong></td>
+                    <td>File upload, CWE-434</td>
+                    <td>code</td>
+                    <td>exec, eval, system, subprocess, include, .php, .jsp</td>
+                    <td class="severity-critical">Critical (+0.30)</td>
+                </tr>
+                <tr>
+                    <td><strong>LFI + Sensitive Files</strong></td>
+                    <td>LFI, path traversal, CWE-22, CWE-98</td>
+                    <td>network</td>
+                    <td>/etc/passwd, .env, config, .git, wp-config</td>
+                    <td class="severity-critical">Critical (+0.25)</td>
+                </tr>
+                <tr>
+                    <td><strong>Multi-Product Corroboration</strong></td>
+                    <td>(any vulnerability type)</td>
+                    <td>(2+ distinct sources)</td>
+                    <td>(none &mdash; source count is the evidence)</td>
+                    <td>unchanged (+0.20)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Rule 10: Why Multi-Product Corroboration Matters</h3>
+
+        <p>
+            The tenth rule is structurally different from the others. It does not match on vulnerability
+            type at all. Instead, it counts the distinct <code>source</code> values across all context
+            documents for the target. When two or more different tools have contributed context, this rule
+            fires and adds a +0.20 confidence boost.
+        </p>
+
+        <p>
+            The reasoning is simple: if a network scanner, a DAST tool, and a SAST tool all have
+            observations about the same target, the aggregate picture is more reliable than any single
+            tool's perspective. False positives from one tool are unlikely to be corroborated by
+            independent analysis from another. Multi-source convergence is, in practice, one of
+            the strongest indicators that a finding is real.
+        </p>
+
+        <h3>Confidence Scoring</h3>
+
+        <p>
+            Confidence starts from a severity-derived seed:
+        </p>
+
+        <pre><code>SEVERITY_SEEDS = {
+    "Critical": 0.50,
+    "High":     0.40,
+    "Medium":   0.30,
+    "Low":      0.20,
+    "Info":     0.10,
+}</code></pre>
+
+        <p>
+            Each matched rule adds its <code>confidence_boost</code>. A Medium SSRF (seed: 0.30) that
+            triggers both <code>ssrf_internal_services</code> (+0.30) and <code>ssrf_cloud_metadata</code>
+            (+0.35) with multi-product corroboration (+0.20) reaches a confidence of 1.0 &mdash; a fully
+            corroborated Critical finding with evidence from multiple independent sources.
+        </p>
+
+        <h2>Attack Chain Construction</h2>
+
+        <p>
+            After rule evaluation, the engine builds an ordered attack chain &mdash; a narrative
+            describing how the vulnerability would be exploited in stages, mapping each step to the
+            tool that provided the evidence.
+        </p>
+
+        <div class="diagram-box">
+            <p style="margin-bottom: 16px; font-weight: 700; color: var(--accent-cyan);">Attack Chain: SSRF &rarr; Cloud Metadata &rarr; Lateral Movement</p>
+            <div class="flow">
+                <span class="flow-step">1. Exploit SSRF<br><small>DAST finding</small></span>
+                <span class="flow-arrow">&rarr;</span>
+                <span class="flow-step">2. Code path confirmed<br><small>SAST: requests.get(url)</small></span>
+                <span class="flow-arrow">&rarr;</span>
+                <span class="flow-step">3. Surface mapped<br><small>DAST: no WAF detected</small></span>
+                <span class="flow-arrow">&rarr;</span>
+                <span class="flow-step">4. Pivot to internal<br><small>Netscan: Redis :6379, 10.x</small></span>
+                <span class="flow-arrow">&rarr;</span>
+                <span class="flow-step">5. Traffic validation<br><small>Proxy: Bearer token</small></span>
+            </div>
+        </div>
+
+        <p>
+            The chain is built from five potential steps, each gated on whether the corresponding
+            context type has data:
+        </p>
+
+        <ol>
+            <li><strong>Exploit the vulnerability</strong> (always present) &mdash; the finding itself, attributed to the scanner that reported it.</li>
+            <li><strong>Code path confirmed</strong> (if code context exists) &mdash; the specific vulnerable sink and file path from static analysis.</li>
+            <li><strong>Attack surface mapped</strong> (if surface context exists) &mdash; discovered parameters, URLs, and WAF status from web reconnaissance.</li>
+            <li><strong>Pivot to internal infrastructure</strong> (if network context exists) &mdash; internal services and IPs reachable via the vulnerability.</li>
+            <li><strong>Validate in live traffic</strong> (if traffic context exists) &mdash; observed authentication patterns and cookie configurations.</li>
+        </ol>
+
+        <p>
+            A finding that only has DAST data produces a single-step chain. A finding with context from
+            all four tool categories produces a five-step exploitation narrative. The chain length itself
+            is a signal &mdash; longer chains with more corroborating evidence represent higher-confidence,
+            higher-impact findings.
+        </p>
+
+        <h2>PoC Generation from Correlated Evidence</h2>
+
+        <p>
+            With the attack chain built and all corroborating evidence assembled, the engine can optionally
+            generate a proof-of-concept exploitation script. This is where the correlation data becomes
+            operationally dangerous (and operationally useful for defenders).
+        </p>
+
+        <p>
+            The PoC context includes every concrete detail extracted during correlation:
+        </p>
+
+        <pre><code>{
+    "target": "example.com",
+    "vuln_type": "ssrf",
+    "parameter": "url",
+    "internal_ips": ["10.0.0.5", "10.0.0.12"],
+    "services": [
+        {"name": "redis", "port": 6379},
+        {"name": "elasticsearch", "port": 9200}
+    ],
+    "open_ports": [22, 80, 443, 6379, 9200],
+    "discovered_urls": ["/api/proxy?url=", "/admin/config"],
+    "mapped_parameters": ["url", "callback", "redirect"],
+    "waf": "none",
+    "vulnerable_files": ["proxy.py"],
+    "vulnerable_sinks": ["requests.get"],
+    "auth_type": "bearer_token",
+    "request_patterns": ["GET /api/proxy"]
+}</code></pre>
+
+        <p>
+            The LLM receives this structured context with instructions to produce a staged exploitation
+            script that uses only the actual discovered IPs, services, and parameters &mdash; not
+            hypothetical or placeholder values. Each line in the PoC is commented with the data source
+            that justified it.
+        </p>
+
+        <div class="callout">
+            <p>
+                <strong>Why this matters for defenders:</strong> A PoC generated from correlated evidence
+                across four tools is fundamentally different from one generated by a single scanner. It
+                demonstrates the full exploitation path &mdash; from initial entry point through lateral
+                movement &mdash; using real infrastructure details. This is the artifact that turns a
+                security report into an executive conversation about risk.
+            </p>
+        </div>
+
+        <h2>The API Surface</h2>
+
+        <p>
+            The correlation engine exposes three endpoints that form a complete ingest-correlate-query cycle.
+        </p>
+
+        <h3>Ingest Context</h3>
+
+        <pre><code>POST /ingest/context
+{
+    "target": "https://example.com",
+    "context_type": "network",
+    "evidence_type": "port_scan",
+    "source": "sn1per",
+    "data": {
+        "ports": [22, 80, 443, 6379],
+        "services": [{"name": "redis", "port": 6379}],
+        "internal_ips": ["10.0.0.5"]
+    }
+}</code></pre>
+
+        <p>
+            Each tool calls this endpoint after completing its scan phase. Bulk ingestion is supported
+            via <code>POST /ingest/context/bulk</code> for tools that produce many context items at once.
+        </p>
+
+        <h3>Correlate a Finding</h3>
+
+        <pre><code>POST /correlate
+{
+    "target": "https://example.com",
+    "vuln_type": "ssrf",
+    "title": "Server-Side Request Forgery in proxy endpoint",
+    "severity": "Medium",
+    "cwe": "CWE-918",
+    "parameter": "url",
+    "generate_poc": true
+}</code></pre>
+
+        <p>
+            Returns the full correlation result: original and escalated severity, matched rules with
+            human-readable reasons, confidence score, attack chain steps, corroborating evidence
+            summaries, and the optional generated PoC.
+        </p>
+
+        <h3>Query Target Context</h3>
+
+        <pre><code>GET /correlate/context/example.com
+
+{
+    "target_id": "example.com",
+    "context_types": {"network": 3, "surface": 2, "code": 1, "traffic": 1},
+    "total_docs": 7,
+    "context": {
+        "network": [{"source": "sn1per", "evidence_type": "port_scan", ...}],
+        "surface": [{"source": "silentchain-enterprise", ...}],
+        ...
+    }
+}</code></pre>
+
+        <p>
+            This diagnostic endpoint shows everything the engine knows about a target before
+            correlation runs. Useful for debugging why a rule did or did not fire.
+        </p>
+
+        <h2>Production Patterns and Lessons</h2>
+
+        <h3>Rule Design: Specificity Over Coverage</h3>
+
+        <p>
+            Early versions of the rule set tried to be comprehensive &mdash; a rule for every
+            possible combination of vulnerability type and context. This produced noisy escalations.
+            A "SQL injection + any network context" rule fired constantly because network context
+            exists for almost every target. The escalations were technically defensible but practically
+            useless.
+        </p>
+
+        <p>
+            The current ten rules are specific. <code>sqli_db_credentials</code> does not fire on
+            "SQL injection + code context exists." It fires on "SQL injection + code context contains
+            strings matching <code>password|db_pass|connection.*string|credential</code>." The rule
+            encodes a specific threat model: SQL injection is Critical when the code base contains
+            database credentials that the injection could exfiltrate.
+        </p>
+
+        <h3>Monotonic Severity Escalation</h3>
+
+        <p>
+            Severity only goes up, never down. If rule A escalates a finding to Critical and rule B
+            would suggest High, the finding stays Critical. This is a deliberate design choice:
+            correlation adds evidence, and evidence of exploitability should never <em>reduce</em>
+            the assessed risk. In a ranked severity space (<code>Critical=0, High=1, Medium=2,
+            Low=3, Info=4</code>), the engine always picks the lower ordinal.
+        </p>
+
+        <h3>Metadata Filtering vs. Vector Search</h3>
+
+        <p>
+            The correlation engine deliberately avoids vector similarity search for context retrieval.
+            When correlating an SSRF finding, we do not want "documents semantically similar to SSRF"
+            &mdash; we want <em>every document about this target</em>, regardless of topic. A Redis
+            service on port 6379 is not semantically similar to "server-side request forgery," but
+            it is critical evidence for the SSRF + internal services escalation rule.
+        </p>
+
+        <p>
+            Vector search is reserved for KB enrichment (pulling relevant CVEs and exploit references),
+            where semantic relevance is the right retrieval criterion. Context retrieval uses pure
+            metadata filtering on <code>target_id</code>.
+        </p>
+
+        <h3>Cross-Product Trust and the Corroboration Signal</h3>
+
+        <p>
+            The multi-product corroboration rule addresses a fundamental problem in automated scanning:
+            false positive rates. A single tool reporting a vulnerability has a false positive rate
+            determined by that tool's accuracy. Two independent tools reporting observations about the
+            same target create a corroboration signal that is stronger than either tool alone.
+        </p>
+
+        <p>
+            This is not the same as two tools finding the same vulnerability. It is two tools
+            providing <em>different types of evidence</em> about the same target &mdash; one finding
+            the vulnerability, another confirming the infrastructure conditions that make it exploitable.
+            The correlation engine exploits the independence of different tool types to increase
+            confidence without reducing coverage.
+        </p>
+
+        <h2>What This Changes for Security Teams</h2>
+
+        <p>
+            Without correlation, security teams triage findings in isolation. A backlog of 200 Medium
+            findings produces analysis paralysis. With correlation, those 200 findings are automatically
+            re-evaluated against infrastructure, code, and traffic context. The twelve findings that
+            have corroborating evidence from multiple sources and match known escalation patterns surface
+            at the top as Critical or High, with attack chains explaining exactly why.
+        </p>
+
+        <p>
+            The attack chain is the deliverable. It is not "we found an SSRF." It is "we found an SSRF
+            in the <code>url</code> parameter of <code>/api/proxy</code>, confirmed the code path
+            (<code>requests.get(url)</code> at line 42 in <code>proxy.py</code> with no sanitization),
+            verified no WAF is protecting the endpoint, and confirmed that Redis on 10.0.0.5:6379
+            and the AWS metadata service at 169.254.169.254 are reachable from the server. Here is
+            the three-stage PoC."
+        </p>
+
+        <p>
+            That finding gets fixed before lunch.
+        </p>
+
+        <div class="post-cta">
+            <h3>Cross-Product Correlation, Built In</h3>
+            <p>
+                The SILENTCHAIN platform includes the correlation engine described in this post, wired
+                across DAST (Enterprise), SAST (SOURCE), network reconnaissance (Sn1per), and traffic
+                analysis (Pro). Every finding is automatically correlated, escalated, and chain-mapped
+                against all available context. No integration work required.
+            </p>
+            <a href="/enterprise.html" class="cta-button">Learn More</a>
+        </div>
+
+        <a href="/blog/" class="back-link">&larr; Back to all posts</a>
+
+    </article>
+</div>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <a href="/" class="logo" style="margin-bottom: 20px;"><img src="/images/silentchainai-logo-transparent.png" alt="SILENTCHAIN AI" class="logo-icon"><span class="logo-text">SILENTCHAIN</span></a>
+                <p style="color: var(--text-muted); font-size: 14px; margin-top: 20px;">
+                    AI-powered security testing for the modern web.
+                    Open source, privacy-focused, and built for professionals.
+                </p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Product</h4>
+                <ul class="footer-links">
+                    <li><a href="/#products">Products</a></li>
+                    <li><a href="/#features">Features</a></li>
+                    <li><a href="/#pricing">Pricing</a></li>
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN/blob/main/README.md">Documentation</a></li>
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN/blob/main/CHANGELOG.md">Changelog</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul class="footer-links">
+                    <li><a href="/blog/">Blog</a></li>
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN">GitHub</a></li>
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN/blob/main/INSTALLATION.md">Installation Guide</a></li>
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN/blob/main/QUICKSTART.md">Quick Start</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Company</h4>
+                <ul class="footer-links">
+                    <li><a href="/about.html">About</a></li>
+                    <li><a href="mailto:support@silentchain.ai">Contact</a></li>
+                    <li><a href="/privacy.html">Privacy Policy</a></li>
+                    <li><a href="/terms.html">Terms of Service</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Connect</h4>
+                <ul class="footer-links">
+                    <li><a href="https://x.com/silentchainai" target="_blank">X (Twitter)</a></li>
+                    <li><a href="https://github.com/silentchainai" target="_blank">GitHub</a></li>
+                    <li><a href="https://youtube.com/@silentchainai" target="_blank">YouTube</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 SILENTCHAIN AI. Built for the security community.</p>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

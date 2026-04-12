@@ -1,0 +1,1777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Security Knowledge Engine — 80K+ Docs Powering AI Vulnerability Detection | SILENTCHAIN AI</title>
+    <meta name="description" content="The RAG Security Knowledge Engine grounds every AI finding in 80,000+ real-world documents: Exploit-DB, CWE, CVE, OWASP, Nuclei templates, and your own scan history. Zero hallucinations. Cross-product correlation with 10 severity escalation rules.">
+    <meta name="keywords" content="rag security engine, retrieval augmented generation, ai vulnerability scanning, knowledge base, exploit database, cwe, cve, owasp, chromadb, vector search, threat intelligence, security knowledge graph, cross-product correlation">
+    <meta name="author" content="SILENTCHAIN AI">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="RAG Security Knowledge Engine — AI Grounded in Real Exploit Data">
+    <meta property="og:description" content="80,000+ security documents. Cross-product correlation. Feedback loop that learns from verified findings. The knowledge layer under every SILENTCHAIN product.">
+    <meta property="og:image" content="https://silentchain.ai/og-image.png">
+    <meta property="og:url" content="https://silentchain.ai/rag-engine">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="RAG Security Knowledge Engine — AI Grounded in Real Exploit Data">
+    <meta name="twitter:description" content="80,000+ security documents. Cross-product correlation. Feedback loop that learns from verified findings.">
+    <meta name="twitter:image" content="https://silentchain.ai/og-image.png">
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://silentchain.ai/rag-engine">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="images/silentchainai-logo-transparent.png">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "RAG Security Knowledge Engine",
+        "applicationCategory": "SecurityApplication",
+        "operatingSystem": "Linux, Docker",
+        "description": "Retrieval-Augmented Generation engine that grounds AI vulnerability scanning in 80,000+ real-world security documents including Exploit-DB, CWE, CVE, OWASP, Nuclei templates, and live scan history.",
+        "offers": {
+            "@type": "Offer",
+            "description": "Included with SILENTCHAIN Enterprise and SOURCE editions"
+        },
+        "author": {
+            "@type": "Organization",
+            "name": "SILENTCHAIN AI",
+            "url": "https://silentchain.ai"
+        },
+        "featureList": [
+            "80,000+ security knowledge base documents",
+            "Cross-product correlation engine with 10 severity escalation rules",
+            "Continuous feedback loop from verified findings",
+            "25+ knowledge sources including Exploit-DB, CWE, CVE, OWASP",
+            "ChromaDB vector store with HNSW indexing",
+            "REST API with FastAPI backend",
+            "Docker deployment"
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "TechArticle",
+        "headline": "RAG Security Knowledge Engine",
+        "description": "Technical overview of the RAG-powered knowledge layer that grounds AI vulnerability detection across the SILENTCHAIN platform.",
+        "author": {
+            "@type": "Organization",
+            "name": "SILENTCHAIN AI"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "SILENTCHAIN AI",
+            "url": "https://silentchain.ai"
+        }
+    }
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@700;800&display=swap');
+
+        :root {
+            --bg-dark: #0a0e1a;
+            --bg-darker: #050810;
+            --accent-cyan: #4de8ff;
+            --accent-blue: #0080f0;
+            --accent-green: #00ff88;
+            --accent-purple: #a855f7;
+            --accent-orange: #ff6b35;
+            --text-light: #e0e6ed;
+            --text-muted: #8892a6;
+            --card-bg: rgba(10, 25, 50, 0.6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated Background */
+        .background-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(168, 85, 247, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(168, 85, 247, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .glow-orb {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .orb-1 {
+            background: var(--accent-purple);
+            top: -300px;
+            left: -300px;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .orb-2 {
+            background: var(--accent-green);
+            bottom: -300px;
+            right: -300px;
+            animation: float 25s ease-in-out infinite reverse;
+        }
+
+        .orb-3 {
+            background: var(--accent-cyan);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse 15s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(100px, 100px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.1; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.2; transform: translate(-50%, -50%) scale(1.2); }
+        }
+
+        /* Content Container */
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 0;
+            border-bottom: 1px solid rgba(77, 232, 255, 0.1);
+            position: relative;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 28px;
+            letter-spacing: -1px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-text {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-cyan);
+        }
+
+        .nav-dropdown {
+            position: relative;
+            padding-bottom: 20px;
+            margin-bottom: -20px;
+        }
+
+        .nav-dropdown > a::after {
+            content: ' \25BE';
+            font-size: 10px;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            min-width: 260px;
+            background: #0c1225;
+            border: 1px solid rgba(77, 232, 255, 0.25);
+            border-radius: 8px;
+            padding: 8px 0;
+            list-style: none;
+            z-index: 1000;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+        }
+
+        .dropdown-menu::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 0;
+            right: 0;
+            height: 20px;
+        }
+
+        .nav-dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu li a {
+            display: block;
+            padding: 10px 24px;
+            color: var(--accent-cyan);
+            text-decoration: none;
+            font-size: 13px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .dropdown-menu li a:hover {
+            color: #fff;
+            background: rgba(77, 232, 255, 0.12);
+        }
+
+        .cta-button {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(77, 232, 255, 0.3);
+        }
+
+        .secondary-button {
+            padding: 12px 30px;
+            background: transparent;
+            color: var(--accent-cyan);
+            border: 1px solid var(--accent-cyan);
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .secondary-button:hover {
+            background: rgba(77, 232, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 120px 0 80px;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(168, 85, 247, 0.15);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            border-radius: 50px;
+            color: var(--accent-purple);
+            font-size: 13px;
+            margin-bottom: 30px;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 64px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 0.6s ease 0.1s both;
+        }
+
+        .hero-description {
+            font-size: 18px;
+            color: var(--text-muted);
+            max-width: 720px;
+            margin: 0 auto 40px;
+            animation: fadeInUp 0.6s ease 0.2s both;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.6s ease 0.3s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Stats Bar */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            padding: 60px 0;
+            border-top: 1px solid rgba(77, 232, 255, 0.1);
+            border-bottom: 1px solid rgba(77, 232, 255, 0.1);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'Syne', sans-serif;
+            font-size: 36px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        /* Problem / Solution Section */
+        .problem-section {
+            padding: 100px 0;
+        }
+
+        .section-tag {
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 2px;
+            color: var(--accent-purple);
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .section-description {
+            color: var(--text-muted);
+            font-size: 16px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .problem-card, .solution-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 40px;
+            border: 1px solid rgba(77, 232, 255, 0.1);
+            transition: all 0.3s;
+        }
+
+        .problem-card {
+            border-color: rgba(255, 107, 53, 0.2);
+        }
+
+        .problem-card:hover {
+            border-color: rgba(255, 107, 53, 0.4);
+            transform: translateY(-3px);
+        }
+
+        .solution-card {
+            border-color: rgba(0, 255, 136, 0.2);
+        }
+
+        .solution-card:hover {
+            border-color: rgba(0, 255, 136, 0.4);
+            transform: translateY(-3px);
+        }
+
+        .card-icon {
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+
+        .problem-card h3 {
+            color: var(--accent-orange);
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .solution-card h3 {
+            color: var(--accent-green);
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .problem-card p, .solution-card p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            padding: 100px 0;
+            background: rgba(5, 8, 15, 0.5);
+        }
+
+        .flow-steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .flow-step {
+            text-align: center;
+            position: relative;
+        }
+
+        .flow-step::after {
+            content: '';
+            position: absolute;
+            top: 36px;
+            right: -15px;
+            width: 30px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-purple), transparent);
+        }
+
+        .flow-step:last-child::after {
+            display: none;
+        }
+
+        .step-number {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: rgba(168, 85, 247, 0.1);
+            border: 2px solid rgba(168, 85, 247, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-family: 'Syne', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--accent-purple);
+        }
+
+        .flow-step h4 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: var(--text-light);
+        }
+
+        .flow-step p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Knowledge Sources Section */
+        .sources-section {
+            padding: 100px 0;
+        }
+
+        .sources-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .source-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(77, 232, 255, 0.1);
+            border-radius: 12px;
+            padding: 30px;
+            transition: all 0.3s;
+        }
+
+        .source-card:hover {
+            border-color: rgba(77, 232, 255, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .source-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .source-icon {
+            font-size: 24px;
+        }
+
+        .source-card h4 {
+            font-size: 15px;
+            color: var(--text-light);
+        }
+
+        .source-card p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 14px;
+        }
+
+        .source-count {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 20px;
+            font-size: 11px;
+            color: var(--accent-green);
+            font-weight: 700;
+        }
+
+        /* Terminal Visual */
+        .terminal-section {
+            padding: 100px 0;
+            background: rgba(5, 8, 15, 0.5);
+        }
+
+        .terminal-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .terminal-content h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 42px;
+            font-weight: 800;
+            text-align: left;
+            margin-bottom: 16px;
+        }
+
+        .terminal-content .section-description {
+            text-align: left;
+            margin: 0 0 30px;
+        }
+
+        .terminal-features {
+            list-style: none;
+        }
+
+        .terminal-features li {
+            padding: 10px 0;
+            font-size: 14px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .terminal-features li::before {
+            content: '\2713';
+            color: var(--accent-green);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .rag-visual {
+            background: #0d1117;
+            border: 1px solid rgba(168, 85, 247, 0.25);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .rag-visual-header {
+            background: #161b22;
+            padding: 15px 20px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+
+        .rag-visual-body {
+            padding: 30px;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .rag-flow-line {
+            margin-bottom: 8px;
+        }
+
+        .rag-label { color: var(--accent-purple); }
+        .rag-arrow { color: var(--text-muted); }
+        .rag-source { color: var(--accent-cyan); }
+        .rag-result { color: var(--accent-green); }
+        .rag-dim { color: var(--text-muted); }
+        .rag-warn { color: var(--accent-orange); }
+
+        /* Correlation Section */
+        .correlation-section {
+            padding: 100px 0;
+        }
+
+        .correlation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .escalation-rules {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .escalation-rule {
+            background: var(--card-bg);
+            border: 1px solid rgba(168, 85, 247, 0.15);
+            border-radius: 10px;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.3s;
+        }
+
+        .escalation-rule:hover {
+            border-color: rgba(168, 85, 247, 0.4);
+            transform: translateX(4px);
+        }
+
+        .rule-severity {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            flex-shrink: 0;
+        }
+
+        .severity-critical {
+            background: rgba(255, 60, 60, 0.15);
+            color: #ff3c3c;
+            border: 1px solid rgba(255, 60, 60, 0.3);
+        }
+
+        .severity-high {
+            background: rgba(255, 107, 53, 0.15);
+            color: var(--accent-orange);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+        }
+
+        .rule-text {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .correlation-content h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 42px;
+            font-weight: 800;
+            text-align: left;
+            margin-bottom: 16px;
+        }
+
+        .correlation-content .section-description {
+            text-align: left;
+            margin: 0 0 30px;
+        }
+
+        /* Feedback Loop Section */
+        .feedback-section {
+            padding: 100px 0;
+            background: rgba(5, 8, 15, 0.5);
+        }
+
+        .feedback-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .feedback-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 255, 136, 0.1);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .feedback-card:hover {
+            border-color: rgba(0, 255, 136, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .feedback-icon {
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+
+        .feedback-card h4 {
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .feedback-card p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        /* Integration Section */
+        .integration-section {
+            padding: 100px 0;
+        }
+
+        .integration-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-top: 60px;
+        }
+
+        .integration-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(77, 232, 255, 0.1);
+            border-radius: 12px;
+            padding: 32px 24px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .integration-card:hover {
+            border-color: rgba(77, 232, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .integration-icon {
+            font-size: 36px;
+            margin-bottom: 16px;
+        }
+
+        .integration-card h4 {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .integration-card p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .integration-badge {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 3px 10px;
+            background: rgba(77, 232, 255, 0.1);
+            border: 1px solid rgba(77, 232, 255, 0.2);
+            border-radius: 20px;
+            font-size: 10px;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* API Section */
+        .api-section {
+            padding: 100px 0;
+            background: rgba(5, 8, 15, 0.5);
+        }
+
+        .api-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .api-content h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 42px;
+            font-weight: 800;
+            text-align: left;
+            margin-bottom: 16px;
+        }
+
+        .api-content .section-description {
+            text-align: left;
+            margin: 0 0 30px;
+        }
+
+        .api-endpoints {
+            list-style: none;
+        }
+
+        .api-endpoints li {
+            padding: 8px 0;
+            font-size: 14px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .api-method {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            flex-shrink: 0;
+            width: 52px;
+            text-align: center;
+        }
+
+        .method-post {
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--accent-green);
+        }
+
+        .method-get {
+            background: rgba(77, 232, 255, 0.15);
+            color: var(--accent-cyan);
+        }
+
+        .method-delete {
+            background: rgba(255, 60, 60, 0.15);
+            color: #ff3c3c;
+        }
+
+        .api-terminal {
+            background: #0d1117;
+            border: 1px solid rgba(77, 232, 255, 0.2);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .api-terminal-header {
+            background: #161b22;
+            padding: 15px 20px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .api-terminal-body {
+            padding: 30px;
+            font-size: 12px;
+            line-height: 1.7;
+            overflow-x: auto;
+        }
+
+        .json-key { color: var(--accent-cyan); }
+        .json-string { color: var(--accent-green); }
+        .json-number { color: var(--accent-orange); }
+        .json-bracket { color: var(--text-muted); }
+        .api-comment { color: #6a737d; }
+
+        /* Final CTA */
+        .final-cta {
+            padding: 100px 0;
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(0, 255, 136, 0.05));
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: 24px;
+            padding: 80px 40px;
+            text-align: center;
+        }
+
+        .cta-box h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .cta-box p {
+            color: var(--text-muted);
+            font-size: 16px;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 30px;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(77, 232, 255, 0.1);
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h4 {
+            font-size: 14px;
+            margin-bottom: 20px;
+            color: var(--text-light);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 13px;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-cyan);
+        }
+
+        .footer-bottom {
+            padding-top: 30px;
+            border-top: 1px solid rgba(77, 232, 255, 0.05);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .sources-grid,
+            .feedback-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .integration-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .flow-steps {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 40px;
+            }
+
+            .flow-step::after {
+                display: none;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 36px;
+            }
+
+            .section-header h2,
+            .terminal-content h2,
+            .correlation-content h2,
+            .api-content h2,
+            .cta-box h2 {
+                font-size: 28px;
+            }
+
+            .hero {
+                padding: 60px 0 40px;
+            }
+
+            .hero-description {
+                font-size: 15px;
+            }
+
+            .problem-grid,
+            .terminal-grid,
+            .correlation-grid,
+            .api-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sources-grid,
+            .feedback-grid,
+            .integration-grid,
+            .flow-steps,
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .problem-section,
+            .how-it-works,
+            .sources-section,
+            .terminal-section,
+            .correlation-section,
+            .feedback-section,
+            .integration-section,
+            .api-section,
+            .final-cta {
+                padding: 60px 0;
+            }
+
+            .cta-box {
+                padding: 40px 24px;
+            }
+
+            nav {
+                flex-wrap: wrap;
+                gap: 16px;
+            }
+
+            .logo {
+                font-size: 20px;
+                gap: 10px;
+                white-space: nowrap;
+            }
+
+            .logo-icon {
+                width: 28px;
+                height: 28px;
+            }
+
+            .nav-links {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 16px 24px;
+                padding-top: 16px;
+                border-top: 1px solid rgba(77, 232, 255, 0.1);
+            }
+
+            nav .cta-button {
+                padding: 8px 20px;
+                font-size: 12px;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+                gap: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Background Effects -->
+<div class="background-grid"></div>
+<div class="glow-orb orb-1"></div>
+<div class="glow-orb orb-2"></div>
+<div class="glow-orb orb-3"></div>
+
+<!-- Navigation -->
+<div class="container" style="z-index: 50;">
+    <nav>
+        <a href="/" class="logo"><img src="images/silentchainai-logo-transparent.png" alt="SILENTCHAIN AI" class="logo-icon"><span class="logo-text">SILENTCHAIN</span></a>
+        <ul class="nav-links">
+            <li class="nav-dropdown">
+                <a href="#">Products</a>
+                <ul class="dropdown-menu">
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN">SILENTCHAIN Community</a></li>
+                    <li><a href="/professional.html">SILENTCHAIN Professional</a></li>
+                    <li><a href="/enterprise.html">SILENTCHAIN Enterprise</a></li>
+                    <li><a href="/source.html">SILENTCHAIN SOURCE</a></li>
+                    <li><a href="https://sn1persecurity.com/" target="_blank">Sn1per AI Core</a></li>
+                </ul>
+            </li>
+            <li><a href="/#features">Features</a></li>
+            <li><a href="/#pricing">Pricing</a></li>
+            <li><a href="/blog/">Blog</a></li>
+            <li><a href="https://github.com/silentchainai/SILENTCHAIN">GitHub</a></li>
+        </ul>
+        <a href="https://github.com/silentchainai/SILENTCHAIN" class="cta-button">Download Free</a>
+    </nav>
+</div>
+
+<!-- Hero Section -->
+<div class="container">
+    <section class="hero">
+        <div class="hero-badge">Knowledge Layer Powering All SILENTCHAIN Products</div>
+        <h1>RAG Security<br>Knowledge Engine</h1>
+        <p class="hero-description">
+            Generic LLMs hallucinate vulnerabilities. The RAG Security Knowledge Engine grounds
+            every AI finding in 80,000+ real-world security documents &mdash; Exploit-DB, CWE, CVE,
+            OWASP, Nuclei templates, and your own scan history. Zero guesswork.
+        </p>
+        <div class="hero-buttons">
+            <a href="/enterprise.html" class="cta-button">
+                Get Enterprise Access
+            </a>
+            <a href="/blog/why-rag-changes-everything-for-ai-vulnerability-scanning/" class="secondary-button">
+                Read the Deep Dive &rarr;
+            </a>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <div class="stats">
+        <div class="stat-item">
+            <div class="stat-number">80K+</div>
+            <div class="stat-label">Knowledge Base Documents</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">25+</div>
+            <div class="stat-label">Knowledge Sources</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">10</div>
+            <div class="stat-label">Severity Escalation Rules</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">4</div>
+            <div class="stat-label">Products Integrated</div>
+        </div>
+    </div>
+</div>
+
+<!-- Problem / Solution -->
+<div class="container">
+    <section class="problem-section">
+        <div class="section-header">
+            <div class="section-tag">The Problem &amp; The Solution</div>
+            <h2>AI Without Context Is Guessing</h2>
+            <p class="section-description">
+                LLMs trained on general data lack the depth to reliably assess real-world vulnerabilities.
+                RAG closes that gap with grounded retrieval from curated security knowledge.
+            </p>
+        </div>
+
+        <div class="problem-grid">
+            <div class="problem-card">
+                <div class="card-icon">&#x26A0;</div>
+                <h3>Generic LLM Analysis</h3>
+                <p>
+                    Standard AI models hallucinate vulnerability names, invent CVE numbers, and generate
+                    plausible-sounding but incorrect remediation advice. Confidence scores are unanchored.
+                    No memory of what has been seen before or what exploits actually exist in the wild.
+                </p>
+            </div>
+            <div class="solution-card">
+                <div class="card-icon">&#x2713;</div>
+                <h3>RAG-Grounded Analysis</h3>
+                <p>
+                    Every finding is backed by real Exploit-DB entries, CWE definitions, CVE records,
+                    and Nuclei templates retrieved at inference time. Confidence is calibrated against
+                    known exploitability data. Findings link back to primary sources.
+                </p>
+            </div>
+            <div class="problem-card">
+                <div class="card-icon">&#x26A0;</div>
+                <h3>Siloed Security Tools</h3>
+                <p>
+                    Web scanner finds SSRF. Code scanner finds unsafe deserialization. Network scanner
+                    finds open internal ports. Each tool reports in isolation &mdash; the critical
+                    attack chain connecting them goes undetected.
+                </p>
+            </div>
+            <div class="solution-card">
+                <div class="card-icon">&#x2713;</div>
+                <h3>Cross-Product Correlation</h3>
+                <p>
+                    The RAG engine ingests context from every scan surface &mdash; web traffic, source code,
+                    and network topology. 10 severity escalation rules automatically detect attack chains
+                    that span multiple tools and promote findings accordingly.
+                </p>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- How It Works -->
+<section class="how-it-works">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag">Architecture</div>
+            <h2>How RAG Grounds Every Finding</h2>
+            <p class="section-description">
+                Four-stage pipeline: from raw AI detection to knowledge-verified, severity-calibrated findings
+                with primary source references.
+            </p>
+        </div>
+
+        <div class="flow-steps">
+            <div class="flow-step">
+                <div class="step-number">1</div>
+                <h4>AI Detection</h4>
+                <p>LLM identifies a potential vulnerability in web traffic, source code, or network scan output.</p>
+            </div>
+            <div class="flow-step">
+                <div class="step-number">2</div>
+                <h4>RAG Retrieval</h4>
+                <p>ChromaDB vector search queries 80K+ docs for CWE definitions, known exploits, CVEs, and prior findings matching the detection.</p>
+            </div>
+            <div class="flow-step">
+                <div class="step-number">3</div>
+                <h4>Enrichment</h4>
+                <p>Retrieved context refines severity, adds exploit references, generates PoC suggestions, and calibrates confidence against real-world data.</p>
+            </div>
+            <div class="flow-step">
+                <div class="step-number">4</div>
+                <h4>Feedback Loop</h4>
+                <p>Verified findings boost related KB documents and are re-ingested, making the engine smarter with every confirmed vulnerability.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Knowledge Sources -->
+<div class="container">
+    <section class="sources-section">
+        <div class="section-header">
+            <div class="section-tag">Knowledge Base</div>
+            <h2>25+ Curated Security Sources</h2>
+            <p class="section-description">
+                Every document is chunked, embedded, and indexed in ChromaDB with HNSW for
+                sub-millisecond retrieval. Source priority and hit counts influence ranking.
+            </p>
+        </div>
+
+        <div class="sources-grid">
+            <div class="source-card">
+                <div class="source-header">
+                    <span class="source-icon">&#x1F4BE;</span>
+                    <h4>Exploit-DB</h4>
+                </div>
+                <p>Real exploit source code from the world's largest public exploit archive. Mapped to CVEs with proof-of-concept code.</p>
+                <span class="source-count">46,000+ exploits</span>
+            </div>
+            <div class="source-card">
+                <div class="source-header">
+                    <span class="source-icon">&#x1F6E1;</span>
+                    <h4>CWE Top 25</h4>
+                </div>
+                <p>MITRE Common Weakness Enumeration definitions with detection guidance, examples, and remediation patterns.</p>
+                <span class="source-count">25 weakness types</span>
+            </div>
+            <div class="source-card">
+                <div class="source-header">
+                    <span class="source-icon">&#x1F50D;</span>
+                    <h4>NVD / CVE</h4>
+                </div>
+                <p>National Vulnerability Database entries with CVSS scores, affected products, and vendor advisories via NVD API v2.0.</p>
+                <span class="source-count">CVE records</span>
+            </div>
+            <div class="source-card">
+                <div class="source-header">
+                    <span class="source-icon">&#x26A1;</span>
+                    <h4>Nuclei Templates</h4>
+                </div>
+                <p>ProjectDiscovery Nuclei detection templates with matchers, extractors, and severity classifications.</p>
+                <span class="source-count">Templates</span>
+            </div>
+            <div class="source-card">
+                <div class="source-header">
+                    <span class="source-icon">&#x1F310;</span>
+                    <h4>OWASP Top 10</h4>
+                </div>
+                <p>Complete OWASP Top 10 categories with attack vectors, security weakness descriptions, and prevention cheat sheets.</p>
+                <span class="source-count">10 categories</span>
+            </div>
+            <div class="source-card">
+                <div class="source-header">
+                    <span class="source-icon">&#x1F4A3;</span>
+                    <h4>PayloadsAllTheThings</h4>
+                </div>
+                <p>Curated payload collections for XSS, SQLi, LFI, SSTI, XXE, command injection, and 60+ other attack categories.</p>
+                <span class="source-count">623+ docs</span>
+            </div>
+            <div class="source-card">
+                <div class="source-header">
+                    <span class="source-icon">&#x1F4C4;</span>
+                    <h4>SecLists</h4>
+                </div>
+                <p>Daniel Miessler's SecLists payloads organized by attack type: XSS, SQLi, LFI, CMDi, SSTI, and XXE.</p>
+                <span class="source-count">Payload sets</span>
+            </div>
+            <div class="source-card">
+                <div class="source-header">
+                    <span class="source-icon">&#x1F50E;</span>
+                    <h4>Nmap NSE Scripts</h4>
+                </div>
+                <p>Nmap vulnerability detection scripts with service fingerprinting and version-based vulnerability checks.</p>
+                <span class="source-count">231 scripts</span>
+            </div>
+            <div class="source-card">
+                <div class="source-header">
+                    <span class="source-icon">&#x1F4CA;</span>
+                    <h4>Your Scan History</h4>
+                </div>
+                <p>Sn1per loot, SILENTCHAIN findings, and SOURCE reports are continuously ingested. Your data trains your engine.</p>
+                <span class="source-count">Continuous</span>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- RAG Retrieval Visual -->
+<section class="terminal-section">
+    <div class="container">
+        <div class="terminal-grid">
+            <div class="terminal-content">
+                <h2>See RAG In Action</h2>
+                <p class="section-description">
+                    When AI detects a potential vulnerability, the RAG engine retrieves relevant
+                    knowledge in real time to verify, enrich, and calibrate the finding.
+                </p>
+                <ul class="terminal-features">
+                    <li>Vector similarity search across 80K+ documents</li>
+                    <li>Sub-millisecond retrieval via ChromaDB HNSW index</li>
+                    <li>Source-weighted ranking (Exploit-DB > generic docs)</li>
+                    <li>Hit count boosting from verified findings</li>
+                    <li>Automatic confidence calibration against known exploits</li>
+                    <li>Primary source links in every finding report</li>
+                </ul>
+            </div>
+            <div class="rag-visual">
+                <div class="rag-visual-header">
+                    <span class="terminal-dot dot-red"></span>
+                    <span class="terminal-dot dot-yellow"></span>
+                    <span class="terminal-dot dot-green"></span>
+                    <span style="color: var(--text-muted); font-size: 12px; margin-left: 8px;">rag-engine &mdash; live retrieval</span>
+                </div>
+                <div class="rag-visual-body">
+                    <div class="rag-flow-line">
+                        <span class="rag-label">[DETECT]</span> <span class="rag-dim">AI flags potential SQL Injection in</span> <span class="rag-source">/api/users?id=</span>
+                    </div>
+                    <div class="rag-flow-line">
+                        <span class="rag-label">[QUERY]</span> <span class="rag-dim">Searching KB for:</span> <span class="rag-source">"SQL injection parameter injection"</span>
+                    </div>
+                    <div class="rag-flow-line">&nbsp;</div>
+                    <div class="rag-flow-line">
+                        <span class="rag-arrow">&rarr;</span> <span class="rag-source">CWE-89</span> <span class="rag-dim">SQL Injection (relevance: 0.94)</span>
+                    </div>
+                    <div class="rag-flow-line">
+                        <span class="rag-arrow">&rarr;</span> <span class="rag-source">EDB-51234</span> <span class="rag-dim">SQLi via user ID param (relevance: 0.91)</span>
+                    </div>
+                    <div class="rag-flow-line">
+                        <span class="rag-arrow">&rarr;</span> <span class="rag-source">CVE-2024-3217</span> <span class="rag-dim">Parameterized query bypass (relevance: 0.87)</span>
+                    </div>
+                    <div class="rag-flow-line">
+                        <span class="rag-arrow">&rarr;</span> <span class="rag-source">nuclei:sqli-error-based</span> <span class="rag-dim">Detection template (relevance: 0.85)</span>
+                    </div>
+                    <div class="rag-flow-line">&nbsp;</div>
+                    <div class="rag-flow-line">
+                        <span class="rag-label">[ENRICH]</span> <span class="rag-result">Severity: HIGH</span> <span class="rag-dim">(confirmed by 3 exploit references)</span>
+                    </div>
+                    <div class="rag-flow-line">
+                        <span class="rag-label">[ENRICH]</span> <span class="rag-result">Confidence: 0.94 &rarr; Certain</span> <span class="rag-dim">(calibrated against CWE-89)</span>
+                    </div>
+                    <div class="rag-flow-line">
+                        <span class="rag-label">[ENRICH]</span> <span class="rag-result">PoC suggested</span> <span class="rag-dim">from EDB-51234 payload pattern</span>
+                    </div>
+                    <div class="rag-flow-line">&nbsp;</div>
+                    <div class="rag-flow-line">
+                        <span class="rag-label">[FEEDBACK]</span> <span class="rag-result">&#x2713; Verified &mdash; boosting 4 KB docs, ingesting finding</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Cross-Product Correlation -->
+<div class="container">
+    <section class="correlation-section">
+        <div class="correlation-grid">
+            <div class="correlation-content">
+                <div class="section-tag">Correlation Engine</div>
+                <h2>Attack Chains That<br>Span Products</h2>
+                <p class="section-description">
+                    The RAG engine ingests context from web traffic (Enterprise), source code (SOURCE),
+                    and network topology (Sn1per). When findings from multiple products converge on the
+                    same target, 10 severity escalation rules automatically detect compound attack chains.
+                </p>
+                <ul class="terminal-features" style="margin-top: 20px;">
+                    <li>Surface context ingestion: URLs, parameters, WAF detection</li>
+                    <li>Code context ingestion: file paths, sinks, data flows</li>
+                    <li>Network context ingestion: ports, services, technologies</li>
+                    <li>Multi-product corroboration escalates to Critical</li>
+                </ul>
+            </div>
+            <div class="escalation-rules">
+                <div class="escalation-rule">
+                    <span class="rule-severity severity-critical">CRIT</span>
+                    <span class="rule-text">SSRF + internal service access detected across web + network scans</span>
+                </div>
+                <div class="escalation-rule">
+                    <span class="rule-severity severity-critical">CRIT</span>
+                    <span class="rule-text">Cloud metadata endpoint reachable via SSRF chain</span>
+                </div>
+                <div class="escalation-rule">
+                    <span class="rule-severity severity-critical">CRIT</span>
+                    <span class="rule-text">RCE confirmed with no WAF protection on target</span>
+                </div>
+                <div class="escalation-rule">
+                    <span class="rule-severity severity-critical">CRIT</span>
+                    <span class="rule-text">Multi-product corroboration: 3+ tools confirm same vulnerability</span>
+                </div>
+                <div class="escalation-rule">
+                    <span class="rule-severity severity-high">HIGH</span>
+                    <span class="rule-text">SQLi in code + active exploitation in web traffic</span>
+                </div>
+                <div class="escalation-rule">
+                    <span class="rule-severity severity-high">HIGH</span>
+                    <span class="rule-text">Auth bypass in source + session handling weakness in traffic</span>
+                </div>
+                <div class="escalation-rule">
+                    <span class="rule-severity severity-high">HIGH</span>
+                    <span class="rule-text">XSS + missing HttpOnly/Secure cookie flags</span>
+                </div>
+                <div class="escalation-rule">
+                    <span class="rule-severity severity-high">HIGH</span>
+                    <span class="rule-text">File upload + code execution path confirmed in source</span>
+                </div>
+                <div class="escalation-rule">
+                    <span class="rule-severity severity-high">HIGH</span>
+                    <span class="rule-text">LFI + sensitive file paths found in network scan</span>
+                </div>
+                <div class="escalation-rule">
+                    <span class="rule-severity severity-high">HIGH</span>
+                    <span class="rule-text">Deserialization sink in code + untrusted input in traffic</span>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Feedback Loop -->
+<section class="feedback-section">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag">Continuous Learning</div>
+            <h2>A Knowledge Base That Gets Smarter</h2>
+            <p class="section-description">
+                Every verified finding feeds back into the knowledge base.
+                The more you scan, the better your engine gets.
+            </p>
+        </div>
+
+        <div class="feedback-grid">
+            <div class="feedback-card">
+                <div class="feedback-icon">&#x1F50D;</div>
+                <h4>Scan &amp; Detect</h4>
+                <p>
+                    AI analyzes traffic, code, or network data. RAG retrieves relevant knowledge
+                    to enrich each finding with real-world context and severity calibration.
+                </p>
+            </div>
+            <div class="feedback-card">
+                <div class="feedback-icon">&#x2705;</div>
+                <h4>Verify &amp; Boost</h4>
+                <p>
+                    Confirmed findings (Certain/Firm confidence) automatically boost the hit count
+                    on related KB documents, promoting them in future retrieval rankings.
+                </p>
+            </div>
+            <div class="feedback-card">
+                <div class="feedback-icon">&#x1F504;</div>
+                <h4>Ingest &amp; Learn</h4>
+                <p>
+                    Verified findings are re-ingested as new KB documents. Your confirmed
+                    vulnerabilities become training data for detecting the same class of issue next time.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Product Integration -->
+<div class="container">
+    <section class="integration-section">
+        <div class="section-header">
+            <div class="section-tag">Integration</div>
+            <h2>Powering Every SILENTCHAIN Product</h2>
+            <p class="section-description">
+                The RAG engine is the shared knowledge layer under all four products.
+                One knowledge base. One feedback loop. Four attack surfaces.
+            </p>
+        </div>
+
+        <div class="integration-grid">
+            <div class="integration-card">
+                <div class="integration-icon">&#x1F310;</div>
+                <h4>SILENTCHAIN Enterprise</h4>
+                <p>Async RAGClient for web app scanning. Surface context ingestion + finding correlation.</p>
+                <span class="integration-badge">DAST</span>
+            </div>
+            <div class="integration-card">
+                <div class="integration-icon">&#x1F4BB;</div>
+                <h4>SILENTCHAIN SOURCE</h4>
+                <p>Code context ingestion. File paths, sinks, and data flows feed the correlation engine.</p>
+                <span class="integration-badge">SAST</span>
+            </div>
+            <div class="integration-card">
+                <div class="integration-icon">&#x1F50C;</div>
+                <h4>SILENTCHAIN Pro</h4>
+                <p>Jython HTTP bridge to RAG API. Traffic context + finding correlation from Burp Suite.</p>
+                <span class="integration-badge">Burp Extension</span>
+            </div>
+            <div class="integration-card">
+                <div class="integration-icon">&#x1F5A7;</div>
+                <h4>Sn1per AI Core</h4>
+                <p>Network context ingestion. Ports, services, and technologies enrich the correlation graph.</p>
+                <span class="integration-badge">Network</span>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- REST API -->
+<section class="api-section">
+    <div class="container">
+        <div class="api-grid">
+            <div class="api-content">
+                <div class="section-tag">Developer API</div>
+                <h2>Full REST API</h2>
+                <p class="section-description">
+                    FastAPI backend with OpenAPI docs. Query the knowledge base, ingest custom data,
+                    submit feedback, and run cross-product correlations programmatically.
+                </p>
+                <ul class="api-endpoints">
+                    <li><span class="api-method method-post">POST</span> /analyze &mdash; AI-augmented vulnerability analysis</li>
+                    <li><span class="api-method method-post">POST</span> /retrieve &mdash; Query knowledge base by vector similarity</li>
+                    <li><span class="api-method method-post">POST</span> /enrich &mdash; Enrich finding with KB context</li>
+                    <li><span class="api-method method-post">POST</span> /ingest &mdash; Add custom documents to KB</li>
+                    <li><span class="api-method method-post">POST</span> /feedback &mdash; Submit finding verification feedback</li>
+                    <li><span class="api-method method-post">POST</span> /correlate &mdash; Cross-product attack correlation</li>
+                    <li><span class="api-method method-post">POST</span> /ingest/context &mdash; Ingest target context</li>
+                    <li><span class="api-method method-get">GET</span> /status &mdash; Engine health + document count</li>
+                    <li><span class="api-method method-get">GET</span> /correlate/context/{target} &mdash; Target context</li>
+                    <li><span class="api-method method-delete">DEL</span> /knowledge/{id} &mdash; Remove KB document</li>
+                </ul>
+            </div>
+            <div class="api-terminal">
+                <div class="api-terminal-header">
+                    <span class="terminal-dot dot-red"></span>
+                    <span class="terminal-dot dot-yellow"></span>
+                    <span class="terminal-dot dot-green"></span>
+                    <span style="color: var(--text-muted); font-size: 12px; margin-left: 8px;">curl &mdash; /retrieve</span>
+                </div>
+                <div class="api-terminal-body">
+                    <div><span class="api-comment"># Query the knowledge base</span></div>
+                    <div><span class="rag-result">$</span> <span class="rag-source">curl -X POST http://localhost:8000/retrieve \</span></div>
+                    <div><span class="rag-source">&nbsp;&nbsp;-H "Content-Type: application/json" \</span></div>
+                    <div><span class="rag-source">&nbsp;&nbsp;-d '{"query": "SQL injection", "top_k": 5}'</span></div>
+                    <div>&nbsp;</div>
+                    <div><span class="json-bracket">{</span></div>
+                    <div>&nbsp;&nbsp;<span class="json-key">"results"</span><span class="json-bracket">: [</span></div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-bracket">{</span></div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"source"</span>: <span class="json-string">"CWE-89"</span>,</div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"relevance"</span>: <span class="json-number">0.94</span>,</div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"content"</span>: <span class="json-string">"Improper Neutralization of Special Elements used in an SQL Command..."</span>,</div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"hit_count"</span>: <span class="json-number">147</span>,</div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"verified"</span>: <span class="json-number">true</span></div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-bracket">}</span>,</div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-bracket">{</span></div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"source"</span>: <span class="json-string">"exploit-db:51234"</span>,</div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"relevance"</span>: <span class="json-number">0.91</span>,</div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"content"</span>: <span class="json-string">"SQLi via unparameterized user ID..."</span>,</div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"hit_count"</span>: <span class="json-number">89</span></div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-bracket">}</span></div>
+                    <div>&nbsp;&nbsp;<span class="json-bracket">],</span></div>
+                    <div>&nbsp;&nbsp;<span class="json-key">"total_docs"</span>: <span class="json-number">80764</span>,</div>
+                    <div>&nbsp;&nbsp;<span class="json-key">"query_time_ms"</span>: <span class="json-number">12</span></div>
+                    <div><span class="json-bracket">}</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Final CTA -->
+<div class="container">
+    <section class="final-cta">
+        <div class="cta-box">
+            <h2>Ground Your AI in<br>Real Security Knowledge</h2>
+            <p>
+                The RAG Security Knowledge Engine is included with SILENTCHAIN Enterprise and SOURCE.
+                Start scanning with 80,000+ documents backing every finding.
+            </p>
+            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                <a href="/enterprise.html" class="cta-button">
+                    Get Enterprise Access
+                </a>
+                <a href="/source.html" class="secondary-button">
+                    Explore SOURCE &rarr;
+                </a>
+                <a href="/blog/why-rag-changes-everything-for-ai-vulnerability-scanning/" class="secondary-button">
+                    Read the Blog Post &rarr;
+                </a>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <a href="/" class="logo" style="margin-bottom: 20px;"><img src="images/silentchainai-logo-transparent.png" alt="SILENTCHAIN AI" class="logo-icon"><span class="logo-text">SILENTCHAIN</span></a>
+                <p style="color: var(--text-muted); font-size: 14px;">
+                    AI-powered security testing for the modern web.
+                    Open source, privacy-focused, and built for professionals.
+                </p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Product</h4>
+                <ul class="footer-links">
+                    <li><a href="/#products">Products</a></li>
+                    <li><a href="/#features">Features</a></li>
+                    <li><a href="/#pricing">Pricing</a></li>
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN/blob/main/README.md">Documentation</a></li>
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN/blob/main/CHANGELOG.md">Changelog</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul class="footer-links">
+                    <li><a href="/blog/">Blog</a></li>
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN">GitHub</a></li>
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN/blob/main/INSTALLATION.md">Installation Guide</a></li>
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN/blob/main/QUICKSTART.md">Quick Start</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Company</h4>
+                <ul class="footer-links">
+                    <li><a href="/about.html">About</a></li>
+                    <li><a href="mailto:support@silentchain.ai">Contact</a></li>
+                    <li><a href="/privacy.html">Privacy Policy</a></li>
+                    <li><a href="/terms.html">Terms of Service</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Connect</h4>
+                <ul class="footer-links">
+                    <li><a href="https://x.com/silentchainai" target="_blank">X (Twitter)</a></li>
+                    <li><a href="https://github.com/silentchainai" target="_blank">GitHub</a></li>
+                    <li><a href="https://youtube.com/@silentchainai" target="_blank">YouTube</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 SILENTCHAIN AI. Built for the security community.</p>
+        </div>
+    </div>
+</footer>
+</body>
+</html>
