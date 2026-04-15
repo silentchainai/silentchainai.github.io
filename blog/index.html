@@ -315,6 +315,36 @@
             text-align: center; color: var(--text-muted); font-size: 12px;
         }
 
+        /* Category Filters */
+        .category-filters {
+            display: flex; flex-wrap: wrap; gap: 10px;
+            justify-content: center; margin-top: 32px;
+        }
+
+        .filter-btn {
+            padding: 6px 18px;
+            background: transparent;
+            border: 1px solid rgba(77, 232, 255, 0.2);
+            border-radius: 20px;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;
+            cursor: pointer; transition: all 0.3s;
+        }
+        .filter-btn:hover {
+            border-color: rgba(77, 232, 255, 0.5);
+            color: var(--accent-cyan);
+        }
+        .filter-btn.active {
+            background: rgba(77, 232, 255, 0.15);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        .post-card.hidden {
+            display: none;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             nav { flex-wrap: wrap; gap: 16px; }
@@ -368,6 +398,19 @@
     <section class="blog-header">
         <h1>Blog</h1>
         <p>Insights on AI-powered security testing and the future of application security.</p>
+
+        <div class="category-filters">
+            <button class="filter-btn active" data-category="all">All</button>
+            <button class="filter-btn" data-category="rag">RAG</button>
+            <button class="filter-btn" data-category="engineering">Engineering</button>
+            <button class="filter-btn" data-category="comparison">Comparison</button>
+            <button class="filter-btn" data-category="phase-2">Phase 2</button>
+            <button class="filter-btn" data-category="burp-suite">Burp Suite</button>
+            <button class="filter-btn" data-category="ai-pentesting">AI Pentesting</button>
+            <button class="filter-btn" data-category="sast">SAST</button>
+            <button class="filter-btn" data-category="mcp">MCP</button>
+            <button class="filter-btn" data-category="correlation">Correlation</button>
+        </div>
     </section>
 </div>
 
@@ -375,7 +418,7 @@
 <div class="container">
     <div class="posts-grid">
 
-        <a href="/blog/mcp-server-security-ai-agent-attack-surface/" class="post-card">
+        <a href="/blog/mcp-server-security-ai-agent-attack-surface/" class="post-card" data-categories="mcp ai-agents">
             <div class="post-meta">
                 <span class="post-tag">MCP</span>
                 <span class="post-tag">AI Agents</span>
@@ -392,7 +435,7 @@
             <span class="read-more">Read more &rarr;</span>
         </a>
 
-        <a href="/blog/phase-2-active-verification-false-positives/" class="post-card">
+        <a href="/blog/phase-2-active-verification-false-positives/" class="post-card" data-categories="phase-2 engineering">
             <div class="post-meta">
                 <span class="post-tag">Phase 2</span>
                 <span class="post-tag">Engineering</span>
@@ -409,7 +452,7 @@
             <span class="read-more">Read more &rarr;</span>
         </a>
 
-        <a href="/blog/building-an-attack-chain-engine/" class="post-card">
+        <a href="/blog/building-an-attack-chain-engine/" class="post-card" data-categories="correlation engineering">
             <div class="post-meta">
                 <span class="post-tag">Correlation</span>
                 <span class="post-tag">Engineering</span>
@@ -425,7 +468,7 @@
             <span class="read-more">Read more &rarr;</span>
         </a>
 
-        <a href="/blog/why-rag-changes-everything-for-ai-vulnerability-scanning/" class="post-card">
+        <a href="/blog/why-rag-changes-everything-for-ai-vulnerability-scanning/" class="post-card" data-categories="rag">
             <div class="post-meta">
                 <span class="post-tag">RAG</span>
                 <span>April 6, 2026</span>
@@ -440,7 +483,7 @@
             <span class="read-more">Read more &rarr;</span>
         </a>
 
-        <a href="/blog/ai-pentesting-tools-2026-comparison/" class="post-card">
+        <a href="/blog/ai-pentesting-tools-2026-comparison/" class="post-card" data-categories="ai-pentesting comparison">
             <div class="post-meta">
                 <span class="post-tag">AI Pentesting</span>
                 <span class="post-tag">Comparison</span>
@@ -455,7 +498,7 @@
             <span class="read-more">Read more &rarr;</span>
         </a>
 
-        <a href="/blog/silentchain-vs-burpgpt-vs-burp-ai-agent/" class="post-card">
+        <a href="/blog/silentchain-vs-burpgpt-vs-burp-ai-agent/" class="post-card" data-categories="burp-suite comparison">
             <div class="post-meta">
                 <span class="post-tag">Burp Suite</span>
                 <span class="post-tag">Comparison</span>
@@ -470,7 +513,7 @@
             <span class="read-more">Read more &rarr;</span>
         </a>
 
-        <a href="/blog/rag-for-vulnerability-detection/" class="post-card">
+        <a href="/blog/rag-for-vulnerability-detection/" class="post-card" data-categories="rag engineering">
             <div class="post-meta">
                 <span class="post-tag">RAG</span>
                 <span class="post-tag">Engineering</span>
@@ -485,7 +528,7 @@
             <span class="read-more">Read more &rarr;</span>
         </a>
 
-        <a href="/blog/ai-code-security-scanners-2026-codex-semgrep-alternatives/" class="post-card">
+        <a href="/blog/ai-code-security-scanners-2026-codex-semgrep-alternatives/" class="post-card" data-categories="sast source">
             <div class="post-meta">
                 <span class="post-tag">SAST</span>
                 <span class="post-tag">SOURCE</span>
@@ -561,5 +604,34 @@
         </div>
     </div>
 </footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var buttons = document.querySelectorAll('.filter-btn');
+    var cards = document.querySelectorAll('.post-card');
+
+    buttons.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var category = this.getAttribute('data-category');
+
+            buttons.forEach(function(b) { b.classList.remove('active'); });
+            this.classList.add('active');
+
+            cards.forEach(function(card) {
+                if (category === 'all') {
+                    card.classList.remove('hidden');
+                } else {
+                    var cats = card.getAttribute('data-categories') || '';
+                    if (cats.split(' ').indexOf(category) !== -1) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                }
+            });
+        });
+    });
+});
+</script>
 </body>
 </html>
