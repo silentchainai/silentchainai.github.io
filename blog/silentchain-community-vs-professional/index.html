@@ -3,8 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-R6V66JC0M4"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-R6V66JC0M4');
+    </script>
     <title>SILENTCHAIN Community vs Professional: What the Upgrade Actually Buys You - SILENTCHAIN AI</title>
-    <meta name="description" content="A feature-by-feature comparison of SILENTCHAIN Community (free) and Professional: Phase 2 active verification, WAF detection and fingerprinting, OOB testing, 200+ curated payloads, 10 AI providers, RAG feedback, and HTML advisory reports.">
+    <meta name="description" content="A feature-by-feature comparison of SILENTCHAIN Community (free) and Professional: Phase 2 active verification, WAF detection and fingerprinting, OOB testing, 200+ curated payloads, 10 AI providers, and HTML advisory reports.">
     <meta name="keywords" content="silentchain community vs professional, burp ai extension comparison, phase 2 active verification, waf detection fingerprinting, oob testing, ai vulnerability scanning, burp suite extension, owasp top 10, free burp ai scanner">
     <meta name="author" content="SILENTCHAIN AI Team">
 
@@ -41,7 +49,7 @@
         "@context": "https://schema.org",
         "@type": "BlogPosting",
         "headline": "SILENTCHAIN Community vs Professional: What the Upgrade Actually Buys You",
-        "description": "A feature-by-feature comparison of SILENTCHAIN Community (free) and Professional: Phase 2 active verification, WAF detection and fingerprinting, OOB testing, 200+ curated payloads, 10 AI providers, RAG feedback, and HTML advisory reports.",
+        "description": "A feature-by-feature comparison of SILENTCHAIN Community (free) and Professional: Phase 2 active verification, WAF detection and fingerprinting, OOB testing, 200+ curated payloads, 10 AI providers, and HTML advisory reports.",
         "datePublished": "2026-06-29",
         "author": {
             "@type": "Organization",
@@ -74,7 +82,7 @@
                 "name": "Is SILENTCHAIN Community free?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Yes. SILENTCHAIN Community is a free, open-source Burp Suite extension with AI-powered OWASP Top 10 detection, six AI providers including fully local Ollama, and RAG retrieval. It has no time limit and no feature paywall on its passive scanning core."
+                    "text": "Yes. SILENTCHAIN Community is a free, open-source Burp Suite extension with AI-powered OWASP Top 10 detection, and six AI providers including fully local Ollama. It has no time limit and no feature paywall on its passive scanning core."
                 }
             },
             {
@@ -82,7 +90,7 @@
                 "name": "What does SILENTCHAIN Professional add over Community?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Professional adds Phase 2 active verification (injecting payloads in a sandbox to confirm exploitability), WAF detection and fingerprinting across 24 signatures, out-of-band (OOB) testing, a curated set of 200+ payloads, additional AI providers (ten total), RAG feedback that boosts your knowledge base from verified findings, and HTML advisory reports."
+                    "text": "Professional adds Phase 2 active verification (injecting payloads in a sandbox to confirm exploitability), WAF detection and fingerprinting across 24 signatures, out-of-band (OOB) testing, a curated set of 200+ payloads, additional AI providers (ten total), and HTML advisory reports."
                 }
             },
             {
@@ -449,9 +457,6 @@
                 <ul class="dropdown-menu">
                     <li><a href="https://github.com/silentchainai/SILENTCHAIN">SILENTCHAIN Community</a></li>
                     <li><a href="/professional.html">SILENTCHAIN Professional</a></li>
-                    <li><a href="/enterprise.html">SILENTCHAIN Enterprise</a></li>
-                    <li><a href="/source.html">SILENTCHAIN SOURCE</a></li>
-                    <li><a href="https://sn1persecurity.com/" target="_blank">Sn1per AI Core</a></li>
                 </ul>
             </li>
             <li><a href="/#features">Features</a></li>
@@ -459,7 +464,7 @@
             <li><a href="/blog/" class="active">Blog</a></li>
             <li><a href="https://github.com/silentchainai/SILENTCHAIN">GitHub</a></li>
         </ul>
-        <a href="https://sn1persecurity.com/wordpress/product/silentchain-professional/" class="cta-button" target="_blank" rel="noopener">Buy Professional - $199/yr</a>
+        <a href="https://sn1persecurity.com/wordpress/product/silentchain-professional/" class="cta-button" target="_blank" rel="noopener">Buy Now</a>
     </nav>
 </div>
 
@@ -501,9 +506,7 @@
             proxy, classifies it against the <strong>OWASP Top 10</strong> with an AI model, and
             writes findings into a sortable table. It ships with <strong>six AI providers</strong>
             - including fully local <a href="https://ollama.com" target="_blank">Ollama</a>, so your
-            traffic never has to leave your machine - and it queries the same
-            <a href="/rag-engine.html">RAG Knowledge Engine</a> (optional, self-hosted, 27,000+ security documents) that
-            the paid editions use. It is free, it is open source, and there is no feature paywall on
+            traffic never has to leave your machine. It is free, it is open source, and there is no feature paywall on
             that passive-scanning core.
         </p>
 
@@ -544,11 +547,6 @@
                     <td><strong>AI providers</strong></td>
                     <td>6 (incl. local Ollama)</td>
                     <td><strong>10</strong> (adds GPT-5.5, Claude Code CLI, OpenRouter, Z.ai)</td>
-                </tr>
-                <tr>
-                    <td><strong>RAG Knowledge Engine</strong></td>
-                    <td>Retrieve</td>
-                    <td><strong>Retrieve + Feedback</strong></td>
                 </tr>
                 <tr>
                     <td><strong>Phase 2 active verification</strong></td>
@@ -654,18 +652,6 @@
             extra slots matter.
         </p>
 
-        <h2>RAG: Retrieve vs Retrieve + Feedback</h2>
-
-        <p>
-            Both editions can optionally connect to a self-hosted RAG Knowledge Engine (off by default). Community uses
-            <strong>Retrieve</strong>: it pulls relevant OWASP, CWE, Exploit-DB and SecLists context
-            to sharpen its analysis. Professional adds the <strong>Feedback</strong> half of the
-            loop - when a finding is actively verified, the related knowledge-base documents are
-            boosted, so the engine gets measurably better at the vulnerability classes <em>you</em>
-            keep finding on the targets <em>you</em> keep testing. Community consumes the knowledge
-            base; Professional helps train it.
-        </p>
-
         <h2>Reporting: CSV vs HTML Advisories</h2>
 
         <p>
@@ -733,8 +719,7 @@
                     <li><a href="/#products">Products</a></li>
                     <li><a href="/#features">Features</a></li>
                     <li><a href="/#pricing">Pricing</a></li>
-                    <li><a href="https://github.com/silentchainai/SILENTCHAIN/blob/main/README.md">Documentation</a></li>
-                    <li><a href="https://github.com/silentchainai/SILENTCHAIN/blob/main/CHANGELOG.md">Changelog</a></li>
+                    <li><a href="/docs/professional/">Documentation</a></li>
                 </ul>
             </div>
 
@@ -742,9 +727,9 @@
                 <h4>Resources</h4>
                 <ul class="footer-links">
                     <li><a href="/blog/">Blog</a></li>
-                    <li><a href="https://github.com/silentchainai/SILENTCHAIN">GitHub</a></li>
-                    <li><a href="https://github.com/silentchainai/SILENTCHAIN/blob/main/INSTALLATION.md">Installation Guide</a></li>
-                    <li><a href="https://github.com/silentchainai/SILENTCHAIN/blob/main/QUICKSTART.md">Quick Start</a></li>
+                    <li><a href="/changelog.html">Changelog</a></li>
+                    <li><a href="/docs/professional/installation/">Installation Guide</a></li>
+                    <li><a href="/docs/professional/quickstart/">Quick Start</a></li>
                 </ul>
             </div>
 
@@ -762,7 +747,7 @@
                 <h4>Connect</h4>
                 <ul class="footer-links">
                     <li><a href="https://x.com/silentchainai" target="_blank">X (Twitter)</a></li>
-                    <li><a href="https://github.com/silentchainai" target="_blank">GitHub</a></li>
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN" target="_blank">GitHub</a></li>
                     <li><a href="https://youtube.com/@silentchainai" target="_blank">YouTube</a></li>
                 </ul>
             </div>

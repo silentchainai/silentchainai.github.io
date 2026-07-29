@@ -214,15 +214,13 @@
         <h3>1.3 Information We Do NOT Collect from Sn1perSecurity Servers</h3>
         <ul>
             <li><strong>Scan Data:</strong> SILENTCHAIN software runs locally on your machine. <strong>Sn1perSecurity</strong> does not receive, transmit, or store any target URLs, HTTP traffic, vulnerability findings, or scan results on our servers.</li>
-            <li><strong>Source Code:</strong> SILENTCHAIN SOURCE analyzes code locally. Sn1perSecurity never accesses, collects, or stores your source code on our servers.</li>
         </ul>
 
         <h3>1.4 AI Provider Data Transmission (Important)</h3>
         <p><strong>This section describes how your data may be transmitted to third-party AI providers when you use SILENTCHAIN products.</strong></p>
-        <p>SILENTCHAIN products use AI providers to analyze HTTP traffic, source code, and generate vulnerability findings. <strong>When you configure a cloud-based AI provider, portions of your scan data are transmitted to that provider's API for analysis.</strong> The specific data transmitted depends on the scan type and provider:</p>
+        <p>SILENTCHAIN products use AI providers to analyze HTTP traffic and generate vulnerability findings. <strong>When you configure a cloud-based AI provider, portions of your scan data are transmitted to that provider's API for analysis.</strong> The specific data transmitted depends on the scan type and provider:</p>
         <ul>
-            <li><strong>SILENTCHAIN Enterprise / Pro / Community (HTTP scanning):</strong> HTTP request and response content (URLs, headers, parameters, body content), vulnerability finding metadata (severity, CWE, parameter names), and Phase 2 active verification payloads may be sent to your configured AI provider.</li>
-            <li><strong>SILENTCHAIN SOURCE (static code analysis):</strong> Source code snippets, file paths, function signatures, data-flow analysis, and vulnerability context may be sent to your configured AI provider.</li>
+            <li><strong>SILENTCHAIN Professional / Community (HTTP scanning):</strong> HTTP request and response content (URLs, headers, parameters, body content), vulnerability finding metadata (severity, CWE, parameter names), and Phase 2 active verification payloads may be sent to your configured AI provider.</li>
         </ul>
         <p><strong>Supported AI providers and their data handling:</strong></p>
         <ul>
@@ -240,7 +238,7 @@
         </ul>
 
         <h3>1.5 License Validation and Telemetry</h3>
-        <p>SILENTCHAIN Pro, Enterprise, and Sn1per Pro/Enterprise editions require license activation and periodic validation. The following data is transmitted to Sn1perSecurity servers during license operations:</p>
+        <p>SILENTCHAIN Professional requires license activation and periodic validation. The following data is transmitted to Sn1perSecurity servers during license operations:</p>
         <ul>
             <li><strong>License Activation:</strong> License key, machine fingerprint (a SHA-256 hash derived from hardware identifiers), software version, build ID, operating system, and hostname.</li>
             <li><strong>Periodic Heartbeat:</strong> License token, machine fingerprint, software version, and aggregated usage metrics including: workspace count, host count, scan count, disk usage, and scan mode. Heartbeats occur approximately every 4 hours while the software is running.</li>
@@ -352,7 +350,8 @@
             <a href="/terms.html">Terms of Service</a>
             <a href="mailto:support@silentchain.ai">Contact</a>
         </p>
-        <p style="margin-top: 16px;">&copy; 2026 SILENTCHAIN AI by Sn1perSecurity LLC. All rights reserved.</p>
+        <p style="margin-top: 16px;">&copy; 2026 Sn1perSecurity LLC. All rights reserved. SILENTCHAIN AI&trade; and the SILENTCHAIN AI logo are trademarks of Sn1perSecurity LLC.</p>
+        <p style="margin-top: 12px; font-size: 11px; opacity: 0.7;">Burp Suite&reg; is a trademark of PortSwigger Ltd. Nessus&reg; is a trademark of Tenable, Inc. OWASP&reg; is a trademark of the OWASP Foundation. Not affiliated with or endorsed by these companies.</p>
     </div>
 </footer>
 </body>

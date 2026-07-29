@@ -456,9 +456,6 @@
                 <ul class="dropdown-menu">
                     <li><a href="https://github.com/silentchainai/SILENTCHAIN">SILENTCHAIN Community</a></li>
                     <li><a href="/professional.html">SILENTCHAIN Professional</a></li>
-                    <li><a href="/enterprise.html">SILENTCHAIN Enterprise</a></li>
-                    <li><a href="/source.html">SILENTCHAIN SOURCE</a></li>
-                    <li><a href="https://sn1persecurity.com/" target="_blank">Sn1per AI Core</a></li>
                 </ul>
             </li>
             <li><a href="/#features">Features</a></li>
@@ -466,7 +463,7 @@
             <li><a href="/blog/" class="active">Blog</a></li>
             <li><a href="https://github.com/silentchainai/SILENTCHAIN">GitHub</a></li>
         </ul>
-        <a href="https://sn1persecurity.com/wordpress/product/silentchain-professional/" class="cta-button" target="_blank" rel="noopener">Buy Professional - $199/yr</a>
+        <a href="https://sn1persecurity.com/wordpress/product/silentchain-professional/" class="cta-button" target="_blank" rel="noopener">Buy Now</a>
     </nav>
 </div>
 
@@ -551,8 +548,7 @@
 
         <p>
             Phase 2 runs after the first-pass AI classifier has produced a list of candidate
-            findings from HTTP transactions. In SILENTCHAIN Enterprise it lives in
-            <code>src/silentchain/scanning/phase2.py</code> and is gated behind the
+            findings from HTTP transactions. In SILENTCHAIN Professional it is gated behind the
             <code>phase2_enabled</code> config flag. The pipeline looks like this:
         </p>
 
@@ -630,8 +626,8 @@
         <p>
             This is the first of two AI calls inside Phase 2, and the more interesting one. The
             prompt (<code>build_phase2_prompt()</code> in <code>ai/prompts.py</code>) asks the model
-            to behave as a payload engineer: given the vulnerability class, the parameter context,
-            and RAG-retrieved exploit snippets, produce a strategy object:
+            to behave as a payload engineer: given the vulnerability class and the parameter
+            context, produce a strategy object:
         </p>
 
         <pre><code>{
@@ -819,18 +815,17 @@
         <h2>Benchmark: E2E Run Against python.testinvicti.com</h2>
 
         <p>
-            We ran SILENTCHAIN Enterprise end-to-end against
+            We ran SILENTCHAIN's Phase 2 pipeline end-to-end against
             <code>http://python.testinvicti.com</code>, a deliberately vulnerable Django target
-            maintained by Invicti. The run used Katana crawl at depth 2, Phase 2 active
-            verification enabled, and the RAG engine providing retrieved context for both
-            strategy generation and verification prompts. Environment details:
+            maintained by Invicti. The run used Katana crawl at depth 2 with Phase 2 active
+            verification enabled for both strategy generation and verification prompts.
+            Environment details:
         </p>
 
         <ul>
             <li><strong>Target:</strong> python.testinvicti.com (Django, no WAF)</li>
             <li><strong>Crawler:</strong> Katana, depth = 2, ~180 unique request templates</li>
-            <li><strong>RAG knowledge base:</strong> ~27,000 documents (OWASP, CWE, Exploit-DB, SecLists, PayloadsAllTheThings, CVSS, prior scan loot)</li>
-            <li><strong>First-pass classifier:</strong> default Enterprise AI dispatcher</li>
+            <li><strong>First-pass classifier:</strong> default AI dispatcher</li>
             <li><strong>Phase 2:</strong> enabled, confidence threshold 70, hybrid curated+AI payloads</li>
         </ul>
 
@@ -976,19 +971,6 @@
             floor. AI is the ceiling.
         </p>
 
-        <h3>Gotcha 4: RAG Context Lifts Both Prompts Noticeably</h3>
-
-        <p>
-            We initially ran Phase 2 without the RAG engine - raw prompts, no retrieved
-            context. Turning on RAG retrieval for the strategy prompt improved Phase 2 acceptance
-            rates on real vulnerabilities (fewer payloads needed per verified finding) and
-            turning it on for the verification prompt improved precision (fewer borderline
-            heuristic matches escalated to false verifications). The retrieved context is
-            usually a small number of Exploit-DB snippets or SecLists payloads for the
-            vulnerability class, feeding the model verified ground truth to compare the observed
-            response against.
-        </p>
-
         <h2>Where Second-Opinion Classification Still Makes Sense</h2>
 
         <p>
@@ -1010,21 +992,11 @@
             between "classify again" and "exploit it" becomes the whole game.
         </p>
 
-        <p>
-            Our SILENTCHAIN SOURCE edition faces this exact boundary on the SAST side. It
-            addresses it by taking findings into a Docker sandbox, writing a PoC script, and
-            executing the PoC against the instrumented code. If the PoC runs and produces the
-            expected effect, the finding stays. If it fails, the finding is downgraded or
-            discarded. Same principle, different substrate: <strong>exploit the candidate or
-            drop it</strong>.
-        </p>
-
         <h2>Try It Yourself</h2>
 
         <p>
-            Phase 2 active verification ships with SILENTCHAIN Professional (Burp Suite
-            extension, Jython) and SILENTCHAIN Enterprise (standalone Python 3, FastAPI +
-            WebSocket). The Community edition uses the same first-pass AI classification but
+            Phase 2 active verification ships with SILENTCHAIN Professional, the paid Burp Suite
+            extension. The free Community edition uses the same first-pass AI classification but
             omits Phase 2 - by design, so that Community stays a simple drop-in Burp
             extension with no sandbox orchestration overhead.
         </p>
@@ -1033,35 +1005,26 @@
             To run the same pipeline we benchmarked:
         </p>
 
-        <pre><code># SILENTCHAIN Enterprise (standalone)
-pip install silentchain-enterprise
-silentchain scan \
-  --url http://your-target.local \
-  --phase2-enabled \
-  --rag-enabled \
-  --rag-api-url http://localhost:8000
-
-# SILENTCHAIN Pro (Burp extension)
-# Load silentchain-pro-v1.2.11.py in Burp Extender,
-# enable "Phase 2 Active Verification" in the config tab,
-# and point the RAG client at your local RAG engine.</code></pre>
+        <pre><code># SILENTCHAIN Professional (Burp Suite extension)
+# 1. Load the SILENTCHAIN Professional extension in Burp Extender
+# 2. Enable "Phase 2 Active Verification" in the config tab
+# 3. Run your traffic through the Burp proxy as usual -
+#    verified findings land in the SILENTCHAIN panel with evidence attached.</code></pre>
 
         <p>
             The configuration fields that map to the architecture described above:
             <code>phase2_enabled</code>, <code>phase2_confidence_threshold</code> (default 70),
-            <code>phase2_max_payloads_per_finding</code>, <code>rag_enabled</code>,
-            <code>rag_api_url</code>, <code>rag_top_k</code>, and
-            <code>rag_min_relevance</code>.
+            and <code>phase2_max_payloads_per_finding</code>.
         </p>
 
         <div class="post-cta">
             <h3>Stop Triaging False Positives. Start Reading Verified Findings.</h3>
             <p>
-                SILENTCHAIN Professional and Enterprise ship Phase 2 active verification out of
+                SILENTCHAIN Professional ships Phase 2 active verification out of
                 the box. Every finding in the report has a payload, a parameter, and a response
                 delta attached as evidence. No Phase 2 match, no finding. Period.
             </p>
-            <a href="/enterprise.html" class="cta-button">Explore Enterprise</a>
+            <a href="/professional.html" class="cta-button">Explore Professional</a>
         </div>
 
         <a href="/blog/" class="back-link">&larr; Back to all posts</a>
@@ -1087,8 +1050,7 @@ silentchain scan \
                     <li><a href="/#products">Products</a></li>
                     <li><a href="/#features">Features</a></li>
                     <li><a href="/#pricing">Pricing</a></li>
-                    <li><a href="https://github.com/silentchainai/SILENTCHAIN/blob/main/README.md">Documentation</a></li>
-                    <li><a href="https://github.com/silentchainai/SILENTCHAIN/blob/main/CHANGELOG.md">Changelog</a></li>
+                    <li><a href="/docs/professional/">Documentation</a></li>
                 </ul>
             </div>
 
@@ -1096,9 +1058,9 @@ silentchain scan \
                 <h4>Resources</h4>
                 <ul class="footer-links">
                     <li><a href="/blog/">Blog</a></li>
-                    <li><a href="https://github.com/silentchainai/SILENTCHAIN">GitHub</a></li>
-                    <li><a href="https://github.com/silentchainai/SILENTCHAIN/blob/main/INSTALLATION.md">Installation Guide</a></li>
-                    <li><a href="https://github.com/silentchainai/SILENTCHAIN/blob/main/QUICKSTART.md">Quick Start</a></li>
+                    <li><a href="/changelog.html">Changelog</a></li>
+                    <li><a href="/docs/professional/installation/">Installation Guide</a></li>
+                    <li><a href="/docs/professional/quickstart/">Quick Start</a></li>
                 </ul>
             </div>
 
@@ -1116,7 +1078,7 @@ silentchain scan \
                 <h4>Connect</h4>
                 <ul class="footer-links">
                     <li><a href="https://x.com/silentchainai" target="_blank">X (Twitter)</a></li>
-                    <li><a href="https://github.com/silentchainai" target="_blank">GitHub</a></li>
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN" target="_blank">GitHub</a></li>
                     <li><a href="https://youtube.com/@silentchainai" target="_blank">YouTube</a></li>
                 </ul>
             </div>
