@@ -1285,7 +1285,7 @@
 
 <!-- Comparison Table -->
 <div class="container">
-    <section id="pricing" class="comparison">
+    <section id="pricing" class="comparison" style="padding-bottom: 32px;">
         <div class="section-header">
             <div class="section-tag">COMMUNITY VS PRO</div>
             <h2>Community vs Professional</h2>
@@ -1375,9 +1375,9 @@
         <p style="text-align: center; margin-top: 24px; font-size: 14px; color: var(--text-muted);">
             Not sure yet? <a href="https://github.com/silentchainai/SILENTCHAIN" style="color: var(--accent-green); text-decoration: none;">Start free with Community</a> - no card required - and upgrade to Professional when you need active verification. Your Professional license is transferable between machines and never auto-rebills.
         </p>
-        <div style="max-width: 720px; margin: 28px auto 0; padding: 22px 26px; background: rgba(10, 25, 50, 0.5); border: 1px solid rgba(77, 232, 255, 0.12); border-radius: 14px;">
-            <div style="font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px; color: var(--text-light); margin-bottom: 12px; letter-spacing: 0.5px;">Notes</div>
-            <ul style="margin: 0; padding-left: 20px; color: var(--text-muted); font-size: 13px; line-height: 1.9;">
+        <div style="margin: 28px auto 0; padding: 30px; background: var(--card-bg); border: 1px solid rgba(77, 232, 255, 0.1); border-radius: 16px; backdrop-filter: blur(10px);">
+            <div style="font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; color: var(--text-light); margin-bottom: 12px; letter-spacing: 0.5px;">Notes</div>
+            <ul style="margin: 0; padding-left: 20px; color: var(--text-muted); font-size: 14px; line-height: 1.9;">
                 <li>Both editions require a separate <strong style="color: var(--text-light);">Burp Suite Professional</strong> license (not included).</li>
                 <li>Professional licenses include updates and basic technical support during the license term.</li>
                 <li>Licenses can be transferred between machines but only used on one machine at a time.</li>
@@ -1389,10 +1389,10 @@
 
 <!-- Email capture (Brevo: replace the form action with your Brevo form endpoint) -->
 <div class="container">
-    <div style="max-width: 640px; margin: 40px auto 0; padding: 32px; background: rgba(10, 25, 50, 0.6); border: 1px solid rgba(77, 232, 255, 0.15); border-radius: 16px; text-align: center;">
-        <h3 style="font-family: 'Syne', sans-serif; font-size: 22px; color: #e0e6ed; margin-bottom: 8px;">See a real SILENTCHAIN Professional report</h3>
-        <p style="color: #8892a6; font-size: 14px; margin-bottom: 20px;">Subscribe and instantly open an example HTML pentest report - verified findings, OWASP Top 10 + CWE mapping, evidence, and remediation, exactly as SILENTCHAIN Professional generates it. Plus occasional AI-pentesting field notes. No spam - unsubscribe anytime.</p>
-        <form action="https://YOUR-BREVO-FORM-ENDPOINT.example" method="POST" target="scBrevoSink" onsubmit="return scReportSignup(this);" style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+    <div style="margin: 0 auto; padding: 40px; background: var(--card-bg); border: 1px solid rgba(77, 232, 255, 0.1); border-radius: 16px; backdrop-filter: blur(10px); text-align: center;">
+        <h3 style="font-family: 'Syne', sans-serif; font-size: 26px; color: #e0e6ed; margin-bottom: 10px;">See a real SILENTCHAIN Professional report</h3>
+        <p style="color: #8892a6; font-size: 15px; margin: 0 auto 24px; max-width: 820px; line-height: 1.7;">Subscribe and instantly open an example HTML pentest report - verified findings, OWASP Top 10 + CWE mapping, evidence, and remediation, exactly as SILENTCHAIN Professional generates it. Plus occasional AI-pentesting field notes. No spam - unsubscribe anytime.</p>
+        <form action="https://YOUR-BREVO-FORM-ENDPOINT.example" method="POST" target="scBrevoSink" onsubmit="return scReportSignup(this);" style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; max-width: 640px; margin: 0 auto;">
             <input type="email" name="EMAIL" placeholder="you@company.com" required style="flex: 1; min-width: 240px; padding: 12px 16px; border-radius: 8px; border: 1px solid rgba(77, 232, 255, 0.3); background: rgba(5, 8, 16, 0.6); color: #e0e6ed; font-family: 'JetBrains Mono', monospace;">
             <button type="submit" class="cta-button">Get the example report</button>
         </form>
