@@ -107,6 +107,27 @@
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
+        "@type": "VideoObject",
+        "name": "SILENTCHAIN AI Professional Demo",
+        "description": "Watch SILENTCHAIN Professional detect and actively verify vulnerabilities in real time inside Burp Suite - Phase 2 active verification, WAF detection, out-of-band testing and HTML advisory reporting.",
+        "thumbnailUrl": "https://i.ytimg.com/vi/yWJK4CvS5pE/maxresdefault.jpg",
+        "uploadDate": "2026-07-19",
+        "embedUrl": "https://www.youtube-nocookie.com/embed/yWJK4CvS5pE",
+        "contentUrl": "https://www.youtube.com/watch?v=yWJK4CvS5pE",
+        "publisher": {
+            "@type": "Organization",
+            "name": "SILENTCHAIN AI",
+            "url": "https://silentchain.ai",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://silentchain.ai/images/silentchainai-logo-transparent.png"
+            }
+        }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
         "@type": "Organization",
         "name": "SILENTCHAIN AI",
         "url": "https://silentchain.ai",
@@ -284,6 +305,29 @@
         .article-body {
             max-width: 820px; margin: 60px auto 0;
             font-size: 15px; line-height: 1.85;
+        }
+
+        .video-wrapper {
+            position: relative; padding-bottom: 56.25%; height: 0;
+            border-radius: 16px; overflow: hidden;
+            border: 1px solid rgba(77, 232, 255, 0.15);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            margin: 30px 0;
+        }
+
+        .video-wrapper iframe {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%; border: none;
+        }
+
+        .post-figure { margin: 30px 0; }
+        .post-figure img {
+            width: 100%; display: block; border-radius: 12px;
+            border: 1px solid rgba(77, 232, 255, 0.18);
+        }
+        .post-figure figcaption {
+            margin-top: 12px; font-size: 13px; color: var(--text-muted);
+            text-align: center; line-height: 1.6;
         }
 
         .article-body h2 {
@@ -502,6 +546,18 @@
 
         <p>Community-grade passive analysis reads the HTTP traffic flowing through Burp and reasons about it like an analyst - it tells you where a vulnerability probably is. Professional adds the machinery to prove it. The output changes from "this parameter looks injectable" to "this parameter is injectable, here is the request that proves it."</p>
 
+        <p>Rather watch than read? The demo below shows SILENTCHAIN Professional detecting and actively verifying vulnerabilities in real time inside Burp Suite.</p>
+
+        <div class="video-wrapper">
+            <iframe
+                src="https://www.youtube-nocookie.com/embed/yWJK4CvS5pE?rel=0&modestbranding=1&color=white"
+                title="SILENTCHAIN AI Professional Demo"
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+            </iframe>
+        </div>
+
         <h2>What Professional Adds</h2>
         <ul>
             <li><strong>Phase 2 active verification</strong> - constructs and sends a confirming request, then only marks a finding verified once exploitability is demonstrated, with the request that proves it.</li>
@@ -511,6 +567,11 @@
             <li><strong>HTML advisory reports</strong> - export a polished report with the exact request and response that proves each finding, ready to hand to a client or a developer.</li>
             <li><strong>10 AI providers</strong> - Burp AI (default), Ollama, OpenAI, GPT-5.5, Claude, Claude Code, Gemini, OpenRouter, Z.ai and Azure AI Foundry. Use a local Ollama model for air-gapped, zero-data-exposure testing.</li>
         </ul>
+
+        <figure class="post-figure">
+            <img src="/images/shots/burp-console.webp" alt="The SILENTCHAIN Professional tab in Burp Suite showing scan statistics, active analysis tasks, a findings table and the live console" loading="lazy">
+            <figcaption>The SILENTCHAIN Professional console inside Burp Suite - scan statistics, active analysis tasks, findings and a live console in one tab.</figcaption>
+        </figure>
 
         <h2>Community vs Professional</h2>
         <table>
@@ -528,8 +589,21 @@
             </tbody>
         </table>
 
+        <figure class="post-figure">
+            <img src="/images/shots/burp-issues.webp" alt="SILENTCHAIN findings listed in the native Burp Suite issues panel with a full advisory, evidence and remediation detail" loading="lazy">
+            <figcaption>Professional registers every finding as a native Burp Scanner issue, complete with advisory, evidence and remediation detail.</figcaption>
+        </figure>
+
         <h2>On-Prem by Design</h2>
         <p>A tool that ships your proxy traffic to a third-party model is a non-starter for a lot of teams. Select the Ollama provider and point SILENTCHAIN at a local runtime, and analysis runs entirely on hardware you control. Sensitive fields are best-effort redacted before anything is sent to a cloud provider, so SILENTCHAIN fits engagements with hard data-residency requirements.</p>
+
+        <h2>A Report You Can Hand to the Client</h2>
+        <p>Every verified finding lands in a polished HTML advisory report - executive summary, severity totals, findings grouped by weakness category and CWE, and the exact request and response that proves each issue. Don't take our word for it: <a href="/reports/SILENTCHAIN-Professional-example-report.html" target="_blank" rel="noopener">open the full interactive example report</a> generated by SILENTCHAIN Professional, or browse <a href="/professional.html#tour">the complete product tour</a> for more screenshots.</p>
+
+        <figure class="post-figure">
+            <img src="/images/shots/report-summary.webp" alt="The executive summary page of a SILENTCHAIN report showing severity totals, a verified count and a top findings table" loading="lazy">
+            <figcaption>The executive summary of a SILENTCHAIN Professional report - severity totals, verified counts and top findings at a glance.</figcaption>
+        </figure>
 
         <h2>Pricing and Licensing</h2>
         <p>SILENTCHAIN Professional is <strong>$199 per seat, per year</strong>, billed annually, with all updates included for the term. There is no monthly plan and no money-back guarantee. Your license key is delivered by email after purchase; activation binds it to your workstation, and you can deactivate to move it to a new machine. SILENTCHAIN Professional requires Burp Suite Professional with AI features enabled.</p>
@@ -542,6 +616,13 @@
                 It is available now at $199 per seat per year.
             </p>
             <a href="https://sn1persecurity.com/wordpress/product/silentchain-professional/?utm_source=silentchain-ai&utm_medium=blog&utm_campaign=pro-launch&utm_content=post-cta" class="cta-button" target="_blank">Buy SILENTCHAIN Professional</a>
+            <p style="margin: 18px 0 0; font-size: 14px;">
+                <a href="/reports/SILENTCHAIN-Professional-example-report.html" target="_blank" rel="noopener">View the example report</a>
+                &nbsp;&middot;&nbsp;
+                <a href="/professional.html">See the full product tour</a>
+                &nbsp;&middot;&nbsp;
+                <a href="https://youtu.be/yWJK4CvS5pE" target="_blank" rel="noopener">Watch the demo on YouTube</a>
+            </p>
         </div>
 
         <a href="/blog/" class="back-link">&larr; Back to all posts</a>
