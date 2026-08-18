@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-R6V66JC0M4"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-R6V66JC0M4');
+    </script>
+    <title>SILENTCHAIN Professional - Settings & Configuration Reference</title>
+    <meta name="description" content="Complete reference for every SILENTCHAIN Professional setting: AI provider options, analysis rounds, safety rails, Phase 2 active verification, and recommended configurations for local AI, fast triage, and deep analysis.">
+    <meta name="keywords" content="silentchain professional settings, burp ai extension configuration, phase 2 settings, ollama num_ctx, analysis rounds, advanced configuration reference">
+    <meta name="author" content="SILENTCHAIN AI Team">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="SILENTCHAIN Professional - Settings & Configuration Reference">
+    <meta property="og:description" content="Every SILENTCHAIN Professional setting explained: AI provider, analysis rounds, safety rails, Phase 2 active verification, and recommended presets.">
+    <meta property="og:image" content="https://silentchain.ai/og-professional.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="https://silentchain.ai/docs/professional/settings/">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="SILENTCHAIN Professional - Settings & Configuration Reference">
+    <meta name="twitter:description" content="Every SILENTCHAIN Professional setting explained: AI provider, analysis rounds, safety rails, Phase 2 active verification, and recommended presets.">
+    <meta name="twitter:image" content="https://silentchain.ai/og-professional.png">
+
+    <link rel="canonical" href="https://silentchain.ai/docs/professional/settings/">
+    <link rel="icon" type="image/png" href="/images/silentchainai-logo-transparent.png">
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "TechArticle",
+        "headline": "SILENTCHAIN Professional - Settings & Configuration Reference",
+        "description": "Complete reference for every SILENTCHAIN Professional setting: AI provider options, analysis rounds, safety rails, Phase 2 active verification, and recommended configurations.",
+        "author": { "@type": "Organization", "name": "SILENTCHAIN AI", "url": "https://silentchain.ai" },
+        "publisher": {
+            "@type": "Organization", "name": "SILENTCHAIN AI", "url": "https://silentchain.ai",
+            "logo": { "@type": "ImageObject", "url": "https://silentchain.ai/images/silentchainai-logo-transparent.png" }
+        },
+        "mainEntityOfPage": { "@type": "WebPage", "@id": "https://silentchain.ai/docs/professional/settings/" }
+    }
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@700;800&display=swap');
+
+        :root {
+            --bg-dark: #0a0e1a;
+            --bg-darker: #050810;
+            --accent-cyan: #4de8ff;
+            --accent-blue: #0080f0;
+            --accent-green: #00ff88;
+            --accent-red: #ff4d6d;
+            --text-light: #e0e6ed;
+            --text-muted: #8892a6;
+            --card-bg: rgba(10, 25, 50, 0.6);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body { font-family: 'JetBrains Mono', monospace; background: var(--bg-dark); color: var(--text-light); overflow-x: hidden; line-height: 1.6; }
+
+        .background-grid { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(77, 232, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(77, 232, 255, 0.03) 1px, transparent 1px); background-size: 50px 50px; animation: gridMove 20s linear infinite; pointer-events: none; z-index: 0; }
+        @keyframes gridMove { 0% { transform: translate(0, 0); } 100% { transform: translate(50px, 50px); } }
+
+        .glow-orb { position: fixed; width: 600px; height: 600px; border-radius: 50%; filter: blur(120px); opacity: 0.15; pointer-events: none; z-index: 1; }
+        .orb-1 { background: var(--accent-cyan); top: -300px; left: -300px; animation: float 20s ease-in-out infinite; }
+        .orb-2 { background: var(--accent-blue); bottom: -300px; right: -300px; animation: float 25s ease-in-out infinite reverse; }
+        @keyframes float { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(100px, 100px); } }
+
+        .container { position: relative; z-index: 10; max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 30px 0; border-bottom: 1px solid rgba(77, 232, 255, 0.1); position: relative; z-index: 100; }
+        .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 28px; letter-spacing: -1px; display: flex; align-items: center; gap: 14px; text-decoration: none; color: inherit; }
+        .logo-text { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .logo-icon { width: 36px; height: 36px; flex-shrink: 0; }
+        .nav-links { display: flex; gap: 40px; list-style: none; }
+        .nav-links a { color: var(--text-light); text-decoration: none; font-size: 14px; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--accent-cyan); }
+        .nav-links a.active { color: var(--accent-cyan); }
+        .nav-dropdown { position: relative; padding-bottom: 20px; margin-bottom: -20px; }
+        .nav-dropdown > a::after { content: ' \25BE'; font-size: 10px; }
+        .dropdown-menu { display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); min-width: 260px; background: #0c1225; border: 1px solid rgba(77, 232, 255, 0.25); border-radius: 8px; padding: 8px 0; list-style: none; z-index: 1000; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7); }
+        .dropdown-menu::before { content: ''; position: absolute; top: -20px; left: 0; right: 0; height: 20px; }
+        .nav-dropdown:hover .dropdown-menu { display: block; }
+        .dropdown-menu li a { display: block; padding: 10px 24px; color: var(--accent-cyan); text-decoration: none; font-size: 13px; transition: all 0.2s; white-space: nowrap; }
+        .dropdown-menu li a:hover { color: #fff; background: rgba(77, 232, 255, 0.12); }
+
+        .cta-button { padding: 12px 30px; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); color: white; border: none; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 14px; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; text-decoration: none; display: inline-block; }
+        .cta-button:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(77, 232, 255, 0.3); }
+
+        .article-header { max-width: 900px; margin: 80px auto 0; text-align: center; }
+        .article-header .post-meta { display: flex; gap: 16px; align-items: center; justify-content: center; margin-bottom: 24px; font-size: 13px; color: var(--text-muted); }
+        .post-tag { padding: 4px 12px; background: rgba(77, 232, 255, 0.1); border: 1px solid rgba(77, 232, 255, 0.2); border-radius: 20px; color: var(--accent-cyan); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+        .article-header h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 46px; background: linear-gradient(135deg, #ffffff, var(--accent-cyan), var(--accent-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.2; margin-bottom: 20px; }
+        .article-header .subtitle { color: var(--text-muted); font-size: 18px; line-height: 1.7; }
+
+        .doc-nav { display: flex; flex-wrap: wrap; gap: 12px; max-width: 900px; margin: 40px auto 0; justify-content: center; }
+        .doc-nav a { padding: 8px 18px; border: 1px solid rgba(77, 232, 255, 0.2); border-radius: 20px; color: var(--text-muted); font-size: 13px; text-decoration: none; transition: all 0.2s; }
+        .doc-nav a:hover { color: var(--accent-cyan); border-color: var(--accent-cyan); }
+        .doc-nav a.active { color: var(--bg-darker); background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); border-color: transparent; font-weight: 700; }
+
+        .article-body { max-width: 900px; margin: 50px auto 0; font-size: 15px; line-height: 1.85; }
+        .article-body h2 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 28px; color: var(--text-light); margin: 50px 0 20px; scroll-margin-top: 20px; }
+        .article-body h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 20px; color: var(--text-light); margin: 36px 0 14px; }
+        .article-body p { color: var(--text-muted); margin-bottom: 20px; }
+        .article-body strong { color: var(--text-light); }
+        .article-body a { color: var(--accent-cyan); text-decoration: none; border-bottom: 1px solid rgba(77, 232, 255, 0.3); transition: border-color 0.3s; }
+        .article-body a:hover { border-color: var(--accent-cyan); }
+        .article-body ul, .article-body ol { color: var(--text-muted); margin: 0 0 20px 24px; }
+        .article-body li { margin-bottom: 8px; }
+        .article-body code { background: rgba(77, 232, 255, 0.08); border: 1px solid rgba(77, 232, 255, 0.15); border-radius: 4px; padding: 2px 6px; font-size: 12.5px; color: var(--accent-cyan); white-space: nowrap; }
+        .article-body pre { background: var(--bg-darker); border: 1px solid rgba(77, 232, 255, 0.1); border-radius: 12px; padding: 24px; margin: 24px 0; overflow-x: auto; font-size: 13px; line-height: 1.6; }
+        .article-body pre code { background: none; border: none; padding: 0; color: var(--text-light); white-space: pre; }
+
+        .callout { background: rgba(77, 232, 255, 0.05); border-left: 3px solid var(--accent-cyan); border-radius: 0 12px 12px 0; padding: 20px 24px; margin: 30px 0; }
+        .callout p { margin-bottom: 0; }
+        .callout-warn { background: rgba(255, 77, 109, 0.06); border-left: 3px solid var(--accent-red); }
+
+        .bench-table { width: 100%; border-collapse: collapse; margin: 24px 0; background: var(--bg-darker); border: 1px solid rgba(77, 232, 255, 0.15); border-radius: 12px; overflow: hidden; font-size: 13px; }
+        .bench-table th, .bench-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid rgba(77, 232, 255, 0.08); vertical-align: top; }
+        .bench-table th { background: rgba(77, 232, 255, 0.06); color: var(--accent-cyan); font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 1px; }
+        .bench-table td { color: var(--text-muted); }
+        .bench-table td strong { color: var(--text-light); }
+        .bench-table td code { white-space: nowrap; }
+        .bench-table tr:last-child td { border-bottom: none; }
+        .def { color: var(--accent-green); font-weight: 700; white-space: nowrap; }
+
+        .toc { background: var(--card-bg); border: 1px solid rgba(77, 232, 255, 0.15); border-radius: 14px; padding: 24px 28px; margin: 30px auto 0; max-width: 900px; }
+        .toc h4 { font-family: 'Syne', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-cyan); margin-bottom: 12px; }
+        .toc ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 30px; }
+        .toc a { color: var(--text-muted); text-decoration: none; font-size: 13px; }
+        .toc a:hover { color: var(--accent-cyan); }
+
+        .back-link { display: inline-block; margin-top: 60px; color: var(--accent-cyan); font-size: 14px; text-decoration: none; font-weight: 700; }
+        .back-link:hover { color: #fff; }
+
+        footer { border-top: 1px solid rgba(77, 232, 255, 0.1); padding: 60px 0 40px; margin-top: 100px; }
+        .footer-content { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 60px; margin-bottom: 40px; }
+        .footer-section h4 { font-family: 'Syne', sans-serif; margin-bottom: 20px; }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 14px; transition: color 0.3s; }
+        .footer-links a:hover { color: var(--accent-cyan); }
+        .footer-bottom { padding-top: 30px; border-top: 1px solid rgba(77, 232, 255, 0.05); text-align: center; color: var(--text-muted); font-size: 12px; }
+
+        .footer-fineprint {
+            max-width: 940px; margin: 10px auto 0;
+            font-size: 11px; line-height: 1.65; opacity: 0.75;
+        }
+
+        .footer-fineprint strong { opacity: 0.95; font-weight: 700; }
+
+        @media (max-width: 768px) {
+            nav { flex-wrap: wrap; gap: 16px; }
+            .logo { font-size: 20px; gap: 10px; white-space: nowrap; }
+            .logo-icon { width: 28px; height: 28px; }
+            .nav-links { order: 3; width: 100%; justify-content: center; flex-wrap: wrap; gap: 16px 24px; padding-top: 16px; border-top: 1px solid rgba(77, 232, 255, 0.1); }
+            nav .cta-button { padding: 8px 20px; font-size: 12px; }
+            .article-header h1 { font-size: 30px; }
+            .article-body h2 { font-size: 22px; }
+            .toc ul { grid-template-columns: 1fr; }
+            .footer-content { grid-template-columns: 1fr; }
+            .bench-table { font-size: 12px; }
+            .bench-table th, .bench-table td { padding: 10px 12px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="background-grid"></div>
+<div class="glow-orb orb-1"></div>
+<div class="glow-orb orb-2"></div>
+
+<!-- Navigation -->
+<div class="container" style="z-index: 50;">
+    <nav>
+        <a href="/" class="logo"><img src="/images/silentchainai-logo-transparent.png" alt="SILENTCHAIN AI" class="logo-icon"><span class="logo-text">SILENTCHAIN</span></a>
+        <ul class="nav-links">
+            <li class="nav-dropdown">
+                <a href="#">Products</a>
+                <ul class="dropdown-menu">
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN">SILENTCHAIN Community</a></li>
+                    <li><a href="/professional.html">SILENTCHAIN Professional</a></li>
+                </ul>
+            </li>
+            <li><a href="/#features">Features</a></li>
+            <li><a href="/#pricing">Pricing</a></li>
+            <li><a href="/blog/">Blog</a></li>
+            <li><a href="https://github.com/silentchainai/SILENTCHAIN">GitHub</a></li>
+        </ul>
+        <a href="https://sn1persecurity.com/wordpress/product/silentchain-professional/" class="cta-button" target="_blank" rel="noopener">Buy Now</a>
+    </nav>
+</div>
+
+<!-- Header -->
+<div class="container">
+    <div class="article-header">
+        <div class="post-meta">
+            <span class="post-tag">Documentation</span>
+            <span class="post-tag">Settings</span>
+            <span>Configuration Reference</span>
+        </div>
+        <h1>Settings &amp; Configuration Reference</h1>
+        <p class="subtitle">
+            Every SILENTCHAIN Professional setting, with its default, range, and effect. Settings live in
+            the SILENTCHAIN Professional tab under <strong>Settings</strong>, split across two tabs -
+            <strong>AI Provider</strong> and <strong>Advanced</strong> - and persist in Burp's preferences.
+        </p>
+    </div>
+    <div class="doc-nav">
+        <a href="/docs/professional/">Overview</a>
+        <a href="/docs/professional/requirements/">Requirements</a>
+        <a href="/docs/professional/installation/">Installation</a>
+        <a href="/docs/professional/quickstart/">Quick Start</a>
+        <a href="/docs/professional/settings/" class="active">Settings</a>
+    </div>
+</div>
+
+<!-- Body -->
+<div class="container">
+    <article class="article-body">
+
+        <div class="toc">
+            <h4>On this page</h4>
+            <ul>
+                <li><a href="#defaults">Defaults philosophy</a></li>
+                <li><a href="#ai-provider">AI Provider tab</a></li>
+                <li><a href="#providers">Provider endpoints</a></li>
+                <li><a href="#general">Advanced: General</a></li>
+                <li><a href="#safety">Advanced: Safety Rails</a></li>
+                <li><a href="#phase2">Advanced: Phase 2</a></li>
+                <li><a href="#presets">Recommended presets</a></li>
+            </ul>
+        </div>
+
+        <h2 id="defaults">Defaults philosophy</h2>
+        <p>
+            SILENTCHAIN Professional ships with <strong>safe, opt-in defaults</strong>. Passive analysis and
+            Phase 2 active verification are both <strong>off</strong> until you enable them, the secret / PII
+            sanitizer is <strong>on</strong>, and analysis is restricted to in-scope targets. Everything below
+            can be tuned in the two Settings tabs; click <strong>Save</strong> to persist. The green value in
+            the <em>Default</em> column is the shipped default.
+        </p>
+
+        <div class="callout">
+            <p>Options and model names may vary by provider or software version.</p>
+        </div>
+
+        <h2 id="ai-provider">AI Provider tab</h2>
+        <p>
+            Selects and configures the model that performs analysis. When <strong>Burp AI</strong> is selected,
+            the third-party fields (URL / key / model / max tokens / Azure version) are disabled because Burp AI
+            runs in-process. Use <strong>Test Connection</strong> to validate, and <strong>Refresh</strong> to
+            pull the model list from providers that support it.
+        </p>
+        <table class="bench-table">
+            <tr><th>Setting</th><th>Default</th><th>Notes</th></tr>
+            <tr><td><strong>AI Provider</strong></td><td><span class="def">Burp AI</span></td><td>One of 10 providers (see the <a href="#providers">endpoint table</a>). Uses Burp AI through PortSwigger&#39;s AI service and consumes your available Burp AI credits.</td></tr>
+            <tr><td><strong>API URL</strong></td><td>provider default</td><td>Auto-filled with the provider's default endpoint when empty. Disabled for Burp AI and Claude Code.</td></tr>
+            <tr><td><strong>API Key</strong></td><td><em>empty</em></td><td>Stored as a password field. Not used by Burp AI, Ollama, or Claude Code.</td></tr>
+            <tr><td><strong>Model</strong></td><td><em>empty</em></td><td>Editable; use <strong>Refresh</strong> to list available models. For Azure this is the deployment name.</td></tr>
+            <tr><td><strong>Max Tokens</strong></td><td><span class="def">4096</span></td><td>Max output tokens per AI call (min 1). Ignored by Burp AI and Claude Code.</td></tr>
+            <tr><td><strong>Azure API Version</strong></td><td><code>2024-06-01</code></td><td>Only used by Azure AI Foundry.</td></tr>
+            <tr><td><strong>Ollama structured output</strong></td><td><code>schema</code></td><td><code>schema</code> forces <code>{"findings":[...]}</code> (most reliable on small local models); <code>json</code> is legacy loose JSON; <code>off</code> relies on the prompt only. Ollama only.</td></tr>
+            <tr><td><strong>Ollama context (num_ctx)</strong></td><td><span class="def">8192</span></td><td>Context window in tokens (min 2048). Must exceed prompt + Max Tokens, or Ollama silently truncates the prompt and returns no findings. Ollama only.</td></tr>
+        </table>
+
+        <h2 id="providers">Provider endpoints</h2>
+        <p>Ten providers are supported. The URL is auto-filled when you switch providers with an empty field.</p>
+        <table class="bench-table">
+            <tr><th>Provider</th><th>Default URL</th><th>Auth</th><th>Notes</th></tr>
+            <tr><td><strong>Burp AI</strong> (default)</td><td>in-process</td><td>none</td><td>Uses your Burp AI Credits; no key needed</td></tr>
+            <tr><td><strong>Ollama</strong></td><td><code>http://localhost:11434</code></td><td>none</td><td>Fully local; tune <code>num_ctx</code> and structured output</td></tr>
+            <tr><td>OpenAI</td><td><code>https://api.openai.com/v1</code></td><td>Bearer key</td><td>Standard OpenAI models</td></tr>
+            <tr><td>GPT-5.5</td><td><code>https://api.openai.com/v1</code></td><td>Bearer key</td><td>OpenAI frontier model; same endpoint + key</td></tr>
+            <tr><td>Claude</td><td><code>https://api.anthropic.com/v1</code></td><td>x-api-key</td><td>Anthropic Claude models</td></tr>
+            <tr><td>Claude Code</td><td>local CLI</td><td>none</td><td>Uses the local <code>claude</code> CLI; must be installed and authenticated</td></tr>
+            <tr><td>Gemini</td><td><code>https://generativelanguage.googleapis.com/v1</code></td><td>key in query</td><td>Google Gemini models</td></tr>
+            <tr><td>OpenRouter</td><td><code>https://openrouter.ai/api/v1</code></td><td>Bearer key</td><td>Uses <code>vendor/model</code> ids</td></tr>
+            <tr><td>Z.ai</td><td><code>https://open.z-ai.io/api/paas/v4</code></td><td>Bearer key</td><td>GLM models</td></tr>
+            <tr><td>Azure AI Foundry</td><td><code>https://&lt;resource&gt;.openai.azure.com</code></td><td>api-key header</td><td>Model = deployment name; set the API version</td></tr>
+        </table>
+        <div class="callout">
+            <p>For local AI analysis, choose <strong>Ollama</strong> and point it at a local model. AI analysis can
+            then run entirely on your own hardware without sending proxy traffic, credentials, or findings to a
+            third-party AI provider. See <a href="/docs/professional/requirements/">Requirements</a> for licensing
+            and other network requirements.</p>
+        </div>
+
+        <h2 id="general">Advanced tab: General</h2>
+        <table class="bench-table">
+            <tr><th>Setting</th><th>Default</th><th>Range</th><th>Effect</th></tr>
+            <tr><td><strong>Passive Scanning</strong></td><td><span class="def">Off</span></td><td>on / off</td><td>Automatically analyze in-scope HTTP traffic as it flows through Burp. Off by default to avoid unnecessary AI usage, latency, and provider costs.</td></tr>
+            <tr><td><strong>Console Theme</strong></td><td><span class="def">Dark</span></td><td>Light / Dark</td><td>Theme for the SILENTCHAIN console output.</td></tr>
+            <tr><td><strong>Verbose Logging</strong></td><td><span class="def">Off</span></td><td>on / off</td><td>Extra diagnostic logging in the console.</td></tr>
+            <tr><td><strong>WAF Detection</strong></td><td><span class="def">On</span></td><td>on / off</td><td>Passively fingerprint and log WAFs (24 vendors) on observed traffic. Detection / fingerprinting only - it does not modify traffic; Phase 2 uses it to back off from actively-blocking hosts.</td></tr>
+            <tr><td><strong>Analysis Rounds</strong></td><td><span class="def">1</span></td><td>1 - 3</td><td>AI analysis passes per request. The model is non-deterministic, so more rounds catch more (deduplicated) findings, at higher latency and token / credit cost.</td></tr>
+            <tr><td><strong>AI Request Timeout (s)</strong></td><td><span class="def">60</span></td><td>&ge; 5</td><td>Per-call timeout for AI requests.</td></tr>
+        </table>
+        <p>The <strong>Run Task Diagnostics</strong> button prints a snapshot of in-flight and completed analysis tasks to the console - useful when a scan appears stuck.</p>
+
+        <h2 id="safety">Advanced tab: Safety Rails</h2>
+        <table class="bench-table">
+            <tr><th>Setting</th><th>Default</th><th>Range</th><th>Effect</th></tr>
+            <tr><td><strong>Sanitizer</strong> (redact secrets / PII)</td><td><span class="def">On</span></td><td>on / off</td><td>Best-effort redaction of secrets and PII before content is sent to a cloud AI provider. Leave on for cloud providers.</td></tr>
+            <tr><td><strong>Scope</strong> (in-scope only)</td><td><span class="def">On</span></td><td>on / off</td><td>Restrict all analysis to targets in Burp's Target scope.</td></tr>
+            <tr><td><strong>Max Response Size (KB)</strong></td><td><span class="def">~195 KB</span></td><td>&ge; 1 KB</td><td>Responses larger than this are truncated before analysis (200,000 bytes by default). Controls token cost on large pages.</td></tr>
+            <tr><td><strong>Passive: Per-host Requests/Minute</strong></td><td><span class="def">10</span></td><td>&ge; 1</td><td>Caps how many requests per host per minute the passive pipeline sends to the AI. Does not affect Phase 2 active sending.</td></tr>
+            <tr><td><strong>URL Dedup Window (min)</strong></td><td><span class="def">60</span></td><td>&ge; 1</td><td>How long an already-analyzed URL is skipped to avoid re-analyzing the same endpoint (default holds up to 500 URLs).</td></tr>
+        </table>
+
+        <h2 id="phase2">Advanced tab: Phase 2 Active Verification</h2>
+        <p>
+            Phase 2 actively tests injection-class findings by sending real payloads to the target and promoting
+            confirmed findings to <strong>Certain</strong>. It is <strong>off by default</strong> and should only
+            be run against authorized targets.
+        </p>
+        <table class="bench-table">
+            <tr><th>Setting</th><th>Default</th><th>Range</th><th>Effect</th></tr>
+            <tr><td><strong>Enable Phase 2</strong></td><td><span class="def">Off</span></td><td>on / off</td><td>Master toggle. Sends payloads to in-scope targets.</td></tr>
+            <tr><td><strong>Payload count</strong></td><td><span class="def">130</span></td><td>1 - 500</td><td>How many payloads from the <strong>200+ curated library</strong> to try per finding. Raise it toward 200+ for broader verification; more payloads means higher recall and more requests.</td></tr>
+            <tr><td><strong>Phase 2 timeout (s)</strong></td><td><span class="def">30</span></td><td>&ge; 5</td><td>Per-request timeout for verification requests.</td></tr>
+            <tr><td><strong>Phase 2 concurrent requests</strong></td><td><span class="def">10</span></td><td>1 - 32</td><td>Parallel payload requests per target. Higher = faster, but more target load and a higher chance of tripping rate limits / WAF IP bans.</td></tr>
+            <tr><td><strong>Curated payloads</strong></td><td><span class="def">On</span></td><td>on / off</td><td>Use the curated payload library (vs. AI-only payload generation).</td></tr>
+            <tr><td><strong>Fuzz surfaces</strong></td><td><span class="def">URL, Body, JSON</span></td><td>URL / Body / Cookie / JSON / Headers</td><td>Which parts of the request to inject into. Cookie and Request Headers are off by default because they can generate noisier results. Header testing includes headers such as Referer and X-Forwarded-For, but excludes Host, Cookie, and Authorization.</td></tr>
+            <tr><td><strong>Inject modes</strong></td><td><span class="def">Replace + Append</span></td><td>Replace / Append</td><td>Whether to replace the original parameter value with a payload, append the payload to it, or both.</td></tr>
+            <tr><td><strong>Collaborator URL</strong> (optional)</td><td><em>empty</em></td><td>URL</td><td>Out-of-band (OOB) callback endpoint for blind XSS / SSRF / XXE / RFI / SQLi detection. Leave empty to use Burp's default Collaborator.</td></tr>
+        </table>
+        <div class="callout callout-warn">
+            <p><strong>Authorized targets only.</strong> Phase 2 sends crafted payloads to the target you select.
+            Raising concurrency and payload count increases load and the chance of a WAF IP ban - tune carefully
+            against production systems.</p>
+        </div>
+
+        <h2 id="presets">Recommended presets</h2>
+
+        <h3>Local AI / restricted-network</h3>
+        <ul>
+            <li><strong>AI Provider:</strong> Ollama, <code>http://localhost:11434</code>, a local model.</li>
+            <li><strong>Ollama context (num_ctx):</strong> 8192 or higher; keep structured output on <code>schema</code>.</li>
+            <li><strong>Sanitizer:</strong> On, as defense in depth.</li>
+        </ul>
+
+        <h3>Fast triage (low cost, low noise)</h3>
+        <ul>
+            <li><strong>Analysis Rounds:</strong> 1. <strong>Passive:</strong> on for a focused scope only.</li>
+            <li><strong>Phase 2:</strong> off - review Phase 1 findings first.</li>
+            <li><strong>Max Response Size:</strong> keep the default to cap token cost.</li>
+        </ul>
+
+        <h3>Deep / thorough verification</h3>
+        <ul>
+            <li><strong>Analysis Rounds:</strong> 2 - 3 for better recall.</li>
+            <li><strong>Phase 2:</strong> on; increase payload count toward 200+ for broader verification; add Cookie and Header fuzz surfaces where appropriate.</li>
+            <li><strong>Concurrency:</strong> raise cautiously (watch for WAF IP bans).</li>
+        </ul>
+
+        <div class="callout">
+            <p>New to the extension? Start with the <a href="/docs/professional/installation/">installation guide</a>
+            and the <a href="/docs/professional/quickstart/">quick start</a>, then come back here to tune.</p>
+        </div>
+
+        <a href="/docs/professional/" class="back-link">&larr; Back to Documentation</a>
+    </article>
+</div>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <a href="/" class="logo" style="margin-bottom: 20px;"><img src="/images/silentchainai-logo-transparent.png" alt="SILENTCHAIN AI" class="logo-icon"><span class="logo-text">SILENTCHAIN</span></a>
+                <p style="color: var(--text-muted); font-size: 14px; margin-top: 20px;">
+                    AI-powered security testing for the modern web. Privacy-focused and built for professionals.
+                </p>
+            </div>
+            <div class="footer-section">
+                <h4>Product</h4>
+                <ul class="footer-links">
+                    <li><a href="/professional.html">Professional</a></li>
+                    <li><a href="/#features">Features</a></li>
+                    <li><a href="/#pricing">Pricing</a></li>
+                    <li><a href="/docs/professional/">Documentation</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Docs</h4>
+                <ul class="footer-links">
+                    <li><a href="/docs/professional/">Overview</a></li>
+                    <li><a href="/docs/professional/requirements/">Requirements</a></li>
+                    <li><a href="/docs/professional/installation/">Installation Guide</a></li>
+                    <li><a href="/docs/professional/quickstart/">Quick Start</a></li>
+                    <li><a href="/docs/professional/settings/">Settings Reference</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <ul class="footer-links">
+                    <li><a href="/about.html">About</a></li>
+                    <li><a href="https://sn1persecurity.com/wordpress/home/contact/" target="_blank" rel="noopener">Need Help?</a></li>
+                    <li><a href="/privacy.html">Privacy Policy</a></li>
+                    <li><a href="/terms.html">Legal</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Connect</h4>
+                <ul class="footer-links">
+                    <li><a href="https://x.com/silentchainai" target="_blank">X (Twitter)</a></li>
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN" target="_blank">GitHub</a></li>
+                    <li><a href="https://youtube.com/@silentchainai" target="_blank">YouTube</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Sn1perSecurity LLC. All rights reserved. SILENTCHAIN AI&trade; and the SILENTCHAIN AI logo are trademarks of Sn1perSecurity LLC.</p>
+            <p class="footer-fineprint"><strong>Compatibility:</strong> SILENTCHAIN is an extension for Burp Suite Professional and requires a separate Burp Suite Professional license. Burp Suite is not included. SILENTCHAIN is a standalone product and does not integrate with the Sn1per platform.</p>
+            <p class="footer-fineprint"><strong>Trademarks:</strong> Burp Suite&reg; is a trademark of PortSwigger Ltd. Nessus&reg; is a trademark of Tenable, Inc. OWASP&reg; is a trademark of the OWASP Foundation. SILENTCHAIN is an independent product and is not affiliated with or endorsed by these companies.</p>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

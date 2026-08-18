@@ -401,6 +401,21 @@
             animation: fadeInUp 0.8s ease-out 0.6s both;
         }
 
+        .hero-builtfor {
+            margin-top: 20px;
+            font-size: 12.5px;
+            letter-spacing: 0.6px;
+            color: var(--text-muted);
+            animation: fadeInUp 0.8s ease-out 0.65s both;
+        }
+
+        .hero-trust {
+            margin-top: 10px;
+            font-size: 13px;
+            color: var(--text-muted);
+            animation: fadeInUp 0.8s ease-out 0.7s both;
+        }
+
         .secondary-button {
             padding: 12px 30px;
             background: transparent;
@@ -451,10 +466,27 @@
             font-family: 'Syne', sans-serif;
             font-size: 48px;
             font-weight: 800;
+            line-height: 1.15;
+            /* keeps the word-based and numeric stats sitting on a common baseline */
+            min-height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+        }
+
+        /* word-length values ("PRIVATE", "OWASP Top 10") would wrap at the numeric 48px.
+           Syne 800 runs ~1.1em per character, so 22px is the ceiling that keeps the
+           longest label on one line inside a 4-up column. */
+        .stat-number.is-word {
+            font-size: 20px;
+            font-size: clamp(16px, 1.5vw, 22px);
+            letter-spacing: 0.5px;
+            text-align: center;
+            white-space: nowrap;
         }
 
         .stat-label {
@@ -855,6 +887,16 @@
             font-size: 12px;
         }
 
+        .footer-fineprint {
+            max-width: 940px;
+            margin: 10px auto 0;
+            font-size: 11px;
+            line-height: 1.65;
+            opacity: 0.75;
+        }
+
+        .footer-fineprint strong { opacity: 0.95; font-weight: 700; }
+
         /* Responsive Design */
         @media (max-width: 1200px) {
             .features-grid,
@@ -1043,37 +1085,32 @@
                 <span class="play-icon">&#9654;</span> Watch Pro Demo
             </a>
         </div>
-        <p class="hero-trust" style="margin-top: 22px; font-size: 13px; color: var(--text-muted);">
+        <p class="hero-builtfor">Built for Burp Suite Professional</p>
+        <p class="hero-trust">
             From the makers of <a href="https://sn1persecurity.com" target="_blank" rel="noopener" style="color: var(--text-light); text-decoration: none; border-bottom: 1px solid rgba(77,232,255,0.4);">Sn1per</a>
             &nbsp;&middot;&nbsp; Free &amp; open-source Community edition
             &nbsp;&middot;&nbsp; No card required to start
             &nbsp;&middot;&nbsp; Run local AI models for private testing
         </p>
-        <div style="max-width: 760px; margin: 30px auto 0; padding: 16px 22px; background: rgba(255, 107, 53, 0.06); border: 1px solid rgba(255, 107, 53, 0.28); border-radius: 12px; font-size: 12.5px; color: #b9c4d4; line-height: 1.7;">
-            <strong style="color: #ffb499;">Requires Burp Suite Professional.</strong>
-            SILENTCHAIN is a Burp Suite extension - it does <strong style="color: var(--text-light);">not</strong> include Burp Suite,
-            is not affiliated with or endorsed by PortSwigger, and does <strong style="color: var(--text-light);">not</strong> plug into
-            our Sn1per platform. Burp Suite Community is not supported.
-        </div>
     </section>
 
     <!-- Stats -->
     <div class="stats">
         <div class="stat-item">
-            <div class="stat-number">100%</div>
-            <div class="stat-label">Local / air-gapped option</div>
+            <div class="stat-number is-word">PRIVATE</div>
+            <div class="stat-label">Local &amp; air-gapped deployments</div>
         </div>
         <div class="stat-item">
             <div class="stat-number">10</div>
-            <div class="stat-label">AI providers (Pro)</div>
+            <div class="stat-label">AI Providers</div>
         </div>
         <div class="stat-item">
             <div class="stat-number">24</div>
-            <div class="stat-label">WAF types fingerprinted (Pro)</div>
+            <div class="stat-label">WAF fingerprints</div>
         </div>
         <div class="stat-item">
-            <div class="stat-number">OWASP</div>
-            <div class="stat-label">Top 10 + CWE mapping</div>
+            <div class="stat-number is-word">OWASP Top 10</div>
+            <div class="stat-label">+CWE mapping</div>
         </div>
     </div>
 </div>
@@ -1085,9 +1122,10 @@
             <div class="section-tag">OUR EDITIONS</div>
             <h2>Community &amp;<br>Professional</h2>
             <p class="section-description">
-                Two editions of the same AI pentesting extension. Both load into
-                <strong style="color: var(--text-light);">Burp Suite Professional</strong> - start free with Community,
-                then upgrade to Professional for active verification, WAF fingerprinting, and 10 AI providers.
+                Two editions of the same AI pentesting extension for
+                <strong style="color: var(--text-light);">Burp Suite Professional</strong>. Start free with the
+                open-source Community edition, then upgrade to Professional when you need advanced
+                AI-powered verification and automation.
             </p>
         </div>
 
@@ -1095,13 +1133,13 @@
             <a href="https://github.com/silentchainai/SILENTCHAIN" class="product-card">
                 <span class="product-tag">Free &amp; Open Source</span>
                 <h3>SILENTCHAIN Community</h3>
-                <p>Burp Suite Professional extension with AI-powered OWASP Top 10 detection. 6 AI providers including local Ollama support. Free and open source.</p>
+                <p>AI-powered Burp Suite Professional extension for discovering OWASP Top 10 vulnerabilities.</p>
                 <span class="product-link">Download Free &rarr;</span>
             </a>
             <a href="/professional.html" class="product-card">
-                <span class="product-tag">$199 / Year &middot; Licensed</span>
+                <span class="product-tag">$199/year</span>
                 <h3>SILENTCHAIN Professional</h3>
-                <p>Burp Suite Professional extension with Phase 2 active verification, WAF detection and fingerprinting for 24 WAF types, 200+ curated payloads, OOB testing, and 10 AI providers including offensive models.</p>
+                <p>Advanced AI pentesting for Burp Suite with active verification, WAF fingerprinting, and offensive AI workflows.</p>
                 <span class="product-link">Learn More &rarr;</span>
             </a>
         </div>
@@ -1121,42 +1159,13 @@
 
         <div class="features-grid">
             <div class="feature-card">
-                <div class="feature-icon">🧠</div>
-                <h3>Multi-Provider AI</h3>
-                <p>
-                    Up to 10 AI providers: Burp AI, Ollama, OpenAI, Claude, Claude Code, Gemini, and more.
-                    Context-aware vulnerability detection that goes beyond pattern matching.
-                    Use local models for air-gapped environments.
-                </p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">📚</div>
-                <h3>OWASP Top 10 + CWE Mapping</h3>
-                <p>
-                    Every finding is mapped to the OWASP Top 10 and a CWE identifier with a
-                    severity score, so each issue lands in a framework your team already
-                    reports against - no manual triage translation required.
-                </p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">🔗</div>
-                <h3>Client-Ready Reports</h3>
-                <p>
-                    Export a polished HTML advisory report with the exact request and response
-                    that proves each finding. Hand it straight to a client or a developer -
-                    evidence included, no rework needed.
-                </p>
-            </div>
-
-            <div class="feature-card">
                 <div class="feature-icon">⚡</div>
                 <h3>Phase 2 Active Verification</h3>
                 <p>
-                    AI-driven payload generation with 200+ curated OWASP payloads.
-                    WAF detection and fingerprinting across 24 WAF signatures.
-                    Out-of-band testing for XSS, SSRF, blind injection, RFI, and XXE.
+                    Verify suspected vulnerabilities with AI-guided testing. Generate targeted
+                    payloads from 200+ curated OWASP payloads. WAF detection and fingerprinting
+                    across 24 WAF signatures. Out-of-band testing for XSS, SSRF, blind injection,
+                    RFI, and XXE.
                 </p>
             </div>
 
@@ -1164,10 +1173,9 @@
                 <div class="feature-icon">🔒</div>
                 <h3>Local-First &amp; Private</h3>
                 <p>
-                    Point SILENTCHAIN at a local Ollama model and analysis runs on your
-                    machine - no request, response, or finding is sent to a third-party
-                    AI service. Cloud providers are optional; sensitive data is redacted
-                    before any external call.
+                    Point SILENTCHAIN at a local Ollama model and analysis runs on your machine -
+                    no request, response, or finding is sent to a third-party AI service. Cloud AI
+                    is optional; sensitive data is redacted before requests are sent.
                 </p>
             </div>
 
@@ -1178,6 +1186,36 @@
                     Loads as a standard Burp extension and analyzes the traffic already
                     flowing through your proxy - no separate scanner to deploy, no new
                     workflow to learn. Passive by default, active when you choose.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🧠</div>
+                <h3>Multi-Provider AI</h3>
+                <p>
+                    Choose the AI model that fits your workflow. Connect to Burp AI, Ollama, OpenAI,
+                    Claude, Claude Code, Gemini, and more for context-aware vulnerability analysis
+                    that goes beyond pattern matching. Use local models for air-gapped environments.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🔗</div>
+                <h3>Client-Ready Reports</h3>
+                <p>
+                    Generate a polished HTML advisory report with the exact request and response
+                    that proves each finding. Hand it straight to a client or a developer -
+                    evidence included, no rework needed.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📚</div>
+                <h3>OWASP Top 10 + CWE Mapping</h3>
+                <p>
+                    Every finding is mapped to the OWASP Top 10 and a CWE identifier with a
+                    severity scoring, making reports easier to prioritize for clients and
+                    development teams.
                 </p>
             </div>
         </div>
@@ -1207,7 +1245,7 @@
             <a href="https://sn1persecurity.com/wordpress/product/silentchain-professional/" class="secondary-button" target="_blank" rel="noopener">Buy Professional - $199/yr</a>
         </div>
         <p class="video-caption" style="margin-top: 20px;">
-            See SILENTCHAIN Professional in action, with live findings and reporting, on the <a href="/professional.html">product page</a>.
+            See how Professional turns AI-discovered vulnerabilities into verified findings with evidence on the <a href="/professional.html">product page</a>.
         </p>
     </section>
 </div>
@@ -1387,29 +1425,16 @@
     </section>
 </div>
 
-<!-- Email capture (Brevo: replace the form action with your Brevo form endpoint) -->
+<!-- Example report - direct access, no signup gate -->
 <div class="container">
     <div style="margin: 0 auto; padding: 40px; background: var(--card-bg); border: 1px solid rgba(77, 232, 255, 0.1); border-radius: 16px; backdrop-filter: blur(10px); text-align: center;">
         <h3 style="font-family: 'Syne', sans-serif; font-size: 26px; color: #e0e6ed; margin-bottom: 10px;">See a real SILENTCHAIN Professional report</h3>
-        <p style="color: #8892a6; font-size: 15px; margin: 0 auto 24px; max-width: 820px; line-height: 1.7;">Subscribe and instantly open an example HTML pentest report - verified findings, OWASP Top 10 + CWE mapping, evidence, and remediation, exactly as SILENTCHAIN Professional generates it. Plus occasional AI-pentesting field notes. No spam - unsubscribe anytime.</p>
-        <form action="https://YOUR-BREVO-FORM-ENDPOINT.example" method="POST" target="scBrevoSink" onsubmit="return scReportSignup(this);" style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; max-width: 640px; margin: 0 auto;">
-            <input type="email" name="EMAIL" placeholder="you@company.com" required style="flex: 1; min-width: 240px; padding: 12px 16px; border-radius: 8px; border: 1px solid rgba(77, 232, 255, 0.3); background: rgba(5, 8, 16, 0.6); color: #e0e6ed; font-family: 'JetBrains Mono', monospace;">
-            <button type="submit" class="cta-button">Get the example report</button>
-        </form>
-        <div class="report-thanks" style="display: none; margin-top: 22px;">
-            <a href="/reports/SILENTCHAIN-Professional-example-report.html" class="cta-button" target="_blank" rel="noopener">Open your example report &rarr;</a>
-            <p style="color: #8892a6; font-size: 13px; margin-top: 14px;">Thanks for subscribing - your example SILENTCHAIN Professional report is ready. It opens in a new tab; use your browser's Save option to keep a copy.</p>
+        <p style="color: #8892a6; font-size: 15px; margin: 0 auto 24px; max-width: 820px; line-height: 1.7;">An example HTML pentest report - verified findings, OWASP Top 10 + CWE mapping, evidence, and remediation, exactly as SILENTCHAIN Professional generates it. No signup required.</p>
+        <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+            <a href="/reports/SILENTCHAIN-Professional-example-report.html" class="cta-button" target="_blank" rel="noopener">View the example report &rarr;</a>
+            <a href="/reports/SILENTCHAIN-Professional-example-report.html" class="secondary-button" download="SILENTCHAIN-Professional-example-report.html">Download HTML</a>
         </div>
-        <iframe name="scBrevoSink" title="Subscription" aria-hidden="true" style="display: none;"></iframe>
-        <script>
-        function scReportSignup(form) {
-            try {
-                form.style.display = 'none';
-                form.parentNode.querySelector('.report-thanks').style.display = 'block';
-            } catch (e) {}
-            return true; /* let the subscription still POST to Brevo via the hidden iframe */
-        }
-        </script>
+        <p style="color: #8892a6; font-size: 13px; margin-top: 16px;">Opens in a new tab. Self-contained HTML - save it or pass it on as-is.</p>
     </div>
 </div>
 
@@ -1473,7 +1498,7 @@
                     <li><a href="/about.html">About</a></li>
                     <li><a href="https://sn1persecurity.com/wordpress/home/contact/" target="_blank" rel="noopener">Contact</a></li>
                     <li><a href="/privacy.html">Privacy Policy</a></li>
-                    <li><a href="/terms.html">Terms of Service</a></li>
+                    <li><a href="/terms.html">Legal</a></li>
                 </ul>
             </div>
 
@@ -1489,8 +1514,8 @@
 
         <div class="footer-bottom">
             <p>&copy; 2026 Sn1perSecurity LLC. All rights reserved. SILENTCHAIN AI&trade; and the SILENTCHAIN AI logo are trademarks of Sn1perSecurity LLC.</p>
-            <p style="margin-top: 12px; font-size: 11px; opacity: 0.85;">SILENTCHAIN is a Burp Suite extension and <strong>requires Burp Suite Professional</strong>; it does not include Burp Suite and is a separate product from the Sn1per platform (it does not plug into Sn1per).</p>
-            <p style="margin-top: 8px; font-size: 11px; opacity: 0.7;">Burp Suite&reg; is a trademark of PortSwigger Ltd. Nessus&reg; is a trademark of Tenable, Inc. OWASP&reg; is a trademark of the OWASP Foundation. Not affiliated with or endorsed by these companies.</p>
+            <p class="footer-fineprint"><strong>Compatibility:</strong> SILENTCHAIN is an extension for Burp Suite Professional and requires a separate Burp Suite Professional license. Burp Suite is not included. SILENTCHAIN is a standalone product and does not integrate with the Sn1per platform.</p>
+            <p class="footer-fineprint"><strong>Trademarks:</strong> Burp Suite&reg; is a trademark of PortSwigger Ltd. Nessus&reg; is a trademark of Tenable, Inc. OWASP&reg; is a trademark of the OWASP Foundation. SILENTCHAIN is an independent product and is not affiliated with or endorsed by these companies.</p>
         </div>
     </div>
 </footer>

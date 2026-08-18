@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-R6V66JC0M4"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-R6V66JC0M4');
+    </script>
+    <title>SILENTCHAIN Changelog - Community &amp; Professional Release History</title>
+    <meta name="description" content="Release history for SILENTCHAIN Community and SILENTCHAIN Professional - the AI pentesting extensions for Burp Suite Professional. Current: Professional v2.0.38, Community v1.3.1.">
+    <link rel="canonical" href="https://silentchain.ai/changelog">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://silentchain.ai/changelog">
+    <meta property="og:title" content="SILENTCHAIN Changelog - Community &amp; Professional Release History">
+    <meta property="og:description" content="Release history for SILENTCHAIN Community and Professional, the AI pentesting extensions for Burp Suite Professional.">
+    <meta property="og:image" content="https://silentchain.ai/og-image.png">
+
+    <link rel="icon" type="image/png" href="images/silentchainai-logo-transparent.png">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@700;800&display=swap');
+
+        :root {
+            --bg-dark: #0a0e1a;
+            --accent-cyan: #4de8ff;
+            --accent-blue: #0080f0;
+            --accent-green: #00ff88;
+            --text-light: #e0e6ed;
+            --text-muted: #8892a6;
+            --card-bg: rgba(10, 25, 50, 0.6);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .background-grid {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image:
+                linear-gradient(rgba(77, 232, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(77, 232, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px; pointer-events: none; z-index: 0;
+        }
+        .glow-orb {
+            position: fixed; width: 600px; height: 600px; border-radius: 50%;
+            filter: blur(120px); opacity: 0.12; pointer-events: none; z-index: 1;
+        }
+        .orb-1 { background: var(--accent-cyan); top: -300px; left: -300px; }
+        .orb-2 { background: var(--accent-blue); bottom: -300px; right: -300px; }
+
+        .container { position: relative; z-index: 10; max-width: 1000px; margin: 0 auto; padding: 0 40px; }
+        .container-wide { max-width: 1400px; }
+
+        /* Nav */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 18px 24px; border-bottom: 1px solid rgba(77, 232, 255, 0.1);
+            position: relative; z-index: 100; background: rgba(10, 14, 26, 0.85);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border-radius: 0 0 14px 14px;
+        }
+        .logo {
+            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 28px;
+            letter-spacing: -1px; display: flex; align-items: center; gap: 14px;
+            text-decoration: none; color: inherit;
+        }
+        .logo-text {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .logo-icon { width: 36px; height: 36px; flex-shrink: 0; }
+        .nav-links { display: flex; gap: 40px; list-style: none; }
+        .nav-links a { color: var(--text-light); text-decoration: none; font-size: 14px; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--accent-cyan); }
+        .nav-dropdown { position: relative; padding-bottom: 20px; margin-bottom: -20px; }
+        .nav-dropdown > a::after { content: ' \25BE'; font-size: 10px; }
+        .dropdown-menu {
+            display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+            min-width: 260px; background: #0c1225; border: 1px solid rgba(77, 232, 255, 0.25);
+            border-radius: 8px; padding: 8px 0; list-style: none; z-index: 1000;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+        }
+        .dropdown-menu::before { content: ''; position: absolute; top: -20px; left: 0; right: 0; height: 20px; }
+        .nav-dropdown:hover .dropdown-menu { display: block; }
+        .dropdown-menu li a {
+            display: block; padding: 10px 24px; color: var(--accent-cyan);
+            text-decoration: none; font-size: 13px; transition: all 0.2s; white-space: nowrap;
+        }
+        .dropdown-menu li a:hover { color: #fff; background: rgba(77, 232, 255, 0.12); }
+        .cta-button {
+            padding: 12px 30px; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            color: white; border: none; border-radius: 8px; font-family: 'JetBrains Mono', monospace;
+            font-weight: 700; font-size: 14px; cursor: pointer; text-decoration: none; display: inline-block;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .cta-button:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(77, 232, 255, 0.3); }
+
+        /* Header */
+        .page-header { text-align: center; padding: 90px 0 40px; }
+        .section-tag {
+            display: inline-block; padding: 6px 16px; background: rgba(77, 232, 255, 0.1);
+            border: 1px solid rgba(77, 232, 255, 0.2); border-radius: 50px; color: var(--accent-cyan);
+            font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px;
+        }
+        .page-header h1 {
+            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 46px;
+            font-size: clamp(2rem, 5vw, 46px); line-height: 1.15; margin-bottom: 18px;
+            background: linear-gradient(135deg, #ffffff, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .page-header p { color: var(--text-muted); font-size: 16px; max-width: 640px; margin: 0 auto; }
+        .current-versions {
+            display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 26px;
+        }
+        .ver-pill {
+            padding: 8px 16px; background: rgba(0,255,136,0.06); border: 1px solid rgba(0,255,136,0.2);
+            border-radius: 20px; font-size: 12px; color: var(--text-muted);
+        }
+        .ver-pill strong { color: var(--accent-green); }
+
+        /* Changelog sections */
+        .log-section { padding: 40px 0; }
+        .log-section h2 {
+            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 28px; margin-bottom: 6px;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .log-section .sub { color: var(--text-muted); font-size: 13px; margin-bottom: 26px; }
+
+        .release {
+            display: grid; grid-template-columns: 150px 1fr; gap: 24px;
+            padding: 20px 0; border-top: 1px solid rgba(77, 232, 255, 0.08);
+        }
+        .release:first-of-type { border-top: none; }
+        .release .meta { display: flex; flex-direction: column; gap: 6px; }
+        .ver-badge {
+            display: inline-block; align-self: flex-start; padding: 4px 12px;
+            background: rgba(77, 232, 255, 0.1); border: 1px solid rgba(77, 232, 255, 0.25);
+            border-radius: 20px; color: var(--accent-cyan); font-size: 13px; font-weight: 700;
+        }
+        .ver-badge.latest { background: rgba(0,255,136,0.1); border-color: rgba(0,255,136,0.35); color: var(--accent-green); }
+        .release .date { color: var(--text-muted); font-size: 12px; }
+        .release .desc { color: var(--text-light); font-size: 14px; line-height: 1.7; }
+        .release .desc.muted { color: var(--text-muted); }
+
+        .note-box {
+            max-width: 1000px; margin: 20px auto 0; padding: 18px 24px; background: rgba(10, 25, 50, 0.5);
+            border: 1px solid rgba(77, 232, 255, 0.12); border-radius: 14px;
+            color: var(--text-muted); font-size: 13px; line-height: 1.8;
+        }
+        .note-box a { color: var(--accent-cyan); text-decoration: none; }
+
+        /* Footer */
+        footer { border-top: 1px solid rgba(77, 232, 255, 0.1); padding: 60px 0 40px; margin-top: 80px; }
+        .footer-content { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 60px; margin-bottom: 40px; }
+        .footer-section h4 { font-family: 'Syne', sans-serif; margin-bottom: 20px; }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 14px; transition: color 0.3s; }
+        .footer-links a:hover { color: var(--accent-cyan); }
+        .footer-bottom {
+            padding-top: 30px; border-top: 1px solid rgba(77, 232, 255, 0.05);
+            text-align: center; color: var(--text-muted); font-size: 12px;
+        }
+
+        .footer-fineprint {
+            max-width: 940px; margin: 10px auto 0;
+            font-size: 11px; line-height: 1.65; opacity: 0.75;
+        }
+
+        .footer-fineprint strong { opacity: 0.95; font-weight: 700; }
+
+        @media (max-width: 1080px) {
+            nav { padding: 16px 18px; }
+            .nav-links { gap: 26px; }
+            nav .cta-button { padding: 10px 20px; font-size: 13px; }
+        }
+        @media (max-width: 940px) {
+            nav { flex-wrap: wrap; gap: 14px; }
+            .logo { font-size: 22px; }
+            .nav-links {
+                order: 3; width: 100%; justify-content: center; flex-wrap: wrap;
+                gap: 14px 22px; padding-top: 14px; border-top: 1px solid rgba(77, 232, 255, 0.1);
+            }
+        }
+        @media (max-width: 640px) {
+            .release { grid-template-columns: 1fr; gap: 10px; }
+            .footer-content { grid-template-columns: 1fr; gap: 30px; }
+            .container { padding: 0 20px; }
+        }
+    </style>
+</head>
+<body>
+<div class="background-grid"></div>
+<div class="glow-orb orb-1"></div>
+<div class="glow-orb orb-2"></div>
+
+<!-- Navigation -->
+<div class="container container-wide" style="z-index: 100; position: sticky; top: 0;">
+    <nav>
+        <a href="/" class="logo"><img src="images/silentchainai-logo-transparent.png" alt="SILENTCHAIN AI" class="logo-icon"><span class="logo-text">SILENTCHAIN</span></a>
+        <ul class="nav-links">
+            <li class="nav-dropdown">
+                <a href="/#products">Products</a>
+                <ul class="dropdown-menu">
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN">SILENTCHAIN Community</a></li>
+                    <li><a href="/professional.html">SILENTCHAIN Professional</a></li>
+                </ul>
+            </li>
+            <li><a href="/#features">Features</a></li>
+            <li><a href="/#pricing">Pricing</a></li>
+            <li><a href="/blog/">Blog</a></li>
+            <li><a href="/changelog.html">Changelog</a></li>
+        </ul>
+        <a href="https://sn1persecurity.com/wordpress/product/silentchain-professional/" class="cta-button" target="_blank" rel="noopener">Buy Now</a>
+    </nav>
+</div>
+
+<!-- Header -->
+<div class="container">
+    <header class="page-header">
+        <div class="section-tag">Release History</div>
+        <h1>SILENTCHAIN Changelog</h1>
+        <p>Release notes for the SILENTCHAIN AI pentesting extensions for Burp Suite Professional. Highlights only - see each edition for full details.</p>
+        <div class="current-versions">
+            <span class="ver-pill">Professional <strong>v2.0.38</strong></span>
+            <span class="ver-pill">Community <strong>v1.3.1</strong></span>
+        </div>
+    </header>
+
+    <!-- Professional -->
+    <section class="log-section">
+        <h2><span style="color: var(--accent-cyan);">&#9670;</span> SILENTCHAIN Professional</h2>
+        <p class="sub">Java / Montoya extension for Burp Suite Professional - active verification, WAF fingerprinting, and 10 AI providers.</p>
+
+        <div class="release">
+            <div class="meta"><span class="ver-badge latest">v2.0.38</span><span class="date">2026-07-26</span></div>
+            <div class="desc">Streamlined the Advanced settings panel.</div>
+        </div>
+        <div class="release">
+            <div class="meta"><span class="ver-badge">v2.0.36</span><span class="date">2026-07-20</span></div>
+            <div class="desc">Redesigned the HTML advisory report to match the SILENTCHAIN theme, with print and accessibility fixes.</div>
+        </div>
+        <div class="release">
+            <div class="meta"><span class="ver-badge">v2.0.32</span><span class="date">2026-07-14</span></div>
+            <div class="desc">Renamed to "SILENTCHAIN Professional" throughout the Burp UI, banner, settings, and report footers.</div>
+        </div>
+        <div class="release">
+            <div class="meta"><span class="ver-badge">v2.0.31</span><span class="date">2026-07-13</span></div>
+            <div class="desc">Added in-app updates: a license-gated download and guided install flow from inside Burp.</div>
+        </div>
+        <div class="release">
+            <div class="meta"><span class="ver-badge">v2.0.30</span><span class="date">2026-07-13</span></div>
+            <div class="desc">Improved local Ollama reliability on small models: structured JSON output, larger context window, and faster reasoning-model responses.</div>
+        </div>
+        <div class="release">
+            <div class="meta"><span class="ver-badge">v2.0.29</span><span class="date">2026-07-08</span></div>
+            <div class="desc">Fixed Phase 1 analysis timeouts so every AI provider honors the configured request timeout.</div>
+        </div>
+        <div class="release">
+            <div class="meta"><span class="ver-badge">v2.0.28</span><span class="date">2026-07-06</span></div>
+            <div class="desc">Added licensing and a first-run EULA, and hardened Phase 2 injection handling and HTML report output.</div>
+        </div>
+        <div class="release">
+            <div class="meta"><span class="ver-badge">v2.0.14</span><span class="date">2026-06-14</span></div>
+            <div class="desc">Faster Phase 2 active verification with concurrent payload sends (configurable concurrency).</div>
+        </div>
+        <div class="release">
+            <div class="meta"><span class="ver-badge">v2.0.6</span><span class="date">2026-06-13</span></div>
+            <div class="desc">Added HTML advisory report export.</div>
+        </div>
+        <div class="release">
+            <div class="meta"><span class="ver-badge">v2.0.4</span><span class="date">2026-06-13</span></div>
+            <div class="desc">Phase 2 active verification engine with out-of-band (OOB) callback testing.</div>
+        </div>
+        <div class="release">
+            <div class="meta"><span class="ver-badge">v2.0.3</span><span class="date">2026-06-13</span></div>
+            <div class="desc">Added 200+ curated payloads and WAF detection and fingerprinting for 24 WAF types.</div>
+        </div>
+        <div class="release">
+            <div class="meta"><span class="ver-badge">v2.0.2</span><span class="date">2026-06-13</span></div>
+            <div class="desc">Reached 10 AI providers, adding GPT-5.5, Claude Code, OpenRouter, and Z.ai.</div>
+        </div>
+        <div class="release">
+            <div class="meta"><span class="ver-badge">v2.0.0</span><span class="date">2026-06-13</span></div>
+            <div class="desc">SILENTCHAIN Professional v2: the Java / Montoya rewrite of the extension.</div>
+        </div>
+    </section>
+
+    <!-- Community -->
+    <section class="log-section">
+        <h2><span style="color: var(--accent-green);">&#9670;</span> SILENTCHAIN Community</h2>
+        <p class="sub">Free, open-source Burp Suite Professional extension - AI-powered OWASP Top 10 detection.</p>
+
+        <div class="release">
+            <div class="meta"><span class="ver-badge latest">v1.3.1</span><span class="date">2026-07-13</span></div>
+            <div class="desc">Fixed local Ollama returning zero findings on small models (structured JSON output, context and repetition tuning, truncated-response recovery).</div>
+        </div>
+        <div class="release">
+            <div class="meta"><span class="ver-badge">v1.3.0</span><span class="date">2026-06-27</span></div>
+            <div class="desc">Rewritten as a native Java / Montoya extension. Burp AI is now the default provider, passive analysis is opt-in, and findings are emitted as native Burp issues.</div>
+        </div>
+        <div class="release">
+            <div class="meta"><span class="ver-badge">v1.2.0</span><span class="date">2026-03-29</span></div>
+            <div class="desc">Added the Azure OpenAI / Foundry provider, a persistent finding cache, CSV export, a start/stop scanning toggle, a runtime status panel, and a fixed thread pool for stable concurrency.</div>
+        </div>
+        <div class="release">
+            <div class="meta"><span class="ver-badge">v1.1.4</span><span class="date">2026-03-09</span></div>
+            <div class="desc">Detection and stability improvements.</div>
+        </div>
+    </section>
+
+    <div class="note-box">
+        Both editions are Burp Suite extensions and <strong>require Burp Suite Professional</strong> (not included). For full technical detail, see the
+        <a href="/docs/professional/">documentation</a>. Product pages: <a href="/professional.html">SILENTCHAIN Professional</a> and
+        <a href="https://github.com/silentchainai/SILENTCHAIN">SILENTCHAIN Community</a>.
+    </div>
+</div>
+
+<!-- Footer -->
+<footer>
+    <div class="container container-wide">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="logo" style="margin-bottom: 20px;"><img src="images/silentchainai-logo-transparent.png" alt="SILENTCHAIN AI" class="logo-icon"><span class="logo-text">SILENTCHAIN</span></div>
+                <p style="color: var(--text-muted); font-size: 14px;">
+                    AI-powered security testing for the modern web.
+                    Open source, privacy-focused, and built for professionals.
+                </p>
+            </div>
+            <div class="footer-section">
+                <h4>Product</h4>
+                <ul class="footer-links">
+                    <li><a href="/#products">Products</a></li>
+                    <li><a href="/#features">Features</a></li>
+                    <li><a href="/#pricing">Pricing</a></li>
+                    <li><a href="/docs/professional/">Documentation</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul class="footer-links">
+                    <li><a href="/blog/">Blog</a></li>
+                    <li><a href="/changelog.html">Changelog</a></li>
+                    <li><a href="/docs/professional/installation/">Installation Guide</a></li>
+                    <li><a href="/docs/professional/quickstart/">Quick Start</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <ul class="footer-links">
+                    <li><a href="/about.html">About</a></li>
+                    <li><a href="https://sn1persecurity.com/wordpress/home/contact/" target="_blank" rel="noopener">Contact</a></li>
+                    <li><a href="/privacy.html">Privacy Policy</a></li>
+                    <li><a href="/terms.html">Legal</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Connect</h4>
+                <ul class="footer-links">
+                    <li><a href="https://x.com/silentchainai" target="_blank">X (Twitter)</a></li>
+                    <li><a href="https://github.com/silentchainai/SILENTCHAIN" target="_blank">GitHub</a></li>
+                    <li><a href="https://youtube.com/@silentchainai" target="_blank">YouTube</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Sn1perSecurity LLC. All rights reserved. SILENTCHAIN AI&trade; and the SILENTCHAIN AI logo are trademarks of Sn1perSecurity LLC.</p>
+            <p class="footer-fineprint"><strong>Compatibility:</strong> SILENTCHAIN is an extension for Burp Suite Professional and requires a separate Burp Suite Professional license. Burp Suite is not included. SILENTCHAIN is a standalone product and does not integrate with the Sn1per platform.</p>
+            <p class="footer-fineprint"><strong>Trademarks:</strong> Burp Suite&reg; is a trademark of PortSwigger Ltd. Nessus&reg; is a trademark of Tenable, Inc. OWASP&reg; is a trademark of the OWASP Foundation. SILENTCHAIN is an independent product and is not affiliated with or endorsed by these companies.</p>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

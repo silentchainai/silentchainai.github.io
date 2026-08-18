@@ -423,6 +423,13 @@
             text-align: center; color: var(--text-muted); font-size: 12px;
         }
 
+        .footer-fineprint {
+            max-width: 940px; margin: 10px auto 0;
+            font-size: 11px; line-height: 1.65; opacity: 0.75;
+        }
+
+        .footer-fineprint strong { opacity: 0.95; font-weight: 700; }
+
         @media (max-width: 768px) {
             nav { flex-wrap: wrap; gap: 16px; }
             .logo { font-size: 20px; gap: 10px; white-space: nowrap; }
@@ -739,7 +746,7 @@
                     <li><a href="/about.html">About</a></li>
                     <li><a href="mailto:support@silentchain.ai">Contact</a></li>
                     <li><a href="/privacy.html">Privacy Policy</a></li>
-                    <li><a href="/terms.html">Terms of Service</a></li>
+                    <li><a href="/terms.html">Legal</a></li>
                 </ul>
             </div>
 
@@ -755,8 +762,8 @@
 
         <div class="footer-bottom">
             <p>&copy; 2026 Sn1perSecurity LLC. All rights reserved. SILENTCHAIN AI&trade; and the SILENTCHAIN AI logo are trademarks of Sn1perSecurity LLC.</p>
-            <p style="margin-top: 8px;">Built for the security community.</p>
-            <p style="margin-top: 12px; font-size: 11px; opacity: 0.7;">Burp Suite&reg; is a trademark of PortSwigger Ltd. Nessus&reg; is a trademark of Tenable, Inc. OWASP&reg; is a trademark of the OWASP Foundation. Not affiliated with or endorsed by these companies.</p>
+            <p class="footer-fineprint"><strong>Compatibility:</strong> SILENTCHAIN is an extension for Burp Suite Professional and requires a separate Burp Suite Professional license. Burp Suite is not included. SILENTCHAIN is a standalone product and does not integrate with the Sn1per platform.</p>
+            <p class="footer-fineprint"><strong>Trademarks:</strong> Burp Suite&reg; is a trademark of PortSwigger Ltd. Nessus&reg; is a trademark of Tenable, Inc. OWASP&reg; is a trademark of the OWASP Foundation. SILENTCHAIN is an independent product and is not affiliated with or endorsed by these companies.</p>
         </div>
     </div>
 </footer>

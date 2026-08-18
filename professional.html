@@ -278,6 +278,20 @@
         .stat-number {
             font-family: 'Syne', sans-serif; font-weight: 800; font-size: 42px;
             color: var(--accent-cyan); margin-bottom: 8px;
+            line-height: 1.15;
+            /* keeps the word-based and numeric stats sitting on a common baseline */
+            min-height: 50px;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* word-length values ("PRIVATE", "OWASP Top 10") would wrap at the numeric 42px.
+           Syne 800 runs ~1.1em per character, so 22px is the ceiling that keeps the
+           longest label on one line inside a 4-up column. */
+        .stat-number.is-word {
+            font-size: 20px;
+            font-size: clamp(16px, 1.5vw, 22px);
+            letter-spacing: 0.5px; text-align: center;
+            white-space: nowrap;
         }
         .stat-label { font-size: 13px; color: var(--text-muted); }
 
@@ -507,6 +521,28 @@
             color: var(--accent-cyan); font-size: 10px;
         }
 
+        /* FAQ */
+        .faq-list { max-width: 820px; margin: 0 auto; }
+
+        .faq-item {
+            background: var(--card-bg);
+            border: 1px solid rgba(77, 232, 255, 0.12);
+            border-radius: 12px; margin-bottom: 12px; padding: 2px 24px;
+        }
+        .faq-item summary {
+            cursor: pointer; padding: 18px 0;
+            font-weight: 700; color: var(--text-light); font-size: 16px;
+        }
+        .faq-item summary:hover { color: var(--accent-cyan); }
+        .faq-item p {
+            padding: 0 0 18px; color: var(--text-muted);
+            font-size: 14px; line-height: 1.7;
+        }
+        .faq-item p + p { padding-top: 0; margin-top: -6px; }
+        .faq-item strong { color: var(--text-light); }
+        .faq-item a { color: var(--accent-cyan); text-decoration: none; }
+        .faq-item a:hover { color: var(--accent-green); }
+
         /* Final CTA */
         .final-cta { padding: 80px 0; }
 
@@ -554,11 +590,20 @@
             text-align: center; color: var(--text-muted); font-size: 12px;
         }
 
+        .footer-fineprint {
+            max-width: 940px; margin: 10px auto 0;
+            font-size: 11px; line-height: 1.65; opacity: 0.75;
+        }
+
+        .footer-fineprint strong { opacity: 0.95; font-weight: 700; }
+
         /* Responsive */
         @media (max-width: 1080px) {
             nav { padding: 16px 18px; }
             .nav-links { gap: 26px; }
             nav .cta-button { padding: 10px 20px; font-size: 13px; }
+            /* 4-up columns get too narrow here for the word-length stat values */
+            .stats { grid-template-columns: repeat(2, 1fr); }
         }
 
         @media (max-width: 940px) {
@@ -625,7 +670,7 @@
         <div class="hero-badge">Active-Verification Burp Extension</div>
         <h1>Supercharge Burp&nbsp;Suite with AI&#8209;Powered Penetration Testing</h1>
         <p class="hero-description">
-            SILENTCHAIN Professional doesn't just flag vulnerabilities - it actively exploits them to
+            SILENTCHAIN Professional doesn't just flag vulnerabilities - it actively validates them to
             confirm they are real. AI-driven payloads, out-of-band callbacks, and 24-WAF fingerprinting
             turn a wall of maybes into a short list of proven findings you can hand a client with
             confidence. With a local model, no proxy traffic, findings, or credentials are sent to a
@@ -650,31 +695,25 @@
             <span style="padding: 8px 16px; background: rgba(77,232,255,0.06); border: 1px solid rgba(77,232,255,0.15); border-radius: 20px; font-size: 12px; color: var(--text-muted);">&#128230; Free &amp; open-source Community on-ramp</span>
             <span style="padding: 8px 16px; background: rgba(77,232,255,0.06); border: 1px solid rgba(77,232,255,0.15); border-radius: 20px; font-size: 12px; color: var(--text-muted);">&#9989; OWASP Top 10 + CWE mapping</span>
         </div>
-        <div style="max-width: 780px; margin: 26px auto 0; padding: 16px 22px; background: rgba(255, 107, 53, 0.06); border: 1px solid rgba(255, 107, 53, 0.28); border-radius: 12px; font-size: 12.5px; color: #b9c4d4; line-height: 1.7;">
-            <strong style="color: #ffb499;">Requires Burp Suite Professional.</strong>
-            SILENTCHAIN is a Burp Suite extension - it does <strong style="color: var(--text-light);">not</strong> include Burp Suite,
-            is not affiliated with or endorsed by PortSwigger, and does <strong style="color: var(--text-light);">not</strong> plug into
-            our Sn1per platform. It does not run on Burp Suite Community.
-        </div>
     </section>
 
     <!-- Stats -->
     <div class="stats">
+        <div class="stat-item">
+            <div class="stat-number is-word">PRIVATE</div>
+            <div class="stat-label">Local &amp; air-gapped deployments</div>
+        </div>
         <div class="stat-item">
             <div class="stat-number">10</div>
             <div class="stat-label">AI Providers</div>
         </div>
         <div class="stat-item">
             <div class="stat-number">24</div>
-            <div class="stat-label">WAF Fingerprints</div>
+            <div class="stat-label">WAF fingerprints</div>
         </div>
         <div class="stat-item">
-            <div class="stat-number">200+</div>
-            <div class="stat-label">Curated Payloads</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-number">100%</div>
-            <div class="stat-label">Local / air-gapped option</div>
+            <div class="stat-number is-word">OWASP Top 10</div>
+            <div class="stat-label">+CWE mapping</div>
         </div>
     </div>
 </div>
@@ -701,16 +740,16 @@
                 </ul>
             </div>
             <div style="background: var(--card-bg); border: 1px solid rgba(0,255,136,0.18); border-radius: 14px; padding: 26px;">
-                <div style="font-size: 15px; font-weight: 700; color: var(--accent-green); margin-bottom: 14px;">Why $199 is the easy call</div>
+                <div style="font-size: 15px; font-weight: 700; color: var(--accent-green); margin-bottom: 14px;">Why Professional pays for itself</div>
                 <ul style="list-style: none; padding: 0; margin: 0; color: var(--text-muted); font-size: 14px; line-height: 1.8;">
                     <li style="margin-bottom: 12px;"><strong style="color: var(--text-light);">Unmetered.</strong> No per-request AI credits like Burp AI - run it all day for one flat price.</li>
                     <li style="margin-bottom: 12px;"><strong style="color: var(--text-light);">Replaces a stack.</strong> AI triage, active verification, and reporting in one extension - not separate add-ons.</li>
-                    <li><strong style="color: var(--text-light);">Start free, then upgrade.</strong> The free Community edition uses the same OWASP Top 10 detection approach - try it on your own targets, then move up to Professional for active verification.</li>
+                    <li><strong style="color: var(--text-light);">Start Free. Upgrade when you need deeper validation.</strong> Community gives you the same OWASP Top 10 detection foundation. Professional adds active verification, WAF-aware testing, OOB testing, and offensive AI models.</li>
                 </ul>
             </div>
         </div>
         <div style="max-width: 980px; margin: 0 auto; padding: 20px 26px; background: rgba(0,255,136,0.05); border: 1px solid rgba(0,255,136,0.15); border-radius: 14px; text-align: center; color: var(--text-muted); font-size: 14px; line-height: 1.8;">
-            <strong style="color: var(--text-light);">Try it risk-free first.</strong> The free <a href="https://github.com/silentchainai/SILENTCHAIN" style="color: var(--accent-cyan); text-decoration: none;">Community edition</a> uses the same OWASP Top 10 detection approach against your own targets - no card required. Your Professional license is <strong style="color: var(--text-light);">transferable between machines</strong> (used on one machine at a time), and it never auto-rebills - we email you before it lapses.
+            <strong style="color: var(--text-light);">Try before you upgrade.</strong> Install the free <a href="https://github.com/silentchainai/SILENTCHAIN" style="color: var(--accent-cyan); text-decoration: none;">Community edition</a> with no card required and test SILENTCHAIN against your own authorized targets. When you're ready for Professional, your license is <strong style="color: var(--text-light);">transferable between machines</strong> (one active machine at a time) and never auto-renews without your approval.
         </div>
     </section>
 </div>
@@ -783,59 +822,64 @@
                 <div class="feature-icon">&#x26A1;</div>
                 <h3>Phase 2 Active Verification</h3>
                 <p>
-                    AI generates targeted payloads to confirm findings with
-                    real exploitation attempts. Moves beyond passive analysis
-                    to proof-of-exploitation evidence.
+                    Move beyond AI suggestions to verified findings. AI-guided testing generates
+                    targeted payloads from 200+ curated OWASP payloads, automatically fingerprints
+                    24 WAF technologies, and performs out-of-band testing for XSS, SSRF, XXE, RFI,
+                    and blind injection to confirm suspected vulnerabilities with evidence.
                 </p>
             </div>
 
             <div class="feature-card">
-                <div class="feature-icon">&#x1F6E1;&#xFE0F;</div>
-                <h3>WAF Detection &amp; Fingerprinting</h3>
+                <div class="feature-icon">&#x1F512;</div>
+                <h3>Local &amp; Self-Hosted AI</h3>
                 <p>
-                    Automatically fingerprint 24 WAF vendors including
-                    Cloudflare, Akamai, ModSecurity, AWS WAF, and Imperva.
-                    Flags the firewall in front of each target; when a WAF is actively blocking, active verification backs off that host to avoid an IP ban.
-                </p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">&#x1F4E1;</div>
-                <h3>Out-of-Band Testing</h3>
-                <p>
-                    Detect blind vulnerabilities with OOB callbacks.
-                    Test for blind XSS, SSRF, XXE, RFI, and blind
-                    SQL injection that traditional scanners miss.
-                </p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">&#x1F9E0;</div>
-                <h3>10 AI Providers</h3>
-                <p>
-                    Burp AI (default), Ollama, OpenAI, GPT-5.5, Claude,
-                    Claude Code, Gemini, OpenRouter, Z.ai, and Azure AI Foundry.
-                    Use a local Ollama model to keep analysis on your own hardware.
+                    Deploy SILENTCHAIN with a local Ollama model to keep analysis entirely on your
+                    own hardware. No requests, responses, or findings leave your environment when
+                    using local AI. Cloud providers remain optional, with sensitive data sanitized
+                    before external AI requests.
                 </p>
             </div>
 
             <div class="feature-card">
                 <div class="feature-icon">&#x1F3AF;</div>
-                <h3>200+ Curated Payloads</h3>
+                <h3>Runs Inside Burp Suite</h3>
                 <p>
-                    Hand-crafted OWASP payloads organized by vulnerability
-                    class. Double-encoding, unicode normalization, and
-                    comment-injection variants.
+                    Works natively inside Burp Suite Professional. SILENTCHAIN adds a dedicated
+                    scanning console, integrates findings into Burp's native Issues panel, and
+                    exports evidence-rich reports without changing the workflow you already use.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">&#x1F9E0;</div>
+                <h3>Multi-Provider AI</h3>
+                <p>
+                    Choose from 10 AI providers, including Burp AI, Ollama, OpenAI, Claude,
+                    Claude Code, Gemini, OpenRouter, GPT-5.5, Z.ai, and Azure AI Foundry. Use local
+                    models for self-hosted analysis or connect to cloud providers for additional
+                    reasoning capabilities.
                 </p>
             </div>
 
             <div class="feature-card">
                 <div class="feature-icon">&#x1F517;</div>
-                <h3>Local &amp; Self-Hosted AI</h3>
+                <h3>Client-Ready Reports</h3>
                 <p>
-                    Point Professional at a local Ollama model and no request, response,
-                    or finding is sent to a third-party AI service - it all stays on
-                    your hardware. Cloud providers are optional.
+                    Generate professional HTML advisory reports with verified findings, evidence,
+                    request/response pairs, severity scoring, and remediation guidance. Findings are
+                    clearly separated between AI-suspected and actively verified issues for
+                    transparent reporting.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">&#x1F4DA;</div>
+                <h3>OWASP Top 10 + CWE Mapping</h3>
+                <p>
+                    Every finding is automatically mapped to the OWASP Top 10 and a CWE identifier
+                    with severity scoring. Reports align with industry-standard frameworks, making it
+                    easier to prioritize remediation, communicate risk, and integrate findings into
+                    existing security workflows.
                 </p>
             </div>
         </div>
@@ -871,8 +915,8 @@
             <div class="section-tag">INSIDE THE PRODUCT</div>
             <h2>What You Actually Get</h2>
             <p class="section-description">
-                A scanning console inside Burp, findings in Burp's own issue
-                list, and a report you can hand straight to the customer.
+                A native Burp workflow: a scanning console inside Burp, findings in
+                Burp's own Issues panel, and reports you can hand directly to clients.
             </p>
         </div>
 
@@ -886,15 +930,15 @@
             <div class="tour-copy">
                 <h3>A full scanning console inside Burp</h3>
                 <p>
-                    SILENTCHAIN adds its own tab to Burp Suite Professional: live
-                    statistics, queued and completed analysis tasks, a sortable
-                    findings table, and a streaming console you can actually read.
+                    SILENTCHAIN adds its own tab to Burp Suite Professional with live
+                    statistics, queued and completed analysis tasks, a sortable findings
+                    table, and a streaming console for monitoring analysis in real time.
                 </p>
                 <p>
-                    The run above observed 4,908 requests and created 117 findings,
-                    56 of them High. Duplicate and rate-limit skips are counted
-                    separately, so you can see exactly where analysis effort - and
-                    target load - is being spent.
+                    In this assessment, SILENTCHAIN observed 4,908 requests and created
+                    117 findings, including 56 High severity issues. Duplicate and
+                    rate-limit skips are tracked separately, showing where analysis
+                    effort and target load are being spent.
                 </p>
             </div>
         </div>
@@ -909,15 +953,15 @@
             <div class="tour-copy">
                 <h3>Findings land in Burp's own Issues panel</h3>
                 <p>
-                    Every finding registers as a native Burp Scanner issue with a
-                    full advisory, request and response, evidence, CWE mapping and
-                    remediation - so it flows straight into the Burp workflow and
-                    exports you already use.
+                    Every finding registers as a native Burp issue with a full advisory,
+                    request and response details, evidence, CWE mapping, and remediation
+                    guidance - so it flows directly into the Burp workflow and exports
+                    you already use.
                 </p>
                 <p>
-                    Actively confirmed issues carry a VERIFIED tag. Findings that
-                    came from AI analysis alone say so plainly, with their
-                    confidence stated, instead of being dressed up as proof.
+                    Verified issues carry a VERIFIED tag. Findings from AI analysis alone
+                    are clearly labeled with their confidence level instead of being
+                    presented as confirmed vulnerabilities.
                 </p>
             </div>
         </div>
@@ -930,16 +974,16 @@
                 </button>
             </figure>
             <div class="tour-copy">
-                <h3>A report you can hand to the customer</h3>
+                <h3>A report you can hand to a client</h3>
                 <p>
-                    Export a self-contained HTML report: severity breakdown, top
-                    findings, and a verified count that keeps actively confirmed
-                    issues visibly separate from AI-suspected ones.
+                    Export a self-contained HTML advisory report with severity breakdowns,
+                    top findings, and verified counts that clearly separate confirmed
+                    issues from AI-suspected findings.
                 </p>
                 <p>
-                    In this assessment 35 of 117 findings were confirmed by Phase 2
-                    payload delivery - and the report says which 35, so nobody has
-                    to take the number on trust.
+                    In this assessment, 35 of 117 findings were confirmed by Phase 2
+                    payload delivery - and the report shows exactly which findings were
+                    verified, so nobody has to take the number on trust.
                 </p>
                 <a href="reports/SILENTCHAIN-Professional-example-report.html" class="secondary-button" target="_blank" rel="noopener">View the full interactive report &rarr;</a>
             </div>
@@ -1083,52 +1127,84 @@
             <div class="section-tag">FAQ</div>
             <h2>Questions before<br>you buy</h2>
         </div>
-        <div style="max-width: 820px; margin: 0 auto;">
-            <details style="background: var(--card-bg); border: 1px solid rgba(77,232,255,0.12); border-radius: 12px; margin-bottom: 12px; padding: 2px 24px;">
-                <summary style="cursor: pointer; padding: 18px 0; font-weight: 700; color: var(--text-light); font-size: 16px;">How do I get my license after purchase?</summary>
-                <p style="padding: 0 0 18px; color: var(--text-muted); font-size: 14px; line-height: 1.7;">After checkout on sn1persecurity.com (Sn1perSecurity is the maker of SILENTCHAIN), your license key is issued and emailed to your order address. Paste it into the extension's License dialog in Burp to activate. Checkout is secure and handled by our store.</p>
+        <div class="faq-list">
+            <details class="faq-item">
+                <summary>What is SILENTCHAIN and how does it work?</summary>
+                <p>SILENTCHAIN is an AI-powered Burp Suite Professional extension that helps security professionals discover, validate, and report web vulnerabilities. It analyzes traffic flowing through Burp and uses AI-assisted detection to identify potential issues. Professional adds active verification to confirm findings with evidence.</p>
+                <p>SILENTCHAIN supports multiple AI providers, including local models through Ollama, so teams can choose between cloud-based AI capabilities or private, self-hosted analysis.</p>
             </details>
-            <details style="background: var(--card-bg); border: 1px solid rgba(77,232,255,0.12); border-radius: 12px; margin-bottom: 12px; padding: 2px 24px;">
-                <summary style="cursor: pointer; padding: 18px 0; font-weight: 700; color: var(--text-light); font-size: 16px;">Can I move my license to another machine?</summary>
-                <p style="padding: 0 0 18px; color: var(--text-muted); font-size: 14px; line-height: 1.7;">Yes. Your license is transferable - deactivate it on one machine and activate it on another anytime. It can be used on one machine at a time.</p>
+            <details class="faq-item">
+                <summary>Does SILENTCHAIN require Burp Suite Professional?</summary>
+                <p>Yes. SILENTCHAIN requires <strong>Burp Suite Professional</strong> and does not run on Burp Suite Community.</p>
+                <p>Burp Suite Professional is a separate product from PortSwigger and is not included with SILENTCHAIN. You provide your own Burp Suite Professional license.</p>
             </details>
-            <details style="background: var(--card-bg); border: 1px solid rgba(77,232,255,0.12); border-radius: 12px; margin-bottom: 12px; padding: 2px 24px;">
-                <summary style="cursor: pointer; padding: 18px 0; font-weight: 700; color: var(--text-light); font-size: 16px;">Can I run it fully offline or air-gapped?</summary>
-                <p style="padding: 0 0 18px; color: var(--text-muted); font-size: 14px; line-height: 1.7;">Yes - with a local model. Select the Ollama provider and point it at a local model, and all AI analysis runs on your hardware: no proxy traffic, findings, or credentials are sent to a third-party AI service. If you choose a cloud provider instead, sensitive data is redacted by default before anything is sent. (As with any testing tool, scanning a remote target still sends traffic to that target over the network.)</p>
+            <details class="faq-item">
+                <summary>What is the difference between Community and Professional?</summary>
+                <p>Community provides AI-assisted OWASP Top 10 detection, multiple AI providers, sensitive-data sanitization, and Burp Suite integration so you can try SILENTCHAIN with your own authorized testing.</p>
+                <p>Professional adds active verification, WAF detection and fingerprinting, out-of-band testing, additional AI providers, offensive AI models, and advanced reporting features.</p>
+                <p>Start with <a href="https://github.com/silentchainai/SILENTCHAIN">Community</a> and upgrade to Professional when you need verified findings and deeper testing capabilities.</p>
             </details>
-            <details style="background: var(--card-bg); border: 1px solid rgba(77,232,255,0.12); border-radius: 12px; margin-bottom: 12px; padding: 2px 24px;">
-                <summary style="cursor: pointer; padding: 18px 0; font-weight: 700; color: var(--text-light); font-size: 16px;">Which AI provider should I use? Do I need to pay for API credits?</summary>
-                <p style="padding: 0 0 18px; color: var(--text-muted); font-size: 14px; line-height: 1.7;">You choose from 10 providers. Burp AI is the zero-setup default (uses your PortSwigger AI credits); Ollama runs local models with no API cost and full data privacy; or bring your own OpenAI, Claude, Gemini, or other key. SILENTCHAIN itself is unmetered - it never charges per request.</p>
+            <details class="faq-item">
+                <summary>How do I get my license after purchase?</summary>
+                <p>After checkout, your SILENTCHAIN Professional license key is emailed to your order address. Paste the key into the SILENTCHAIN License dialog inside Burp to activate your installation.</p>
+                <p>Checkout is secure and handled through the <a href="https://sn1persecurity.com/wordpress/product/silentchain-professional/" target="_blank" rel="noopener">SILENTCHAIN store</a>.</p>
             </details>
-            <details style="background: var(--card-bg); border: 1px solid rgba(77,232,255,0.12); border-radius: 12px; margin-bottom: 12px; padding: 2px 24px;">
-                <summary style="cursor: pointer; padding: 18px 0; font-weight: 700; color: var(--text-light); font-size: 16px;">Does it need Burp Suite Professional, or does Community work?</summary>
-                <p style="padding: 0 0 18px; color: var(--text-muted); font-size: 14px; line-height: 1.7;">SILENTCHAIN Professional requires <strong style="color: var(--text-light);">Burp Suite Professional</strong>. It registers findings as Burp Scanner issues and uses Montoya scanner APIs that are only available in Burp Suite Professional, so it does not run on Burp Suite Community. Burp Suite is a separate product from PortSwigger and is not included with SILENTCHAIN - you provide your own Burp Suite Professional license.</p>
+            <details class="faq-item">
+                <summary>Can I move my license to another machine?</summary>
+                <p>Yes. Your Professional license is transferable between machines. Deactivate it on one machine and activate it on another. A license can be active on one machine at a time.</p>
             </details>
-            <details style="background: var(--card-bg); border: 1px solid rgba(77,232,255,0.12); border-radius: 12px; margin-bottom: 12px; padding: 2px 24px;">
-                <summary style="cursor: pointer; padding: 18px 0; font-weight: 700; color: var(--text-light); font-size: 16px;">Is this only for authorized testing?</summary>
-                <p style="padding: 0 0 18px; color: var(--text-muted); font-size: 14px; line-height: 1.7;">Yes. SILENTCHAIN is an offensive-security tool for authorized testing only - use it against systems you own or have explicit written permission to test.</p>
+            <details class="faq-item">
+                <summary>Does the license auto-renew or auto-charge me?</summary>
+                <p>No. SILENTCHAIN Professional is an annual license and does not silently auto-renew. We will notify you before your license expires so you can decide whether to renew.</p>
             </details>
-            <details style="background: var(--card-bg); border: 1px solid rgba(77,232,255,0.12); border-radius: 12px; margin-bottom: 12px; padding: 2px 24px;">
-                <summary style="cursor: pointer; padding: 18px 0; font-weight: 700; color: var(--text-light); font-size: 16px;">Do you offer refunds, or can I try first?</summary>
-                <p style="padding: 0 0 18px; color: var(--text-muted); font-size: 14px; line-height: 1.7;">There is no money-back guarantee, so we make it easy to try risk-free first: the free Community edition uses the same OWASP Top 10 detection approach against your own targets, and you can watch the full demo before you spend a dollar. Upgrade to Professional when you are ready for active verification.</p>
+            <details class="faq-item">
+                <summary>Can SILENTCHAIN run locally, offline, or in an air-gapped environment?</summary>
+                <p>Yes, with a local AI model. Connect SILENTCHAIN to Ollama and run AI analysis entirely on your own hardware. Requests, responses, and findings are not sent to a third-party AI provider.</p>
+                <p>Cloud AI providers are optional. When using external providers, sensitive data is sanitized before requests are sent.</p>
             </details>
-            <details style="background: var(--card-bg); border: 1px solid rgba(77,232,255,0.12); border-radius: 12px; margin-bottom: 12px; padding: 2px 24px;">
-                <summary style="cursor: pointer; padding: 18px 0; font-weight: 700; color: var(--text-light); font-size: 16px;">Do licenses auto-renew or auto-charge me?</summary>
-                <p style="padding: 0 0 18px; color: var(--text-muted); font-size: 14px; line-height: 1.7;">No surprise charges. Professional is an annual license and does not silently auto-rebill - we email you before it lapses, so renewing is your choice.</p>
+            <details class="faq-item">
+                <summary>Does my data leave my network?</summary>
+                <p>Not when using a local AI deployment. With Ollama or another self-hosted model, requests, responses, and findings remain on your hardware.</p>
+                <p>Cloud AI providers are optional, and SILENTCHAIN sanitizes sensitive data before external AI requests.</p>
+            </details>
+            <details class="faq-item">
+                <summary>Which AI providers does SILENTCHAIN support? Do I need API credits?</summary>
+                <p>SILENTCHAIN supports 10 AI providers, including Burp AI, Ollama, OpenAI, Claude, Gemini, OpenRouter, Z.ai, GPT-5.5, Claude Code, and Azure AI Foundry.</p>
+                <p>Burp AI uses your existing PortSwigger AI credits. Ollama uses local models with no API cost. Other cloud providers may require your own API credentials.</p>
+                <p>SILENTCHAIN Professional itself is unmetered - there are no per-request AI charges from SILENTCHAIN.</p>
+            </details>
+            <details class="faq-item">
+                <summary>Is SILENTCHAIN only for authorized security testing?</summary>
+                <p>Yes. SILENTCHAIN is an offensive security testing tool intended for authorized use only. Use it only against systems you own or have explicit permission to test.</p>
+            </details>
+            <details class="faq-item">
+                <summary>Is there a refund policy or can I try it first?</summary>
+                <p>Because SILENTCHAIN Professional is a digitally delivered software license, license purchases are non-refundable once issued.</p>
+                <p>To make evaluation easy, the free <a href="https://github.com/silentchainai/SILENTCHAIN">Community edition</a> lets you test the SILENTCHAIN workflow against your own authorized targets before upgrading. You can also review the <a href="#demo">Professional demo</a> and <a href="/docs/professional/">documentation</a> before purchasing.</p>
+                <p>Upgrade to Professional when you are ready for active verification, WAF-aware testing, advanced reporting, and additional AI providers.</p>
+            </details>
+            <details class="faq-item">
+                <summary>Does SILENTCHAIN replace Burp Suite or work with other scanners?</summary>
+                <p>No. SILENTCHAIN is a Burp Suite Professional extension and works inside the Burp workflow you already use. It does not include Burp Suite, replace Burp Suite Professional, or integrate with the Sn1per platform.</p>
+                <p>SILENTCHAIN focuses on AI-assisted vulnerability discovery, verification, and reporting inside Burp Suite Professional.</p>
             </details>
         </div>
     </section>
 </div>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
-{"@type":"Question","name":"How do I get my license after purchase?","acceptedAnswer":{"@type":"Answer","text":"After checkout on sn1persecurity.com (the maker of SILENTCHAIN), your license key is issued and emailed to your order address. Paste it into the extension's License dialog in Burp to activate."}},
-{"@type":"Question","name":"Can I move my license to another machine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Your license is transferable - deactivate it on one machine and activate it on another anytime. It can be used on one machine at a time."}},
-{"@type":"Question","name":"Can I run it fully offline or air-gapped?","acceptedAnswer":{"@type":"Answer","text":"Yes, with a local model. Select the Ollama provider and point it at a local model, and all AI analysis runs on your hardware - no proxy traffic, findings, or credentials are sent to a third-party AI service. With a cloud provider, sensitive data is redacted by default before anything is sent."}},
-{"@type":"Question","name":"Which AI provider should I use? Do I need to pay for API credits?","acceptedAnswer":{"@type":"Answer","text":"You choose from 10 providers. Burp AI is the zero-setup default (uses PortSwigger AI credits); Ollama runs local models with no API cost; or bring your own key. SILENTCHAIN itself is unmetered - it never charges per request."}},
-{"@type":"Question","name":"Does it need Burp Suite Professional, or does Community work?","acceptedAnswer":{"@type":"Answer","text":"SILENTCHAIN Professional requires Burp Suite Professional. It registers findings as Burp Scanner issues and uses Montoya scanner APIs that are only available in Burp Suite Professional, so it does not run on Burp Suite Community. Burp Suite is a separate PortSwigger product and is not included."}},
-{"@type":"Question","name":"Is this only for authorized testing?","acceptedAnswer":{"@type":"Answer","text":"Yes. SILENTCHAIN is an offensive-security tool for authorized testing only - use it against systems you own or have explicit written permission to test."}},
-{"@type":"Question","name":"Do you offer refunds, or can I try first?","acceptedAnswer":{"@type":"Answer","text":"There is no money-back guarantee. Try risk-free first with the free Community edition (same OWASP Top 10 detection approach) and the demo, then upgrade to Professional for active verification when you are ready."}},
-{"@type":"Question","name":"Do licenses auto-renew or auto-charge me?","acceptedAnswer":{"@type":"Answer","text":"No. Professional is an annual license and does not silently auto-rebill - we email you before it lapses, so renewing is your choice."}}
+{"@type":"Question","name":"What is SILENTCHAIN and how does it work?","acceptedAnswer":{"@type":"Answer","text":"SILENTCHAIN is an AI-powered Burp Suite Professional extension that helps security professionals discover, validate, and report web vulnerabilities. It analyzes traffic flowing through Burp and uses AI-assisted detection to identify potential issues. Professional adds active verification to confirm findings with evidence. SILENTCHAIN supports multiple AI providers, including local models through Ollama, so teams can choose between cloud-based AI capabilities or private, self-hosted analysis."}},
+{"@type":"Question","name":"Does SILENTCHAIN require Burp Suite Professional?","acceptedAnswer":{"@type":"Answer","text":"Yes. SILENTCHAIN requires Burp Suite Professional and does not run on Burp Suite Community. Burp Suite Professional is a separate product from PortSwigger and is not included with SILENTCHAIN. You provide your own Burp Suite Professional license."}},
+{"@type":"Question","name":"What is the difference between Community and Professional?","acceptedAnswer":{"@type":"Answer","text":"Community provides AI-assisted OWASP Top 10 detection, multiple AI providers, sensitive-data sanitization, and Burp Suite integration so you can try SILENTCHAIN with your own authorized testing. Professional adds active verification, WAF detection and fingerprinting, out-of-band testing, additional AI providers, offensive AI models, and advanced reporting features. Start with Community and upgrade to Professional when you need verified findings and deeper testing capabilities."}},
+{"@type":"Question","name":"How do I get my license after purchase?","acceptedAnswer":{"@type":"Answer","text":"After checkout, your SILENTCHAIN Professional license key is emailed to your order address. Paste the key into the SILENTCHAIN License dialog inside Burp to activate your installation. Checkout is secure and handled through the SILENTCHAIN store."}},
+{"@type":"Question","name":"Can I move my license to another machine?","acceptedAnswer":{"@type":"Answer","text":"Yes. Your Professional license is transferable between machines. Deactivate it on one machine and activate it on another. A license can be active on one machine at a time."}},
+{"@type":"Question","name":"Does the license auto-renew or auto-charge me?","acceptedAnswer":{"@type":"Answer","text":"No. SILENTCHAIN Professional is an annual license and does not silently auto-renew. We will notify you before your license expires so you can decide whether to renew."}},
+{"@type":"Question","name":"Can SILENTCHAIN run locally, offline, or in an air-gapped environment?","acceptedAnswer":{"@type":"Answer","text":"Yes, with a local AI model. Connect SILENTCHAIN to Ollama and run AI analysis entirely on your own hardware. Requests, responses, and findings are not sent to a third-party AI provider. Cloud AI providers are optional. When using external providers, sensitive data is sanitized before requests are sent."}},
+{"@type":"Question","name":"Does my data leave my network?","acceptedAnswer":{"@type":"Answer","text":"Not when using a local AI deployment. With Ollama or another self-hosted model, requests, responses, and findings remain on your hardware. Cloud AI providers are optional, and SILENTCHAIN sanitizes sensitive data before external AI requests."}},
+{"@type":"Question","name":"Which AI providers does SILENTCHAIN support? Do I need API credits?","acceptedAnswer":{"@type":"Answer","text":"SILENTCHAIN supports 10 AI providers, including Burp AI, Ollama, OpenAI, Claude, Gemini, OpenRouter, Z.ai, GPT-5.5, Claude Code, and Azure AI Foundry. Burp AI uses your existing PortSwigger AI credits. Ollama uses local models with no API cost. Other cloud providers may require your own API credentials. SILENTCHAIN Professional itself is unmetered - there are no per-request AI charges from SILENTCHAIN."}},
+{"@type":"Question","name":"Is SILENTCHAIN only for authorized security testing?","acceptedAnswer":{"@type":"Answer","text":"Yes. SILENTCHAIN is an offensive security testing tool intended for authorized use only. Use it only against systems you own or have explicit permission to test."}},
+{"@type":"Question","name":"Is there a refund policy or can I try it first?","acceptedAnswer":{"@type":"Answer","text":"Because SILENTCHAIN Professional is a digitally delivered software license, license purchases are non-refundable once issued. To make evaluation easy, the free Community edition lets you test the SILENTCHAIN workflow against your own authorized targets before upgrading. You can also review the Professional demo and documentation before purchasing. Upgrade to Professional when you are ready for active verification, WAF-aware testing, advanced reporting, and additional AI providers."}},
+{"@type":"Question","name":"Does SILENTCHAIN replace Burp Suite or work with other scanners?","acceptedAnswer":{"@type":"Answer","text":"No. SILENTCHAIN is a Burp Suite Professional extension and works inside the Burp workflow you already use. It does not include Burp Suite, replace Burp Suite Professional, or integrate with the Sn1per platform. SILENTCHAIN focuses on AI-assisted vulnerability discovery, verification, and reporting inside Burp Suite Professional."}}
 ]}
 </script>
 
@@ -1215,7 +1291,7 @@
                     <li><a href="/about.html">About</a></li>
                     <li><a href="https://sn1persecurity.com/wordpress/home/contact/" target="_blank" rel="noopener">Contact</a></li>
                     <li><a href="/privacy.html">Privacy Policy</a></li>
-                    <li><a href="/terms.html">Terms of Service</a></li>
+                    <li><a href="/terms.html">Legal</a></li>
                 </ul>
             </div>
 
@@ -1231,9 +1307,8 @@
 
         <div class="footer-bottom">
             <p>&copy; 2026 Sn1perSecurity LLC. All rights reserved. SILENTCHAIN AI&trade; and the SILENTCHAIN AI logo are trademarks of Sn1perSecurity LLC.</p>
-            <p style="margin-top: 8px;">Built for the security community.</p>
-            <p style="margin-top: 12px; font-size: 11px; opacity: 0.85;">SILENTCHAIN is a Burp Suite extension and <strong>requires Burp Suite Professional</strong>; it does not include Burp Suite and is a separate product from the Sn1per platform (it does not plug into Sn1per).</p>
-            <p style="margin-top: 8px; font-size: 11px; opacity: 0.7;">Burp Suite&reg; is a trademark of PortSwigger Ltd. Nessus&reg; is a trademark of Tenable, Inc. OWASP&reg; is a trademark of the OWASP Foundation. Not affiliated with or endorsed by these companies.</p>
+            <p class="footer-fineprint"><strong>Compatibility:</strong> SILENTCHAIN is an extension for Burp Suite Professional and requires a separate Burp Suite Professional license. Burp Suite is not included. SILENTCHAIN is a standalone product and does not integrate with the Sn1per platform.</p>
+            <p class="footer-fineprint"><strong>Trademarks:</strong> Burp Suite&reg; is a trademark of PortSwigger Ltd. Nessus&reg; is a trademark of Tenable, Inc. OWASP&reg; is a trademark of the OWASP Foundation. SILENTCHAIN is an independent product and is not affiliated with or endorsed by these companies.</p>
         </div>
     </div>
 </footer>

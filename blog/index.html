@@ -198,6 +198,22 @@
             box-shadow: 0 10px 30px rgba(77, 232, 255, 0.3);
         }
 
+        .secondary-button {
+            padding: 12px 30px;
+            background: transparent;
+            color: var(--text-light);
+            border: 1px solid rgba(77, 232, 255, 0.3);
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700; font-size: 14px; cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none; display: inline-block;
+        }
+        .secondary-button:hover {
+            background: rgba(77, 232, 255, 0.1);
+            border-color: var(--accent-cyan);
+        }
+
         /* Blog Header */
         .blog-header {
             padding: 80px 0 40px;
@@ -294,6 +310,13 @@
             border-top: 1px solid rgba(77, 232, 255, 0.05);
             text-align: center; color: var(--text-muted); font-size: 12px;
         }
+
+        .footer-fineprint {
+            max-width: 940px; margin: 10px auto 0;
+            font-size: 11px; line-height: 1.65; opacity: 0.75;
+        }
+
+        .footer-fineprint strong { opacity: 0.95; font-weight: 700; }
 
         /* Category Filters */
         .category-filters {
@@ -437,7 +460,7 @@
             <p class="post-excerpt">
                 Second-opinion LLM classification reduces false positives. Actively exploiting the
                 candidate in a sandbox eliminates them. A technical deep-dive into the Phase 2
-                architecture &mdash; with prompt templates, heuristic cascade, and benchmark data
+                architecture - with prompt templates, heuristic cascade, and benchmark data
                 from a 36-finding E2E test.
             </p>
             <span class="read-more">Read more &rarr;</span>
@@ -446,29 +469,16 @@
     </div>
 </div>
 
-<!-- Newsletter -->
+<!-- Example report - direct access, no signup gate -->
 <div class="container">
 <div style="max-width: 640px; margin: 60px auto 0; padding: 32px; background: rgba(10, 25, 50, 0.6); border: 1px solid rgba(77, 232, 255, 0.15); border-radius: 16px; text-align: center;">
     <h3 style="font-family: 'Syne', sans-serif; font-size: 22px; color: #e0e6ed; margin-bottom: 8px;">See a real SILENTCHAIN Professional report</h3>
-    <p style="color: #8892a6; font-size: 14px; margin-bottom: 20px;">Subscribe and instantly open an example HTML pentest report - verified findings, OWASP Top 10 + CWE mapping, evidence, and remediation, exactly as SILENTCHAIN Professional generates it. Plus occasional AI-pentesting field notes. No spam - unsubscribe anytime.</p>
-    <form action="https://YOUR-BREVO-FORM-ENDPOINT.example" method="POST" target="scBrevoSink" onsubmit="return scReportSignup(this);" style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
-        <input type="email" name="EMAIL" placeholder="you@company.com" required style="flex: 1; min-width: 240px; padding: 12px 16px; border-radius: 8px; border: 1px solid rgba(77, 232, 255, 0.3); background: rgba(5, 8, 16, 0.6); color: #e0e6ed; font-family: 'JetBrains Mono', monospace;">
-        <button type="submit" class="cta-button">Get the example report</button>
-    </form>
-    <div class="report-thanks" style="display: none; margin-top: 22px;">
-        <a href="/reports/SILENTCHAIN-Professional-example-report.html" class="cta-button" target="_blank" rel="noopener">Open your example report &rarr;</a>
-        <p style="color: #8892a6; font-size: 13px; margin-top: 14px;">Thanks for subscribing - your example SILENTCHAIN Professional report is ready. It opens in a new tab; use your browser's Save option to keep a copy.</p>
+    <p style="color: #8892a6; font-size: 14px; margin-bottom: 20px;">An example HTML pentest report - verified findings, OWASP Top 10 + CWE mapping, evidence, and remediation, exactly as SILENTCHAIN Professional generates it. No signup required.</p>
+    <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+        <a href="/reports/SILENTCHAIN-Professional-example-report.html" class="cta-button" target="_blank" rel="noopener">View the example report &rarr;</a>
+        <a href="/reports/SILENTCHAIN-Professional-example-report.html" class="secondary-button" download="SILENTCHAIN-Professional-example-report.html">Download HTML</a>
     </div>
-    <iframe name="scBrevoSink" title="Subscription" aria-hidden="true" style="display: none;"></iframe>
-    <script>
-    function scReportSignup(form) {
-        try {
-            form.style.display = 'none';
-            form.parentNode.querySelector('.report-thanks').style.display = 'block';
-        } catch (e) {}
-        return true; /* let the subscription still POST to Brevo via the hidden iframe */
-    }
-    </script>
+    <p style="color: #8892a6; font-size: 13px; margin-top: 16px;">Opens in a new tab. Self-contained HTML - save it or pass it on as-is.</p>
 </div>
 </div>
 
@@ -510,7 +520,7 @@
                     <li><a href="/about.html">About</a></li>
                     <li><a href="mailto:support@silentchain.ai">Contact</a></li>
                     <li><a href="/privacy.html">Privacy Policy</a></li>
-                    <li><a href="/terms.html">Terms of Service</a></li>
+                    <li><a href="/terms.html">Legal</a></li>
                 </ul>
             </div>
 
@@ -526,8 +536,8 @@
 
         <div class="footer-bottom">
             <p>&copy; 2026 Sn1perSecurity LLC. All rights reserved. SILENTCHAIN AI&trade; and the SILENTCHAIN AI logo are trademarks of Sn1perSecurity LLC.</p>
-            <p style="margin-top: 8px;">Built for the security community.</p>
-            <p style="margin-top: 12px; font-size: 11px; opacity: 0.7;">Burp Suite&reg; is a trademark of PortSwigger Ltd. Nessus&reg; is a trademark of Tenable, Inc. OWASP&reg; is a trademark of the OWASP Foundation. Not affiliated with or endorsed by these companies.</p>
+            <p class="footer-fineprint"><strong>Compatibility:</strong> SILENTCHAIN is an extension for Burp Suite Professional and requires a separate Burp Suite Professional license. Burp Suite is not included. SILENTCHAIN is a standalone product and does not integrate with the Sn1per platform.</p>
+            <p class="footer-fineprint"><strong>Trademarks:</strong> Burp Suite&reg; is a trademark of PortSwigger Ltd. Nessus&reg; is a trademark of Tenable, Inc. OWASP&reg; is a trademark of the OWASP Foundation. SILENTCHAIN is an independent product and is not affiliated with or endorsed by these companies.</p>
         </div>
     </div>
 </footer>

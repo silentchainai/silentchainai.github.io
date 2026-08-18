@@ -26,5 +26,10 @@ desktop.ini
 # Logs
 *.log
 
+# Backup working files (keep out of the published Pages repo)
+*.bak
+*.bak-*
+*.bak.*
+
 # Dependencies (defensive)
 node_modules/

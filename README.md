@@ -335,7 +335,7 @@ This forces analysis even if the URL was previously scanned.
 - 🔄 **Burp Intruder Integration**: Auto-configures fuzzing attacks
 - ⚡ **Smart Fuzzing**: AI-generated payloads for maximum coverage
 
-**Contact us for commercial licensing and professional editions:** support@sn1persecurity.com
+**Contact us for commercial licensing and professional editions:** [Need Help?](https://sn1persecurity.com/wordpress/home/contact/)
 
 ---
 
