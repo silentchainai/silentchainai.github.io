@@ -12,7 +12,7 @@
       gtag('config', 'G-R6V66JC0M4');
     </script>
     <title>SILENTCHAIN Changelog - Community &amp; Professional Release History</title>
-    <meta name="description" content="Release history for SILENTCHAIN Community and SILENTCHAIN Professional - the AI pentesting extensions for Burp Suite Professional. Current: Professional v2.0.38, Community v1.3.1.">
+    <meta name="description" content="Release history for SILENTCHAIN Community and SILENTCHAIN Professional - the AI pentesting extensions for Burp Suite Professional. Current: Professional v2.0.41, Community v1.3.1.">
     <link rel="canonical" href="https://silentchain.ai/changelog">
 
     <!-- Open Graph -->
@@ -235,7 +235,7 @@
         <h1>SILENTCHAIN Changelog</h1>
         <p>Release notes for the SILENTCHAIN AI pentesting extensions for Burp Suite Professional. Highlights only - see each edition for full details.</p>
         <div class="current-versions">
-            <span class="ver-pill">Professional <strong>v2.0.38</strong></span>
+            <span class="ver-pill">Professional <strong>v2.0.41</strong></span>
             <span class="ver-pill">Community <strong>v1.3.1</strong></span>
         </div>
     </header>
@@ -246,7 +246,19 @@
         <p class="sub">Java / Montoya extension for Burp Suite Professional - active verification, WAF fingerprinting, and 10 AI providers.</p>
 
         <div class="release">
-            <div class="meta"><span class="ver-badge latest">v2.0.38</span><span class="date">2026-07-26</span></div>
+            <div class="meta"><span class="ver-badge latest">v2.0.41</span><span class="date">2026-08-18</span></div>
+            <div class="desc">Fixed a passive-scan false-positive flood of "missing Content-Security-Policy" findings: CSP checks now run only on successful responses, skip the extension's own probe traffic, and are deduplicated per host.</div>
+        </div>
+        <div class="release">
+            <div class="meta"><span class="ver-badge">v2.0.40</span><span class="date">2026-08-17</span></div>
+            <div class="desc">Added request-header fuzzing to Phase 2 active verification (SSRF and proxy headers), improved out-of-band and server-side template injection (SSTI) verification accuracy, and overhauled the local Ollama provider for more reliable structured output.</div>
+        </div>
+        <div class="release">
+            <div class="meta"><span class="ver-badge">v2.0.39</span><span class="date">2026-08-16</span></div>
+            <div class="desc">Added API-focused active checks to Phase 2: GraphQL introspection, insecure deserialization, JWT alg:none and SAML signature stripping, mass assignment, and OAuth redirect_uri tampering.</div>
+        </div>
+        <div class="release">
+            <div class="meta"><span class="ver-badge">v2.0.38</span><span class="date">2026-07-26</span></div>
             <div class="desc">Streamlined the Advanced settings panel.</div>
         </div>
         <div class="release">
